@@ -1,0 +1,27 @@
+# Kubenetes目錄
+k8s
+
+# 本地的依賴包目錄
+node_modules
+
+# npm 的debug log文件
+npm-debug.log
+
+# Dockerfile 本身
+Dockerfile
+
+# .dockerignore 文件
+.dockerignore
+
+# Git 版本控制目錄
+.git
+
+# 資料庫config文件（若有）
+*.env
+
+# IDE 配置文件
+.vscode/
+.idea/
+
+# 其他日誌文件
+*.log

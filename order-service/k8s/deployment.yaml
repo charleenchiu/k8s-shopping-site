@@ -1,0 +1,36 @@
+apiVersion: apps/v1  # 使用的 API 版本
+kind: Deployment  # 資源的類型，這裡是 Deployment
+metadata:
+  name: order-service  # Deployment 的名稱
+spec:
+  replicas: 1  # 副本數量，這裡指定運行一個副本
+  selector:
+    matchLabels:
+      app: order-service  # 用來選擇 Pod 的標籤
+  template: # 定義了 Pod 的模板
+    metadata:
+      labels:
+        app: order-service  # Pod 的標籤
+    spec: # Pod 的具體規範
+      containers:
+      - name: order-service  # 容器的名稱
+        image: public.ecr.aws/j5a0e3h8/4api_docker_website/order_service:latest  # ECR 映像 URI 和標籤
+        ports:
+        - containerPort: 3003  # 容器內部的埠號。API 應用程式在 `3003` 埠號上監聽，則 service.yaml 的 targetPort 及 deployment.yaml 的 `containerPort` 中也要指定 `3003`。這樣，Kubernetes 會將流量正確地路由到 API 應用程式。
+        resources:  # 用來定義資源請求和限制
+          requests:   # 容器運行所需的最小資源
+            memory: "64Mi"
+            cpu: "250m"
+          limits: # 容器運行所允許的最大資源
+            memory: "128Mi"
+            cpu: "500m"
+      affinity: # 用來定義 Pod 的親和性和反親和性
+        podAntiAffinity:  # 確保 Pod 分佈在不同的節點上，避免單個節點上的資源過載
+          requiredDuringSchedulingIgnoredDuringExecution:  # 在調度期間需要滿足的條件，但在執行期間可以忽略
+            - labelSelector:  # 標籤選擇器，用來選擇符合條件的 Pod
+                matchExpressions:  # 匹配表達式
+                  - key: app  # 標籤的鍵
+                    operator: In  # 操作符，這裡表示鍵的值應該在指定的值列表中
+                    values:  # 值列表
+                      - order-service  # 符合條件的值
+            topologyKey: "kubernetes.io/hostname"  # 拓撲鍵，這裡表示 Pod 需要分佈在不同的主機上

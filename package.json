@@ -1,0 +1,45 @@
+{
+  "name": "shoppingsite",
+  "version": "1.0.0",
+  "main": "dbTest.js",
+  "type": "module",
+  "scripts": {
+    "start": "webpack serve --open",
+    "test": "mocha --require @babel/register web-client/test/**/*.test.js",
+    "build": "webpack --config webpack.config.js"
+  },
+  "author": "Charleen Chiu",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@babel/core": "^7.25.8",
+    "@babel/preset-env": "^7.25.8",
+    "@babel/preset-react": "^7.25.7",
+    "@babel/register": "^7.25.7",
+    "@testing-library/react": "^16.0.1",
+    "chai": "5.1.1",
+    "chai-http": "5.1.0",
+    "express": "^4.21.0",
+    "html-webpack-plugin": "^5.6.0",
+    "mocha": "^10.7.3",
+    "tape": "^5.9.0",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "crypto-browserify": "^3.12.0",
+    "dotenv": "^16.4.5",
+    "mysql2": "^3.11.3",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
+    "url": "^0.11.4"
+  },
+  "private": true,
+  "workspaces": [
+    "user-service",
+    "product-service",
+    "order-service",
+    "payment-service",
+    "web-client"
+  ]
+}

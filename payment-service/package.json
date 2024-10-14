@@ -1,0 +1,31 @@
+{
+  "name": "payment-service",
+  "version": "1.0.0",
+  "main": "payment-service.js",
+  "directories": {
+    "test": "test"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "webpack serve --config webpack.config.js --env SERVICE_NAME=payment-service",
+    "test": "npx mocha --require @babel/register test/**/*.test.js"
+  },
+  "keywords": [],
+  "author": "Charleen Chiu",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.25.8",
+    "@babel/preset-env": "^7.25.8",
+    "babel-loader": "^9.2.1",
+    "chai": "^5.1.1",
+    "chai-http": "^5.1.1",
+    "express": "^4.21.0",
+    "mocha": "^10.7.3",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "description": "",
+  "dependencies": {
+    "mysql2": "^3.11.3"
+  }
+}

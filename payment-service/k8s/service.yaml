@@ -1,0 +1,12 @@
+apiVersion: v1  # 使用的 API 版本
+kind: Service  # 資源的類型，這裡是 Service
+metadata:
+  name: payment-service  # Service 的名稱
+spec:
+  type: LoadBalancer  # Service 的類型，這裡是 LoadBalancer
+  selector:
+    app: payment-service  # 用來選擇 Pod 的標籤
+  ports:
+  - protocol: TCP  # 使用的協議，這裡是 TCP
+    port: 3004  # Service 暴露的埠號(可以是80)
+    targetPort: 3004  # 容器內部的埠號。API 應用程式在 `3004` 埠號上監聽，則service.yaml的targetPort及deployment.yaml的 `containerPort` 中也要指定 `3004`。這樣，Kubernetes 會將流量正確地路由到API應用程式。
