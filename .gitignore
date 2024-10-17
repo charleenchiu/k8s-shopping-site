@@ -11,3 +11,4 @@ InitAndCleanup/.terraform/
 InitAndCleanup/.terraform.lock.hcl
 InitAndCleanup/terraform.tfstate
 InitAndCleanup/terraform.tfstate.backup
+InitAndCleanup/.terraform.tfstate.lock.info
