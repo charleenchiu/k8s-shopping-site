@@ -1,72 +1,124 @@
-使用 Helm 可以幫助您更輕鬆地管理 Kubernetes 的應用程式部署，尤其是當您有多個 microservices 需要部署時。以下是具體的文件與步驟，教您如何編寫與使用 Helm。
+前面您教我使用helm的部份，我想請您依照我的專案結構，再次具體教我怎麼做：
+C:\charleen\LearnDevops\k8s-shopping-site_1_simple
+├── ansible
+│   ├── inventory
+│   └── playbook.yml
+├── k8s
+│   ├── order-service-deployment.yaml
+│   ├── payment-service-deployment.yaml
+│   ├── product-service-deployment.yaml
+│   ├── site-service-deployment.yaml
+│   └── user-service-deployment.yaml
+├── order-service
+│   ├── Dockerfile
+│   ├── index.js (http://localhost:3003)
+│   ├── node_modules
+│   ├── package-lock.json
+│   └── package.json
+├── payment-service
+│   ├── Dockerfile
+│   ├── index.js (http://localhost:3004)
+│   ├── node_modules
+│   ├── package-lock.json
+│   └── package.json
+├── product-service
+│   ├── Dockerfile
+│   ├── index.js (http://localhost:3002)
+│   ├── node_modules
+│   ├── package-lock.json
+│   └── package.json
+├── terraform
+│   ├── main.tf
+│   ├── outputs.tf
+│   └── variables.tf
+├── user-service
+│   ├── Dockerfile
+│   ├── index.js (http://localhost:3001)
+│   ├── node_modules
+│   ├── package-lock.json
+│   └── package.json
+├── .env
+├── docker-compose.yml
+├── Dockerfile
+├── index.js
+├── Jenkinsfile
+├── node_modules
+├── package-lock.json
+└── package.json
 
-## 1. Helm Chart 結構
+使用 Helm 來管理 Kubernetes 應用程式是非常有用的，它能簡化部署、升級和管理應用程式的過程。以下是依照您的專案結構，具體的 Helm 實作步驟：
 
-首先，您需要為每個 microservice 建立 Helm Chart。Helm Chart 是一組檔案的集合，用來描述 Kubernetes 應用程式的資源。Helm Chart 的基本結構如下：
+### 1. 安裝 Helm
+
+首先，確保您已安裝 Helm。如果尚未安裝，可以參考 [Helm 官方文檔](https://helm.sh/docs/intro/install/) 進行安裝。
+
+### 2. 建立 Helm Chart
+
+在您的專案根目錄下，使用以下命令來創建 Helm Chart：
 
 ```bash
-my-microservice-chart/
-│
-├── Chart.yaml            # Chart 的基本資訊
-├── values.yaml           # 預設的變數值
-├── templates/            # Kubernetes YAML 範本檔案
-│   ├── deployment.yaml   # 部署 Deployment 的範本
-│   ├── service.yaml      # 部署 Service 的範本
-│   ├── ingress.yaml      # 部署 Ingress 的範本（可選）
-│   └── _helpers.tpl      # 可重複使用的模板函數
+cd C:\charleen\LearnDevops\k8s-shopping-site_1_simple
+helm create k8s-chart
 ```
 
-### 1.1 `Chart.yaml`
-這是 Helm Chart 的主檔案，用來定義 Chart 的名稱、版本等基本資訊。
+這將在專案根目錄中創建一個名為 `k8s-chart` 的目錄，包含 Helm Chart 的基本結構。
 
-範例 `Chart.yaml`：
+### 3. 修改 Helm Chart 結構
+
+接下來，您需要根據每個服務修改 `k8s-chart` 的結構。以下是應該如何組織該目錄的示例：
+
+```plaintext
+k8s-chart
+├── Chart.yaml
+├── values.yaml
+└── templates
+    ├── deployment.yaml
+    ├── service.yaml
+    └── ingress.yaml  # 如果您需要使用 Ingress
+```
+
+### 4. 編輯 `Chart.yaml`
+
+編輯 `k8s-chart/Chart.yaml` 文件，設置 Chart 的基本信息：
 
 ```yaml
 apiVersion: v2
-name: my-microservice
-description: A Helm chart for my microservice
+name: k8s-shopping-site
+description: A Helm chart for Kubernetes Shopping Site
 version: 0.1.0
-appVersion: "1.0.0"
+appVersion: "1.0"
 ```
 
-### 1.2 `values.yaml`
-這個檔案包含預設的變數值，這些值可以在範本中使用。
+### 5. 設定 `values.yaml`
 
-範例 `values.yaml`：
+在 `values.yaml` 中定義您服務的基本配置，例如環境變數、映像名稱等：
 
 ```yaml
-replicaCount: 2
+replicaCount: 1
 
 image:
-  repository: my-microservice
-  tag: "latest"
+  repository: your-ecr-repo-url  # 更新為您的 ECR 地址
   pullPolicy: IfNotPresent
+  tag: "latest"  # 或您所使用的標籤
 
 service:
   type: ClusterIP
-  port: 80
+  port: 80  # 您的應用程序端口
 
-ingress:
-  enabled: true
-  annotations: {}
-  hosts:
-    - host: my-microservice.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
+resources: {}
 ```
 
-### 1.3 `deployment.yaml` (在 `templates/` 中)
-這是定義 Kubernetes Deployment 資源的範本，用來部署您的 microservice。
+### 6. 編輯 `deployment.yaml`
 
-範例 `deployment.yaml`：
+在 `templates/deployment.yaml` 中定義 Kubernetes 部署：
 
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-deployment
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -78,138 +130,58 @@ spec:
         app: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ .Release.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          ports:
-            - containerPort: {{ .Values.service.port }}
-          resources: {}
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.service.port }}
+        env:
+        - name: NODE_ENV
+          value: "production"
+        # 根據需要添加其他環境變數
 ```
 
-### 1.4 `service.yaml` (在 `templates/` 中)
-定義 Kubernetes Service 資源的範本，用來暴露 Deployment 中的服務。
+### 7. 編輯 `service.yaml`
 
-範例 `service.yaml`：
+在 `templates/service.yaml` 中定義服務：
 
 ```yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-service
+  name: {{ .Release.Name }}
 spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.port }}
   selector:
     app: {{ .Release.Name }}
 ```
 
-### 1.5 `ingress.yaml` (在 `templates/` 中)
-定義 Kubernetes Ingress 資源的範本，用來暴露 HTTP 路徑（可選）。
+### 8. 部署 Helm Chart
 
-範例 `ingress.yaml`：
-
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {{ .Release.Name }}-ingress
-  annotations:
-    {{- range $key, $value := .Values.ingress.annotations }}
-    {{ $key }}: {{ $value }}
-    {{- end }}
-spec:
-  rules:
-    - host: {{ .Values.ingress.hosts[0].host }}
-      http:
-        paths:
-          - path: {{ .Values.ingress.hosts[0].paths[0].path }}
-            pathType: {{ .Values.ingress.hosts[0].paths[0].pathType }}
-            backend:
-              service:
-                name: {{ .Release.Name }}-service
-                port:
-                  number: {{ .Values.service.port }}
-```
-
-### 1.6 `_helpers.tpl` (在 `templates/` 中)
-這個檔案可定義共用的模板函數，幫助簡化範本檔案（可選）。
-
-範例 `_helpers.tpl`：
-
-```yaml
-{{- define "fullname" -}}
-{{ .Release.Name }}-{{ .Chart.Name }}
-{{- end -}}
-```
-
-## 2. 使用 Helm
-
-### 2.1 安裝 Helm
-
-如果尚未安裝 Helm，請按照以下指令安裝 Helm：
+在專案根目錄下運行以下命令以部署您的應用程序：
 
 ```bash
-curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+helm install k8s-shopping-site ./k8s-chart
 ```
 
-### 2.2 建立 Helm Chart
+### 9. 更新 Helm Chart
 
-在每個 microservice 的根目錄中執行以下命令來初始化一個 Helm Chart：
+若要更新已部署的 Helm Chart，可以進行修改後運行：
 
 ```bash
-helm create my-microservice
+helm upgrade k8s-shopping-site ./k8s-chart
 ```
 
-這會自動建立上述結構，然後您可以修改 `values.yaml` 和 `templates/` 中的檔案來適應您的專案需求。
+### 10. 卸載 Helm Chart
 
-### 2.3 部署 Helm Chart
-
-當您完成了所有的設定，您可以使用以下命令將 microservice 部署到 Kubernetes 集群：
+如果需要卸載 Helm Chart，可以使用以下命令：
 
 ```bash
-helm install my-microservice ./my-microservice-chart
+helm uninstall k8s-shopping-site
 ```
 
-其中 `my-microservice` 是部署的名稱，`./my-microservice-chart` 是 Helm Chart 的目錄路徑。
+### 小結
 
-### 2.4 升級部署
-
-如果需要修改配置，您可以更新 `values.yaml` 或其他模板檔案，然後執行以下命令來升級您的部署：
-
-```bash
-helm upgrade my-microservice ./my-microservice-chart
-```
-
-### 2.5 刪除部署
-
-如果您需要刪除已安裝的 Chart，可以使用以下命令：
-
-```bash
-helm uninstall my-microservice
-```
-
-## 3. 整合 Jenkins Pipeline
-
-您可以將 Helm 的部署命令整合進您的 Jenkins Pipeline 中，確保自動化部署。以下是範例 Jenkinsfile：
-
-```groovy
-pipeline {
-    agent any
-    environment {
-        KUBECONFIG = credentials('kubeconfig-file')
-    }
-    stages {
-        stage('Deploy to Kubernetes with Helm') {
-            steps {
-                script {
-                    sh 'helm upgrade --install my-microservice ./my-microservice-chart --set image.tag=$IMAGE_TAG'
-                }
-            }
-        }
-    }
-}
-```
-
-## 結論
-
-這些步驟應該能幫助您在專案中開始使用 Helm。Helm 的優勢在於它能將 Kubernetes 應用的資源抽象化，使其變得更具模組化並且更容易管理。透過將每個 microservice 打包為一個 Helm Chart，您可以更容易地進行版本控制與自動化部署。
+通過以上步驟，您已經為每個微服務建立了 Helm Chart，這將使得在 Kubernetes 上管理和部署這些服務變得更加簡單和高效。您可以為每個微服務創建一個獨立的 Helm Chart，或將它們整合到一個 Chart 中，根據您的需求進行選擇。
