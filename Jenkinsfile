@@ -141,6 +141,14 @@ pipeline {
         always {
             // 無論成功與否，確保清理 Jenkins workspace
             cleanWS()
+            sh '''
+                # 刪除未使用的容器：
+                echo y | docker container prune
+                # 刪除未使用的映像：
+                echo y | docker image prune -a
+                # 刪除未使用的卷：
+                echo y | docker volume prune
+            '''
         }
     }
 }
