@@ -1,0 +1,56 @@
+//填在Jenkins建置項目"Terraform Destroy"的Script內，並勾選參數化建置，依parameters的內容建立兩個參數
+pipeline {
+    agent any
+    environment {
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+    }
+    parameters {
+        string(name: 'GIT_REPO_URL', defaultValue: 'https://github.com/charleenchiu/k8s-shopping-site.git', description: 'Git repository URL')
+        string(name: 'GIT_BRANCH', defaultValue: '1_simple', description: 'Git branch to checkout')
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                //git url: 'https://github.com/charleenchiu/vprofile-project.git', branch: 'cicd-kube'
+                //git branch: '1_simple', url: 'https://github.com/charleenchiu/k8s-shopping-site.git'
+                // 使用構建參數進行 Git 檢出
+                git branch: "${params.GIT_BRANCH}", url: "${params.GIT_REPO_URL}"
+            }
+        }
+        stage('Terraform Init') {
+            steps {
+                // 初始化 Terraform
+                sh 'terraform init'
+            }
+        }
+        stage('Terraform Destroy') {
+            steps {
+                // 執行 Terraform Destroy
+                sh 'terraform destroy -auto-approve'
+            }
+        }
+        stage('Clean Workspace') {
+            steps {
+                // 刪除工作區下的所有檔案
+                deleteDir()
+            }
+        }
+    }
+    post {
+        always {
+            script {
+                // 確保在每次構建後都會清理工作區
+                cleanWs()
+                sh '''
+                    # 刪除未使用的容器：
+                    echo y | docker container prune
+                    # 刪除未使用的映像：
+                    echo y | docker image prune -a
+                    # 刪除未使用的卷：
+                    echo y | docker volume prune
+                '''
+            }
+        }
+    }
+}
