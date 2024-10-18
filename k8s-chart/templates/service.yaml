@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "k8s-chart.fullname" . }}-{{ .Values.serviceName }}
+  labels:
+    {{- include "k8s-chart.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}  # 從 values.yaml 讀取服務類型
+  ports:
+    - port: {{ .Values.port }}
+      targetPort: {{ .Values.port }}
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ .Values.serviceName }}

@@ -160,9 +160,9 @@ resource "aws_cloudwatch_log_group" "payment_service_log_group" {
 }
 
 # EKS Node Group
-resource "aws_eks_node_group" "k8s-shopping-site_nodegroup" {
+resource "aws_eks_node_group" "k8s-shopping-site_node_group" {
   cluster_name    = aws_eks_cluster.k8s-shopping-site_cluster.name
-  node_group_name = "k8s-shopping-site_nodegroup"
+  node_group_name = "k8s-shopping-site_node_group"
   node_role_arn   = aws_iam_role.new_node_group_role[0].arn
   subnet_ids      = var.subnet_ids
 
@@ -205,7 +205,7 @@ resource "aws_ecrpublic_repository" "payment_service_repo" {
 /*相關資訊：
 ● cluster:k8s-shopping-site_cluster
 
-● node_group:k8s-shopping-site_nodegroup
+● node_group:k8s-shopping-site_node_group
 
 ● eksClusterRole
 ARN: arn:aws:iam::167804136284:role/eksClusterRole

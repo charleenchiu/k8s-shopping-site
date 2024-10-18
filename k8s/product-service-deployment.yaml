@@ -17,6 +17,24 @@ spec:
         image: your-dockerhub-username/product-service:latest # 替換為你的 Docker 映像
         ports:
         - containerPort: 3002
+        env:
+        - name: AWS_REGION
+          value: "us-east-1" # AWS區域
+        - name: AWS_LOG_GROUP
+          value: /eks/k8s-shopping-site_task"  # Log Group 名稱
+        #- name: AWS_LOG_STREAM
+        # value: "product-service"  # 每個微服務的日誌流可有不同的名稱
+        #resources:
+        #  limits:
+        #    memory: "512Mi"
+        #    cpu: "500m"
+      # 日誌配置，這裡使用了 awslogs 日誌驅動
+      #logging:
+      #  driver: awslogs
+      #  options: 
+      #    awslogs-region: us-east-1 # AWS 區域
+      #    awslogs-group: "/eks/k8s-shopping-site_task"
+      #    awslogs-stream-prefix: "product-service"
 ---
 apiVersion: v1
 kind: Service

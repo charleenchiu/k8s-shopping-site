@@ -33,6 +33,11 @@ output "eks_cluster_url" {
   value = aws_eks_cluster.k8s-shopping-site_cluster.endpoint  # 取得 EKS Cluster 的 API 端點 URL
 }
 
+# 輸出 CloudWatch aws_cloudwatch_log_group的資訊
+output "cloudwatch_log_group_name" {
+  value = aws_cloudwatch_log_group.k8s-shopping-site_log_group.name  # 取得 aws_cloudwatch_log_group的Name
+}
+
 # 輸出 Kubernetes 憑證授權中心的資料
 output "kubeconfig_certificate_authority_data" {
   value = aws_eks_cluster.k8s-shopping-site_cluster.certificate_authority[0].data  # 取得 Kubernetes CA 資料

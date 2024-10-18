@@ -15,6 +15,7 @@ pipeline {
         EKS_CLUSTER_URL = '' // EKS Cluster URL（將在 Terraform 階段後更新）
         KUBECONFIG_CERTIFICATE_AUTHORITY_DATA = '' // Kubernetes 憑證授權中心的資料
         IMAGE_TAG = 'latest' // Docker Image Tag
+        LOG_GROUP_NAME = ''   // CloudWatch Log Group 名稱（將在 Terraform 階段後更新）
     }
 
     stages {
@@ -49,20 +50,21 @@ pipeline {
                     env.EKS_CLUSTER_ARN = sh(script: 'cd terraform && terraform output -raw eks_cluster_arn', returnStdout: true).trim()
                     env.EKS_CLUSTER_URL = sh(script: 'cd terraform && terraform output -raw eks_cluster_url', returnStdout: true).trim()
                     env.KUBECONFIG_CERTIFICATE_AUTHORITY_DATA = sh(script: 'cd terraform && terraform output -raw kubeconfig_certificate_authority_data', returnStdout: true).trim()
+                    env.LOG_GROUP_NAME = sh(script: 'cd terraform && terraform output -raw cloudwatch_log_group_name', returnStdout: true).trim()
                 }
             }
         }
 
-        /*
+        
         stage('Ansible Configuration') {
             steps {
                 script {
                     // 使用 Ansible 配置 EC2 或其他服務，並使用從 Terraform 獲得的變數
-                    sh "ansible-playbook -i inventory.yml -e 'site_ecr_repo=$SITE_ECR_REPO eks_cluster_arn=$EKS_CLUSTER_ARN' setup.yml"
+                    sh "ansible-playbook -i inventory.yml -e 'site_ecr_repo=${env.SITE_ECR_REPO} eks_cluster_arn=${env.EKS_CLUSTER_ARN}' setup.yml"
                 }
             }
         }
-        */
+        
 
         stage('Build Docker Image') {
             steps {
@@ -98,6 +100,7 @@ pipeline {
             }
         }
 
+        
         stage('Update Kubernetes Deployment') {
             steps {
                 script {
@@ -127,14 +130,38 @@ pipeline {
             }
         }
 
-        stage('Clean up Docker image') {
+        /*
+        stage('Install Fluent Bit') {
             steps {
                 script {
-                    // 清除Docker build cache
-                    sh 'docker builder prune -f'
+                    // 安裝 aws-for-fluent-bit Helm Chart
+                    sh '''
+                        helm repo add fluent https://fluent.github.io/helm-charts
+                        helm repo update
+                        helm install aws-for-fluent-bit fluent/fluent-bit --set awsRegion=${env.AWS_REGION} --set cloudWatch.logGroupName=${env.LOG_GROUP_NAME}
+                    '''
                 }
             }
         }
+
+        stage('Helm Deploy') {
+            steps {
+                script {
+                    // 建立 Docker images 的設定
+                    def images = """
+                        services.user-service.image=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG},
+                        services.product-service.image=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG},
+                        services.order-service.image=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG},
+                        services.payment-service.image=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG},
+                        services.site-service.image=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.SITE_ECR_REPO}:${env.IMAGE_TAG}
+                    """
+
+                    // 使用 helm 指令
+                    sh "helm upgrade --install k8s-site ./k8s-chart --set awsLogsGroup=${env.LOG_GROUP_NAME},${images}"
+                }
+            }
+        }
+        */
     }
 
     post {
@@ -142,12 +169,14 @@ pipeline {
             // 無論成功與否，確保清理 Jenkins workspace
             cleanWS()
             sh '''
+                # 清除所有未使用的 build cache
+                echo y | docker builder prune -f
                 # 刪除未使用的容器：
                 echo y | docker container prune
-                # 刪除未使用的映像：
-                echo y | docker image prune -a
-                # 刪除未使用的卷：
-                echo y | docker volume prune
+                # 刪除所有未使用的映像，包括未被任何容器使用的映像。這是釋放空間的有效方法，但要小心，因為它也會刪除任何你不再需要的映像：
+                # echo y | docker image prune -a
+                # 刪除所有未使用的docker磁碟機。若你的 pipeline 有使用 docker磁碟機 來存儲數據，則需要考慮是否要保留這些docker磁碟機：
+                # echo y | docker volume prune
             '''
         }
     }

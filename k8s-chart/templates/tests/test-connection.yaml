@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "k8s-chart.fullname" . }}-test-connection
+  labels:
+    {{- include "k8s-chart.labels" . | nindent 4 }}
+spec:
+  restartPolicy: Never
+  containers:
+    {{- range $service, $config := .Values.services }}
+    - name: {{ $service }}-test-connection
+      image: {{ $config.image.repository }}:{{ $config.image.tag | default "latest" }}
+      command: ["sh", "-c"]
+      args:
+        - >
+          nc -z {{ include "k8s-chart.fullname" . }}-{{ $service }} {{ $config.service.port }} || exit 1
+    {{- end }}

@@ -12,3 +12,21 @@ InitAndCleanup/.terraform.lock.hcl
 InitAndCleanup/terraform.tfstate
 InitAndCleanup/terraform.tfstate.backup
 InitAndCleanup/.terraform.tfstate.lock.info
+
+# helm的檔案
+# Helm Chart 目錄中的 .helmignore
+k8s-chart/**/.DS_Store
+k8s-chart/**/Thumbs.db
+k8s-chart/**/*.tgz
+
+# Chart dependencies
+k8s-chart/charts/*
+
+# Template-generated files
+k8s-chart/templates/*.rendered
+
+# 特定於開發環境的文件
+k8s-chart/test/
+k8s-chart/tmp/
+k8s-chart/*.log
+
