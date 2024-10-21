@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-{{ .Values.serviceName }}  # 使用 .Values.serviceName
+  labels:
+    app: {{ .Values.serviceName }}
 spec:
   replicas: {{ .Values.replicaCount | default 1 }}  # 預設值為 1
   selector:

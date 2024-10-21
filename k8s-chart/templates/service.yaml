@@ -7,7 +7,8 @@ metadata:
 spec:
   type: {{ .Values.service.type | default "ClusterIP" }}  # 若 .Values.service.type 為 nil，則使用預設值 "ClusterIP"
   ports:
-  - port: {{ .Values.service.port }}  # 這裡需要確保正確引用
+  - protocol: TCP
+    port: {{ .Values.service.port }}  # 這裡需要確保正確引用
     targetPort: {{ .Values.service.port }}  # 這裡需要確保正確引用
   selector:
     app: {{ .Values.serviceName }}  # 確保有正確的 selector
