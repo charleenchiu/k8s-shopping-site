@@ -1,26 +1,26 @@
+{{- range .Values.services }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.serviceName }}  # 使用 .Values.serviceName
-  labels:
-    app: {{ .Values.serviceName }}
+  name: {{ .name }}-deployment
 spec:
-  replicas: {{ .Values.replicaCount | default 1 }}  # 預設值為 1
+  replicas: {{ $.Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.serviceName }}  # 使用 .Values.serviceName
+      app: {{ .name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.serviceName }}  # 使用 .Values.serviceName
+        app: {{ .name }}
     spec:
       containers:
-      - name: {{ .Values.serviceName }}  # 使用 .Values.serviceName
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"  # 使用正確的映像檔地址
+      - name: {{ .name }}
+        image: "{{ .image.repository }}:{{ .image.tag }}"
         ports:
-        - containerPort: {{ .Values.service.port }}  # 使用 .Values.service.port
+        - containerPort: {{ .service.port }}
         env:
         - name: AWS_LOG_GROUP
-          value: "{{ .Values.awsLogsGroup }}"  # 使用 .Values.awsLogsGroup
+          value: "{{ .awsLogsGroup }}"
         - name: AWS_REGION
-          value: "us-east-1"
+          value: "{{ $.Values.awsRegion }}"
+{{- end }}

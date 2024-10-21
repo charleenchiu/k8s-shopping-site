@@ -1,57 +1,48 @@
 replicaCount: 1
+awsRegion: "us-east-1"  # 預設值us-east-1，會被 Jenkins 的 Helm 指令動態設置
 
 services:
-  user-service:
-    serviceName: "user-service"
+  - name: "user-service"
     image:
-      #repository: "user-service-ecr-repo-uri" # 填入 user-service 的映像檔地址
-      repository: nginx
+      repository: "user-service-ecr-repo-uri"
       tag: "latest"
     service:
       type: ClusterIP
       port: 3001
-    awsLogsGroup: "/eks/k8s-shopping-site_task"
+    awsLogsGroup: "" # 這裡會被 Jenkins 的 Helm 指令動態設置
 
-  product-service:
-    serviceName: "product-service"
+  - name: "product-service"
     image:
-      #repository: "product-service-ecr-repo-uri"
-      repository: nginx
+      repository: "product-service-ecr-repo-uri"
       tag: "latest"
     service:
       type: ClusterIP
       port: 3002
-    awsLogsGroup: "/eks/k8s-shopping-site_task"
+    awsLogsGroup: "" # 這裡會被 Jenkins 的 Helm 指令動態設置
 
-  order-service:
-    serviceName: "order-service"
+  - name: "order-service"
     image:
-      #repository: "order-service-ecr-repo-uri"
-      repository: nginx
+      repository: "order-service-ecr-repo-uri"
       tag: "latest"
     service:
       type: ClusterIP
       port: 3003
-    awsLogsGroup: "/eks/k8s-shopping-site_task"
+    awsLogsGroup: "" # 這裡會被 Jenkins 的 Helm 指令動態設置
 
-  payment-service:
-    serviceName: "payment-service"
+  - name: "payment-service"
     image:
-      #repository: "payment-service-ecr-repo-uri"
-      repository: nginx
+      repository: "payment-service-ecr-repo-uri"
       tag: "latest"
     service:
       type: ClusterIP
       port: 3004
-    awsLogsGroup: "/eks/k8s-shopping-site_task"
+    awsLogsGroup: "" # 這裡會被 Jenkins 的 Helm 指令動態設置
 
-  site-service:
-    serviceName: "site-service"
+  - name: "site-service"
     image:
-      #repository: "site-service-ecr-repo-uri"
-      repository: nginx
+      repository: "site-service-ecr-repo-uri"
       tag: "latest"
     service:
       type: ClusterIP
       port: 3000
-    awsLogsGroup: "/eks/k8s-shopping-site_task"
+    awsLogsGroup: "" # 這裡會被 Jenkins 的 Helm 指令動態設置

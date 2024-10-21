@@ -101,6 +101,7 @@ pipeline {
         }
 
         
+        /*
         stage('Update Kubernetes Deployment') {
             steps {
                 script {
@@ -129,8 +130,8 @@ pipeline {
                 }
             }
         }
+        */
 
-        /*
         stage('Install Fluent Bit') {
             steps {
                 script {
@@ -147,21 +148,34 @@ pipeline {
         stage('Helm Deploy') {
             steps {
                 script {
-                    // 建立 Docker images 的設定
+                    // 建立 Docker images 的設定，使用參數命名方式
                     def images = """
-                        services.user-service.image=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG},
-                        services.product-service.image=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG},
-                        services.order-service.image=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG},
-                        services.payment-service.image=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG},
-                        services.site-service.image=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.SITE_ECR_REPO}:${env.IMAGE_TAG}
+                        services.user-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.USER_SERVICE_ECR_REPO},
+                        services.user-service.image.tag=${env.IMAGE_TAG},
+                        services.product-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PRODUCT_SERVICE_ECR_REPO},
+                        services.product-service.image.tag=${env.IMAGE_TAG},
+                        services.order-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ORDER_SERVICE_ECR_REPO},
+                        services.order-service.image.tag=${env.IMAGE_TAG},
+                        services.payment-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PAYMENT_SERVICE_ECR_REPO},
+                        services.payment-service.image.tag=${env.IMAGE_TAG},
+                        services.site-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.SITE_ECR_REPO},
+                        services.site-service.image.tag=${env.IMAGE_TAG}
                     """
 
-                    // 使用 helm 指令
-                    sh "helm upgrade --install k8s-site ./k8s-chart --set awsLogsGroup=${env.LOG_GROUP_NAME},${images}"
+                    // 使用 helm 指令，使用參數命名方式動態傳遞 awsRegion 和 awsLogsGroup
+                    sh """
+                        helm upgrade --install k8s-site ./k8s-chart \
+                        --set awsRegion=${env.AWS_REGION}, \
+                        --set services.user-service.awsLogsGroup=${env.LOG_GROUP_NAME}, \
+                        --set services.product-service.awsLogsGroup=${env.LOG_GROUP_NAME}, \
+                        --set services.order-service.awsLogsGroup=${env.LOG_GROUP_NAME}, \
+                        --set services.payment-service.awsLogsGroup=${env.LOG_GROUP_NAME}, \
+                        --set services.site-service.awsLogsGroup=${env.LOG_GROUP_NAME}, \
+                        ${images}
+                    """
                 }
             }
         }
-        */
     }
 
     post {
