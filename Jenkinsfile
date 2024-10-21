@@ -55,7 +55,7 @@ pipeline {
             }
         }
 
-        
+        /*
         stage('Ansible Configuration') {
             steps {
                 script {
@@ -64,6 +64,7 @@ pipeline {
                 }
             }
         }
+        */
         
 
         stage('Build Docker Image') {
