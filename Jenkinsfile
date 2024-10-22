@@ -62,6 +62,7 @@ pipeline {
                     env.LOG_GROUP_NAME = outputList[7].trim()
                     env.KUBECONFIG_CERTIFICATE_AUTHORITY_DATA = outputList[8].trim()
 
+                    /*
                     // 驗證輸出的變數
                     sh '''
                     echo "SITE_ECR_REPO: ${env.SITE_ECR_REPO}"
@@ -73,6 +74,7 @@ pipeline {
                     echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
                     echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
                     '''
+                    */
                 }
             }
         }
@@ -228,12 +230,29 @@ pipeline {
             // 無論成功與否，確保清理 Jenkins workspace
             //cleanWS()
             // Clean after build
-            cleanWs(cleanWhenNotBuilt: false,
-                    deleteDirs: true,
-                    disableDeferredWipeout: true,
-                    notFailBuild: true,
-                    patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
-                               [pattern: '.propsfile', type: 'EXCLUDE']])
+            // 清理工作區設置
+            cleanWs(
+                // 如果構建未完成也進行清理
+                cleanWhenNotBuilt: false,
+                
+                // 刪除目錄
+                deleteDirs: true,
+                
+                // 禁用延遲清除
+                disableDeferredWipeout: true,
+                
+                // 失敗時不會使構建失敗
+                notFailBuild: true,
+                
+                // 包含與排除的檔案模式
+                patterns: [
+                    // 包含 .gitignore 檔案
+                    [pattern: '.gitignore', type: 'INCLUDE'],
+                    
+                    // 排除 .propsfile 檔案
+                    [pattern: '.propsfile', type: 'EXCLUDE']
+                ]
+            )
 
             sh '''
                 # 清除所有未使用的 build cache
