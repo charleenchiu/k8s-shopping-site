@@ -210,18 +210,28 @@ pipeline {
     }
 
     post {
+        fail {
+            // 如果過程失敗，清除 terraform 建的資源
+            sh '''
+                cd terraform
+                terraform destroy -auto-approve
+                rm -rf .terraform*
+                rm -rf terraform.tfstate*
+            '''
+        }
+
         always {
             // 無論成功與否，確保清理 Jenkins workspace
             cleanWS()
             sh '''
                 # 清除所有未使用的 build cache
-                echo y | docker builder prune -f
-                # 刪除未使用的容器：
-                echo y | docker container prune
-                # 刪除所有未使用的映像，包括未被任何容器使用的映像。這是釋放空間的有效方法，但要小心，因為它也會刪除任何你不再需要的映像：
-                # echo y | docker image prune -a
-                # 刪除所有未使用的docker磁碟機。若你的 pipeline 有使用 docker磁碟機 來存儲數據，則需要考慮是否要保留這些docker磁碟機：
-                # echo y | docker volume prune
+                docker builder prune -f
+                # 刪除未使用的容器
+                docker container prune -f
+                # 刪除所有未使用的映像
+                # docker image prune -a -f
+                # 刪除所有未使用的 docker 磁碟機
+                # docker volume prune -f
             '''
         }
     }
