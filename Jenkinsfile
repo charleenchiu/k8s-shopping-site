@@ -29,29 +29,40 @@ pipeline {
         stage('Terraform Init & Apply') {
             steps {
                 script {
-                    // 初始化 Terraform 並應用配置
-                    /* Jenkins 的每一個 sh 步驟都在一個新的 shell 中執行，
-                        因此要在同一個 sh 步驟中執行所有相關的 Terraform 命令，
-                        也不可有空行，
-                        才不會發生找不到路徑的問題 */
+                    // 在一個 sh 步驟中執行 Terraform 初始化與 Apply
                     sh '''
-                        pwd
                         cd terraform
-                        pwd
                         terraform init
                         terraform apply -auto-approve
                     '''
-                    // 確保從 terraform 目錄中取得輸出
-                    env.SITE_ECR_REPO = sh(script: 'cd terraform && terraform output -raw site_ecr_repo', returnStdout: true).trim()
-                    env.USER_SERVICE_ECR_REPO = sh(script: 'cd terraform && terraform output -raw user_service_ecr_repo', returnStdout: true).trim()
-                    env.PRODUCT_SERVICE_ECR_REPO = sh(script: 'cd terraform && terraform output -raw product_service_ecr_repo', returnStdout: true).trim()
-                    env.ORDER_SERVICE_ECR_REPO = sh(script: 'cd terraform && terraform output -raw order_service_ecr_repo', returnStdout: true).trim()
-                    env.PAYMENT_SERVICE_ECR_REPO = sh(script: 'cd terraform && terraform output -raw payment_service_ecr_repo', returnStdout: true).trim()
-                    env.EKS_CLUSTER_ARN = sh(script: 'cd terraform && terraform output -raw eks_cluster_arn', returnStdout: true).trim()
-                    env.EKS_CLUSTER_URL = sh(script: 'cd terraform && terraform output -raw eks_cluster_url', returnStdout: true).trim()
-                    env.KUBECONFIG_CERTIFICATE_AUTHORITY_DATA = sh(script: 'cd terraform && terraform output -raw kubeconfig_certificate_authority_data', returnStdout: true).trim()
-                    env.LOG_GROUP_NAME = sh(script: 'cd terraform && terraform output -raw cloudwatch_log_group_name', returnStdout: true).trim()
-                
+
+                    // 在一個 shell 執行所有 Terraform 輸出命令
+                    def outputs = sh(script: '''
+                        cd terraform
+                        echo $(terraform output -raw site_ecr_repo)
+                        echo $(terraform output -raw user_service_ecr_repo)
+                        echo $(terraform output -raw product_service_ecr_repo)
+                        echo $(terraform output -raw order_service_ecr_repo)
+                        echo $(terraform output -raw payment_service_ecr_repo)
+                        echo $(terraform output -raw eks_cluster_arn)
+                        echo $(terraform output -raw eks_cluster_url)
+                        echo $(terraform output -raw cloudwatch_log_group_name)
+                        echo $(terraform output -raw kubeconfig_certificate_authority_data)
+                    ''', returnStdout: true).trim()
+
+                    // 將結果拆分為各自的變數
+                    def outputList = outputs.split('\n')
+                    env.SITE_ECR_REPO = outputList[0].trim()
+                    env.USER_SERVICE_ECR_REPO = outputList[1].trim()
+                    env.PRODUCT_SERVICE_ECR_REPO = outputList[2].trim()
+                    env.ORDER_SERVICE_ECR_REPO = outputList[3].trim()
+                    env.PAYMENT_SERVICE_ECR_REPO = outputList[4].trim()
+                    env.EKS_CLUSTER_ARN = outputList[5].trim()
+                    env.EKS_CLUSTER_URL = outputList[6].trim()
+                    env.LOG_GROUP_NAME = outputList[7].trim()
+                    env.KUBECONFIG_CERTIFICATE_AUTHORITY_DATA = outputList[8].trim()
+
+                    // 驗證輸出的變數
                     sh '''
                     echo ${env.SITE_ECR_REPO}
                     echo ${env.USER_SERVICE_ECR_REPO}
@@ -82,11 +93,13 @@ pipeline {
             steps {
                 script {
                     // 使用 Dockerfile 建構 Image
-                    sh "docker build -t ${env.SITE_ECR_REPO}:${env.IMAGE_TAG} ."
-                    sh "docker build -t ${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ."
-                    sh "docker build -t ${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ."
-                    sh "docker build -t ${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ."
-                    sh "docker build -t ${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ."
+                    sh '''
+                    docker build -t ${env.SITE_ECR_REPO}:${env.IMAGE_TAG} .
+                    docker build -t ${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} .
+                    docker build -t ${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} .
+                    docker build -t ${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} .
+                    docker build -t ${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} .
+                    '''
                 }
             }
         }
@@ -94,20 +107,26 @@ pipeline {
         stage('Login to ECR & Push Image') {
             steps {
                 script {
-                    // 透過 AWS CLI 登入 ECR
-                    sh "aws ecr get-login-password --region ${env.AWS_REGION} | docker login --username AWS --password-stdin ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com"
+                    sh '''
+                    # 透過 AWS CLI 登入 ECR
+                    aws ecr get-login-password --region ${env.AWS_REGION} | docker login --username AWS --password-stdin ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com
 
-                    // Push Image 到 ECR
-                    sh "docker tag ${env.SITE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.SITE_ECR_REPO}:${env.IMAGE_TAG}"
-                    sh "docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.SITE_ECR_REPO}:${env.IMAGE_TAG}"
-                    sh "docker tag ${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}"
-                    sh "docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}"
-                    sh "docker tag ${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}"
-                    sh "docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}"
-                    sh "docker tag ${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}"
-                    sh "docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}"
-                    sh "docker tag ${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}"
-                    sh "docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}"
+                    # Push Image 到 ECR
+                    docker tag ${env.SITE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.SITE_ECR_REPO}:${env.IMAGE_TAG}
+                    docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.SITE_ECR_REPO}:${env.IMAGE_TAG}
+
+                    docker tag ${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
+                    docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
+
+                    docker tag ${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
+                    docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
+
+                    docker tag ${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
+                    docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
+
+                    docker tag ${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
+                    docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
+                    '''
                 }
             }
         }
