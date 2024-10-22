@@ -51,6 +51,17 @@ pipeline {
                     env.EKS_CLUSTER_URL = sh(script: 'cd terraform && terraform output -raw eks_cluster_url', returnStdout: true).trim()
                     env.KUBECONFIG_CERTIFICATE_AUTHORITY_DATA = sh(script: 'cd terraform && terraform output -raw kubeconfig_certificate_authority_data', returnStdout: true).trim()
                     env.LOG_GROUP_NAME = sh(script: 'cd terraform && terraform output -raw cloudwatch_log_group_name', returnStdout: true).trim()
+                
+                    sh '''
+                    echo ${env.SITE_ECR_REPO}
+                    echo ${env.USER_SERVICE_ECR_REPO}
+                    echo ${env.PRODUCT_SERVICE_ECR_REPO}
+                    echo ${env.ORDER_SERVICE_ECR_REPO}
+                    echo ${env.PAYMENT_SERVICE_ECR_REPO}
+                    echo ${env.EKS_CLUSTER_ARN}
+                    echo ${env.EKS_CLUSTER_URL}
+                    echo ${env.LOG_GROUP_NAME}
+                    '''
                 }
             }
         }
