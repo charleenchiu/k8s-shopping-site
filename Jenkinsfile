@@ -51,7 +51,8 @@ pipeline {
                     ''', returnStdout: true).trim()
 
                     // 將結果拆分為各自的變數
-                    def outputList = outputs.split('\n')
+                    //def outputList = outputs.split('\n')
+                    def outputList = outputs.split('\r?\n').collect { it.trim() }
                     env.SITE_ECR_REPO = outputList[0].trim()
                     env.USER_SERVICE_ECR_REPO = outputList[1].trim()
                     env.PRODUCT_SERVICE_ECR_REPO = outputList[2].trim()
@@ -64,6 +65,7 @@ pipeline {
 
                     // 驗證輸出的變數
                     sh """
+                    echo Terraform Outputs: ${outputs}"
                     echo "SITE_ECR_REPO: ${env.SITE_ECR_REPO}"
                     echo "USER_SERVICE_ECR_REPO: ${env.USER_SERVICE_ECR_REPO}"
                     echo "PRODUCT_SERVICE_ECR_REPO: ${env.PRODUCT_SERVICE_ECR_REPO}"
