@@ -230,43 +230,51 @@ pipeline {
         }
 
         always {
-            // 無論成功與否，確保清理 Jenkins workspace
-            //cleanWS()
-            // Clean after build
-            // 清理工作區設置
-            cleanWs(
-                // 如果構建未完成也進行清理
-                cleanWhenNotBuilt: false,
-                
-                // 刪除目錄
-                deleteDirs: true,
-                
-                // 禁用延遲清除
-                disableDeferredWipeout: true,
-                
-                // 失敗時不會使構建失敗
-                notFailBuild: true,
-                
-                // 包含與排除的檔案模式
-                patterns: [
-                    // 包含 .gitignore 檔案
-                    [pattern: '.gitignore', type: 'INCLUDE'],
-                    
-                    // 排除 .propsfile 檔案
-                    [pattern: '.propsfile', type: 'EXCLUDE']
-                ]
-            )
+            script {
+                // 無論成功與否，確保清理 Jenkins workspace
+                //cleanWS()
+                // Clean after build
+                // 清理工作區設置
+                cleanWs(
+                    // 如果構建未完成也進行清理
+                    cleanWhenNotBuilt: false,
+                    // 刪除目錄
+                    deleteDirs: true,
+                    // 禁用延遲清除
+                    disableDeferredWipeout: true,
+                    // 失敗時不會使構建失敗
+                    notFailBuild: true,
+                    // 包含與排除的檔案模式
+                    patterns: [
+                        // 包含 .gitignore 檔案
+                        [pattern: '.gitignore', type: 'INCLUDE'],
+                        // 排除 .propsfile 檔案
+                        [pattern: '.propsfile', type: 'EXCLUDE']
+                    ]
+                )
 
-            sh '''
-                # 清除所有未使用的 build cache
-                docker builder prune -f
-                # 刪除未使用的容器
-                docker container prune -f
-                # 刪除所有未使用的映像
-                # docker image prune -a -f
-                # 刪除所有未使用的 docker 磁碟機
-                # docker volume prune -f
-            '''
+                // 檢查 Terraform 是否被鎖定，並解除鎖定
+                def lockFile = 'terraform.tfstate.lock.info'
+                if (fileExists(lockFile)) {
+                    echo 'Terraform state is locked, attempting to unlock...'
+                    // 用 force-unlock 解鎖
+                    def lockId = readFile(lockFile).trim() // 讀取鎖定 ID
+                    sh "terraform force-unlock ${lockId}"
+                } else {
+                    echo 'No lock found, proceeding normally.'
+                }
+
+                sh '''
+                    # 清除所有未使用的 build cache
+                    docker builder prune -f
+                    # 刪除未使用的容器
+                    docker container prune -f
+                    # 刪除所有未使用的映像
+                    # docker image prune -a -f
+                    # 刪除所有未使用的 docker 磁碟機
+                    # docker volume prune -f
+                '''
+            }
         }
     }
 }
