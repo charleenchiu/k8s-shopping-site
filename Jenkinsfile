@@ -26,7 +26,7 @@ pipeline {
             }
         }
 
-        stage('Terraform Init & Apply') {
+        stage('Terraform Init') {
             steps {
                 script {
                     // 初始化與應用 Terraform
@@ -35,35 +35,32 @@ pipeline {
                         terraform init
                         terraform apply -auto-approve
                     '''
-
+                }
+            }
+        }
+        stage('Get Outputs') {
+            steps {
+                script {
                     // 執行 Terraform 輸出命令並獲取結果
-                    def outputs = sh(script: '''
-                        cd terraform
-                        terraform output -raw site_ecr_repo
-                        terraform output -raw user_service_ecr_repo
-                        terraform output -raw product_service_ecr_repo
-                        terraform output -raw order_service_ecr_repo
-                        terraform output -raw payment_service_ecr_repo
-                        terraform output -raw eks_cluster_arn
-                        terraform output -raw eks_cluster_url
-                        terraform output -raw cloudwatch_log_group_name
-                        terraform output -raw kubeconfig_certificate_authority_data
-                    ''', returnStdout: true).trim()
+                    def outputs = sh(script: 'terraform output -json', returnStdout: true).trim()
+                    def json = readJSON(text: outputs)
 
-                    // 拆分結果並設定環境變數
-                    def outputList = outputs.split('\r?\n').collect { it.trim() }
-                    env.SITE_ECR_REPO = outputList[0]
-                    env.USER_SERVICE_ECR_REPO = outputList[1]
-                    env.PRODUCT_SERVICE_ECR_REPO = outputList[2]
-                    env.ORDER_SERVICE_ECR_REPO = outputList[3]
-                    env.PAYMENT_SERVICE_ECR_REPO = outputList[4]
-                    env.EKS_CLUSTER_ARN = outputList[5]
-                    env.EKS_CLUSTER_URL = outputList[6]
-                    env.LOG_GROUP_NAME = outputList[7]
-                    env.KUBECONFIG_CERTIFICATE_AUTHORITY_DATA = outputList[8]
-
+                    // 設定環境變數
+                    env.SITE_ECR_REPO = json.site_ecr_repo.value
+                    env.USER_SERVICE_ECR_REPO = json.user_service_ecr_repo.value
+                    env.PRODUCT_SERVICE_ECR_REPO = json.product_service_ecr_repo.value
+                    env.ORDER_SERVICE_ECR_REPO = json.order_service_ecr_repo.value
+                    env.PAYMENT_SERVICE_ECR_REPO = json.payment_service_ecr_repo.value
+                    env.EKS_CLUSTER_ARN = json.eks_cluster_arn.value
+                    env.EKS_CLUSTER_URL = json.eks_cluster_url.value
+                    env.LOG_GROUP_NAME = json.log_group_name.value
+                }
+            }
+        }
+        stage('Verify Outputs') {
+            steps {
+                script {
                     // 驗證輸出的變數
-                    sh """
                     echo "Verify All Terraform Outputs: ${outputs}"
                     echo "SITE_ECR_REPO: ${env.SITE_ECR_REPO}"
                     echo "USER_SERVICE_ECR_REPO: ${env.USER_SERVICE_ECR_REPO}"
@@ -73,7 +70,6 @@ pipeline {
                     echo "EKS_CLUSTER_ARN: ${env.EKS_CLUSTER_ARN}"
                     echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
                     echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
-                    """
                 }
             }
         }
