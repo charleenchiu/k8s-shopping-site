@@ -210,6 +210,7 @@ pipeline {
     }
 
     post {
+        /*
         failure {
             // 如果過程失敗，清除 terraform 建的資源
             sh '''
@@ -219,6 +220,7 @@ pipeline {
                 rm -rf terraform.tfstate*
             '''
         }
+        */
 
         always {
             // 無論成功與否，確保清理 Jenkins workspace
