@@ -64,7 +64,7 @@ pipeline {
 
                     /*
                     // 驗證輸出的變數
-                    sh '''
+                    sh """
                     echo "SITE_ECR_REPO: ${env.SITE_ECR_REPO}"
                     echo "USER_SERVICE_ECR_REPO: ${env.USER_SERVICE_ECR_REPO}"
                     echo "PRODUCT_SERVICE_ECR_REPO: ${env.PRODUCT_SERVICE_ECR_REPO}"
@@ -73,7 +73,7 @@ pipeline {
                     echo "EKS_CLUSTER_ARN: ${env.EKS_CLUSTER_ARN}"
                     echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
                     echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
-                    '''
+                    """
                     */
                 }
             }
@@ -95,13 +95,13 @@ pipeline {
             steps {
                 script {
                     // 使用 Dockerfile 建構 Image
-                    sh '''
+                    sh """
                     docker build -t ${env.SITE_ECR_REPO}:${env.IMAGE_TAG} .
                     docker build -t ${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} .
                     docker build -t ${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} .
                     docker build -t ${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} .
                     docker build -t ${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} .
-                    '''
+                    """
                 }
             }
         }
@@ -109,7 +109,7 @@ pipeline {
         stage('Login to ECR & Push Image') {
             steps {
                 script {
-                    sh '''
+                    sh """
                     try {
                         # 透過 AWS CLI 登入 ECR
                         aws ecr get-login-password --region ${env.AWS_REGION} | docker login --username AWS --password-stdin ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com
@@ -132,7 +132,7 @@ pipeline {
                     } catch (Exception e) {
                         error "Failed to login or push to ECR: ${e}"
                     }
-                    '''
+                    """
                 }
             }
         }
@@ -173,11 +173,11 @@ pipeline {
             steps {
                 script {
                     // 安裝 aws-for-fluent-bit Helm Chart
-                    sh '''
+                    sh """
                         helm repo add fluent https://fluent.github.io/helm-charts
                         helm repo update
                         helm install aws-for-fluent-bit fluent/fluent-bit --set awsRegion=${env.AWS_REGION} --set cloudWatch.logGroupName=${env.LOG_GROUP_NAME}
-                    '''
+                    """
                 }
             }
         }
