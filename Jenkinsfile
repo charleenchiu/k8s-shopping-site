@@ -26,6 +26,7 @@ pipeline {
             }
         }
 
+        stage('Terraform Init & Apply') {
             steps {
                 script {
                     // 初始化與應用 Terraform
