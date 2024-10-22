@@ -224,7 +224,15 @@ pipeline {
 
         always {
             // 無論成功與否，確保清理 Jenkins workspace
-            cleanWS()
+            //cleanWS()
+            // Clean after build
+            cleanWs(cleanWhenNotBuilt: false,
+                    deleteDirs: true,
+                    disableDeferredWipeout: true,
+                    notFailBuild: true,
+                    patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
+                               [pattern: '.propsfile', type: 'EXCLUDE']])
+
             sh '''
                 # 清除所有未使用的 build cache
                 docker builder prune -f
