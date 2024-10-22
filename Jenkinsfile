@@ -110,28 +110,26 @@ pipeline {
             steps {
                 script {
                     sh """
-                    try {
-                        # 透過 AWS CLI 登入 ECR
-                        aws ecr get-login-password --region ${env.AWS_REGION} | docker login --username AWS --password-stdin ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com
+                    set -e  # 開啟 Shell 的錯誤模式，若有錯誤則停止執行
 
-                        # Push Image 到 ECR
-                        docker tag ${env.SITE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.SITE_ECR_REPO}:${env.IMAGE_TAG}
-                        docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.SITE_ECR_REPO}:${env.IMAGE_TAG}
+                    # 透過 AWS CLI 登入 ECR
+                    aws ecr get-login-password --region ${env.AWS_REGION} | docker login --username AWS --password-stdin ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com
 
-                        docker tag ${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
-                        docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
+                    # Push Image 到 ECR
+                    docker tag ${env.SITE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.SITE_ECR_REPO}:${env.IMAGE_TAG}
+                    docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.SITE_ECR_REPO}:${env.IMAGE_TAG}
 
-                        docker tag ${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
-                        docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
+                    docker tag ${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
+                    docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
 
-                        docker tag ${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
-                        docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
+                    docker tag ${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
+                    docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
 
-                        docker tag ${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
-                        docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
-                    } catch (Exception e) {
-                        error "Failed to login or push to ECR: ${e}"
-                    }
+                    docker tag ${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
+                    docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
+
+                    docker tag ${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
+                    docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
                     """
                 }
             }
@@ -176,7 +174,9 @@ pipeline {
                     sh """
                         helm repo add fluent https://fluent.github.io/helm-charts
                         helm repo update
-                        helm install aws-for-fluent-bit fluent/fluent-bit --set awsRegion=${env.AWS_REGION} --set cloudWatch.logGroupName=${env.LOG_GROUP_NAME}
+                        helm install aws-for-fluent-bit fluent/fluent-bit \
+                        --set awsRegion=${env.AWS_REGION} \
+                        --set cloudWatch.logGroupName=${env.LOG_GROUP_NAME}
                     """
                 }
             }
@@ -187,33 +187,32 @@ pipeline {
                 script {
                     // 建立 Docker images 的設定，使用參數命名方式
                     def images = """
-                        services.user-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.USER_SERVICE_ECR_REPO},
-                        services.user-service.image.tag=${env.IMAGE_TAG},
-                        services.product-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PRODUCT_SERVICE_ECR_REPO},
-                        services.product-service.image.tag=${env.IMAGE_TAG},
-                        services.order-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ORDER_SERVICE_ECR_REPO},
-                        services.order-service.image.tag=${env.IMAGE_TAG},
-                        services.payment-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PAYMENT_SERVICE_ECR_REPO},
-                        services.payment-service.image.tag=${env.IMAGE_TAG},
-                        services.site-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.SITE_ECR_REPO},
-                        services.site-service.image.tag=${env.IMAGE_TAG}
+                        --set services.user-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.USER_SERVICE_ECR_REPO} \
+                        --set services.user-service.image.tag=${env.IMAGE_TAG} \
+                        --set services.product-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PRODUCT_SERVICE_ECR_REPO} \
+                        --set services.product-service.image.tag=${env.IMAGE_TAG} \
+                        --set services.order-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ORDER_SERVICE_ECR_REPO} \
+                        --set services.order-service.image.tag=${env.IMAGE_TAG} \
+                        --set services.payment-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PAYMENT_SERVICE_ECR_REPO} \
+                        --set services.payment-service.image.tag=${env.IMAGE_TAG} \
+                        --set services.site-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.SITE_ECR_REPO} \
+                        --set services.site-service.image.tag=${env.IMAGE_TAG}
                     """
 
                     // 使用 helm 指令，使用參數命名方式動態傳遞 awsRegion 和 awsLogsGroup
                     sh """
                         helm upgrade --install k8s-site ./k8s-chart \
-                        --set awsRegion=${env.AWS_REGION}, \
-                        --set services.user-service.awsLogsGroup=${env.LOG_GROUP_NAME}, \
-                        --set services.product-service.awsLogsGroup=${env.LOG_GROUP_NAME}, \
-                        --set services.order-service.awsLogsGroup=${env.LOG_GROUP_NAME}, \
-                        --set services.payment-service.awsLogsGroup=${env.LOG_GROUP_NAME}, \
-                        --set services.site-service.awsLogsGroup=${env.LOG_GROUP_NAME}, \
+                        --set awsRegion=${env.AWS_REGION} \
+                        --set services.user-service.awsLogsGroup=${env.LOG_GROUP_NAME} \
+                        --set services.product-service.awsLogsGroup=${env.LOG_GROUP_NAME} \
+                        --set services.order-service.awsLogsGroup=${env.LOG_GROUP_NAME} \
+                        --set services.payment-service.awsLogsGroup=${env.LOG_GROUP_NAME} \
+                        --set services.site-service.awsLogsGroup=${env.LOG_GROUP_NAME} \
                         ${images}
                     """
                 }
             }
         }
-    }
 
     post {
         failure {
