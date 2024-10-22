@@ -64,14 +64,14 @@ pipeline {
 
                     // 驗證輸出的變數
                     sh '''
-                    echo ${env.SITE_ECR_REPO}
-                    echo ${env.USER_SERVICE_ECR_REPO}
-                    echo ${env.PRODUCT_SERVICE_ECR_REPO}
-                    echo ${env.ORDER_SERVICE_ECR_REPO}
-                    echo ${env.PAYMENT_SERVICE_ECR_REPO}
-                    echo ${env.EKS_CLUSTER_ARN}
-                    echo ${env.EKS_CLUSTER_URL}
-                    echo ${env.LOG_GROUP_NAME}
+                    echo "SITE_ECR_REPO: ${env.SITE_ECR_REPO}"
+                    echo "USER_SERVICE_ECR_REPO: ${env.USER_SERVICE_ECR_REPO}"
+                    echo "PRODUCT_SERVICE_ECR_REPO: ${env.PRODUCT_SERVICE_ECR_REPO}"
+                    echo "ORDER_SERVICE_ECR_REPO: ${env.ORDER_SERVICE_ECR_REPO}"
+                    echo "PAYMENT_SERVICE_ECR_REPO: ${env.PAYMENT_SERVICE_ECR_REPO}"
+                    echo "EKS_CLUSTER_ARN: ${env.EKS_CLUSTER_ARN}"
+                    echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
+                    echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
                     '''
                 }
             }
