@@ -439,7 +439,7 @@ user-service:
      retention_in_days = 7
    }
 
-   output "cloudwatch_log_group_name" {
+   output "log_group_name" {
      value = aws_cloudwatch_log_group.k8s_log_group.name
    }
    ```
@@ -467,7 +467,7 @@ user-service:
            stage('Get Log Group Name') {
                steps {
                    script {
-                       def logGroupName = sh(script: 'terraform output -raw cloudwatch_log_group_name', returnStdout: true).trim()
+                       def logGroupName = sh(script: 'terraform output -raw log_group_name', returnStdout: true).trim()
                        env.LOG_GROUP_NAME = logGroupName
                    }
                }

@@ -34,7 +34,7 @@ output "eks_cluster_url" {
 }
 
 # 輸出 CloudWatch aws_cloudwatch_log_group的資訊
-output "cloudwatch_log_group_name" {
+output "log_group_name" {
   value = aws_cloudwatch_log_group.k8s-shopping-site_log_group.name  # 取得 aws_cloudwatch_log_group的Name
 }
 

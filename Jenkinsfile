@@ -4,8 +4,10 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-        AWS_REGION = 'us-east-1'    // AWS 區域
         AWS_ACCOUNT_ID = '167804136284' // AWS 帳戶 ID
+        IMAGE_TAG = 'latest' // Docker Image Tag
+        AWS_REGION = 'us-east-1'    // AWS 區域
+        /*
         SITE_ECR_REPO = ''   // ECR Repository 名稱（將在 Terraform 階段後更新）
         USER_SERVICE_ECR_REPO = ''  // User Service 的 ECR Repository
         PRODUCT_SERVICE_ECR_REPO = '' // Product Service 的 ECR Repository
@@ -14,8 +16,8 @@ pipeline {
         EKS_CLUSTER_ARN = '' // EKS Cluster ARN（將在 Terraform 階段後更新）
         EKS_CLUSTER_URL = '' // EKS Cluster URL（將在 Terraform 階段後更新）
         KUBECONFIG_CERTIFICATE_AUTHORITY_DATA = '' // Kubernetes 憑證授權中心的資料
-        IMAGE_TAG = 'latest' // Docker Image Tag
         LOG_GROUP_NAME = ''   // CloudWatch Log Group 名稱（將在 Terraform 階段後更新）
+        */
     }
 
     stages {
@@ -52,12 +54,12 @@ pipeline {
                     echo "formattedOutputs_2: ${formattedOutputs_2}"
 
                     // 提取 CloudWatch Log Group 名稱
-                    def logGroupName = (outputs =~ /cloudwatch_log_group_name\s+=\s+(\S+)/)[0][1]
+                    def logGroupName = (outputs =~ /LOG_GROUP_NAME\s+=\s+(\S+)/)[0][1]
                     echo "logGroupName: ${logGroupName}"
 
                     // 設定環境變數
-                    env.CLOUDWATCH_LOG_GROUP_NAME = logGroupName
-                    */
+                    env.LOG_GROUP_NAME = logGroupName
+                    */                    
                 }
             }
         }
@@ -69,37 +71,18 @@ pipeline {
                     def outputs = sh(script: 'cd terraform && terraform refresh && terraform output', returnStdout: true).trim()
                     echo "outputs: ${outputs}"
 
-                    def user_service_ecr_repo_Reg = (outputs =~ /user_service_ecr_repo\s+=\s+(\S+)/)[0][1]
-                    echo "user_service_ecr_repo_Reg: ${user_service_ecr_repo}"
-
-                    def outputList = outputs.split('\n')
-                    def user_service_ecr_repo_n = outputList[1].trim()
-                    echo "user_service_ecr_repo_n: ${user_service_ecr_repo_n}"
-
-                    // 使用正規表達式來提取各個輸出值
-                    env.LOG_GROUP_NAME = (outputs =~ /cloudwatch_log_group_name\s+=\s+(\S+)/)[0][1]
-                    env.EKS_CLUSTER_ARN = (outputs =~ /eks_cluster_arn\s+=\s+(\S+)/)[0][1]
-                    env.EKS_CLUSTER_URL = (outputs =~ /eks_cluster_url\s+=\s+(\S+)/)[0][1]
-                    env.SITE_ECR_REPO = (outputs =~ /site_ecr_repo\s+=\s+(\S+)/)[0][1]
-                    env.USER_SERVICE_ECR_REPO = (outputs =~ /user_service_ecr_repo\s+=\s+(\S+)/)[0][1]
-                    env.PRODUCT_SERVICE_ECR_REPO = (outputs =~ /product_service_ecr_repo\s+=\s+(\S+)/)[0][1]
-                    env.ORDER_SERVICE_ECR_REPO = (outputs =~ /order_service_ecr_repo\s+=\s+(\S+)/)[0][1]
-                    env.PAYMENT_SERVICE_ECR_REPO = (outputs =~ /payment_service_ecr_repo\s+=\s+(\S+)/)[0][1]
-
-                    /*
                     // 將結果拆分為各自的變數
-                    //def outputList = outputs.split('\n')
-                    def outputList = outputs.split('\r?\n').collect { it.trim() }
-                    env.SITE_ECR_REPO = outputList[0].trim()
-                    env.USER_SERVICE_ECR_REPO = outputList[1].trim()
-                    env.PRODUCT_SERVICE_ECR_REPO = outputList[2].trim()
-                    env.ORDER_SERVICE_ECR_REPO = outputList[3].trim()
-                    env.PAYMENT_SERVICE_ECR_REPO = outputList[4].trim()
-                    env.EKS_CLUSTER_ARN = outputList[5].trim()
-                    env.EKS_CLUSTER_URL = outputList[6].trim()
-                    env.LOG_GROUP_NAME = outputList[7].trim()
-                    env.KUBECONFIG_CERTIFICATE_AUTHORITY_DATA = outputList[8].trim()
-                    */
+                    def outputList = outputs.split('\n').collect { it.trim() }
+                    env.SITE_ECR_REPO = outputList.find { it.contains("site_ecr_repo") }?.split('=')[1]?.trim()
+                    env.USER_SERVICE_ECR_REPO = outputList.find { it.contains("user_service_ecr_repo") }?.split('=')[1]?.trim()
+                    env.PRODUCT_SERVICE_ECR_REPO = outputList.find { it.contains("product_service_ecr_repo") }?.split('=')[1]?.trim()
+                    env.ORDER_SERVICE_ECR_REPO = outputList.find { it.contains("order_service_ecr_repo") }?.split('=')[1]?.trim()
+                    env.PAYMENT_SERVICE_ECR_REPO = outputList.find { it.contains("payment_service_ecr_repo") }?.split('=')[1]?.trim()
+                    env.LOG_GROUP_NAME = outputList.find { it.contains("log_group_name") }?.split('=')[1]?.trim()
+                    env.EKS_CLUSTER_ARN = outputList.find { it.contains("eks_cluster_arn") }?.split('=')[1]?.trim()
+                    env.EKS_CLUSTER_URL = outputList.find { it.contains("eks_cluster_url") }?.split('=')[1]?.trim()
+                    env.KUBECONFIG_CERTIFICATE_AUTHORITY_DATA = outputList.find { it.contains("kubeconfig_certificate_authority_data") }?.split('=')[1]?.trim()
+                    
 
                     /*
                     // 提取各個輸出值，設定環境變數
@@ -110,7 +93,7 @@ pipeline {
                     env.PAYMENT_SERVICE_ECR_REPO = sh(script: 'cd terraform && terraform output payment_service_ecr_repo', returnStdout: true).trim()
                     env.EKS_CLUSTER_ARN = sh(script: 'cd terraform && terraform output eks_cluster_arn', returnStdout: true).trim()
                     env.EKS_CLUSTER_URL = sh(script: 'cd terraform && terraform output eks_cluster_url', returnStdout: true).trim()
-                    env.CLOUDWATCH_LOG_GROUP_NAME = sh(script: 'cd terraform && terraform output cloudwatch_log_group_name', returnStdout: true).trim()
+                    env.LOG_GROUP_NAME = sh(script: 'cd terraform && terraform output log_group_name', returnStdout: true).trim()
                     */
                 }
             }
@@ -131,7 +114,7 @@ pipeline {
                     echo "PAYMENT_SERVICE_ECR_REPO: ${env.PAYMENT_SERVICE_ECR_REPO}"
                     echo "EKS_CLUSTER_ARN: ${env.EKS_CLUSTER_ARN}"
                     echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
-                    echo "CLOUDWATCH_LOG_GROUP_NAME: ${env.CLOUDWATCH_LOG_GROUP_NAME}"
+                    echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
                 }
             }
         }
@@ -322,7 +305,7 @@ pipeline {
                     echo 'No lock found, proceeding normally.'
                 }
                 */
-                
+
                 sh '''
                     # 清除所有未使用的 build cache
                     docker builder prune -f

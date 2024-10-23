@@ -1,0 +1,186 @@
+Started by user admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/TerraformOutputSplit
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Get Outputs By Regex)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+TERRAFORM_OUTPUTS: 
+log_group_name = "/eks/k8s-shopping-site_task"
+eks_cluster_arn = "arn:aws:eks:us-east-1:167804136284:cluster/k8s-shopping-site_cluster"
+eks_cluster_url = "https://48374570160E00AAD1ABCC2641A93BA8.gr7.us-east-1.eks.amazonaws.com"
+kubeconfig_certificate_authority_data = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURCVENDQWUyZ0F3SUJBZ0lJR1lJWks3TlpjNVV3RFFZSktvWklodmNOQVFFTEJRQXdGVEVUTUJFR0ExVUUKQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB5TkRFd01qTXdOVFUzTlRaYUZ3MHpOREV3TWpFd05qQXlOVFphTUJVeApFekFSQmdOVkJBTVRDbXQxWW1WeWJtVjBaWE13Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLCkFvSUJBUURqOHJuaVZZMkpUREIxUzdBWURZNnZRb0hNVHJ5cXZ3RCt5UjJiUlg3VGZFem1RbEltZmYyU0hmYWEKMHdoaFZyNmJYRGVBdDhvbS9YUzdxYUcwQVh4MlVTRi9qWlYxWWN4bDNQOG1acnU5WW5BOFk5WGg3cHZhcVhoTApwaFV0cnpQazVRT2FTT1YwR0RQbFhjSm1vdkt6blJGclUxb0t4SnJmbDBWcXhhMy9qdDRIZWpXd09LRGc3QjhGCklaMWxrZndhZVQ5VEU0a3lkcnVvTkQzSFUyOUVzaTRHTmlreGhpYXF0VitURE45dnJxS1pVT2pvUFNGY2VFM0cKMDJmUFpKR255aFFFK3B3YncwTXpTUmRDVEhVU2c2SUQvdHlNRzEzakhYNldrcW5CL2FGcnNVQUoreWFZUVBkTQpjQnJKVWdmNW9EWHlTbUp0QTRyQkR0TERiK2ExQWdNQkFBR2pXVEJYTUE0R0ExVWREd0VCL3dRRUF3SUNwREFQCkJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXQkJUYUgxWFREdlpNTFhQWHNMRk80UUdVdlVpTDZ6QVYKQmdOVkhSRUVEakFNZ2dwcmRXSmxjbTVsZEdWek1BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQ2JPWm5peUk0agpqSHNQRmlzNTFFT2JQa2NNd0xWR2o3RW9tNk54c1ZWdmdLSDhWV1QrdldJME0zcFZtekYyUStFbjhKaWFhdEh0CjM1dGk2d3RtV21UK0tOOE9XUHdyMHpWV2M2YlhzYzFraU4wVVNjSW5rZkFIRXRzd2hROFNtZ1JMMTFyWlBMRmkKUFZLcG5ydG1yM1F0Vm1idTJoVnFYZzcwbjdkYWpjcmw5b0ZscnZPekRyd1lHR3VGSjY5dzFHNHhIM0FVbU9jawo0Zi9YazYwSERPd1JMRzNJN2hWMzBOQkFwSm1qci96b3JMVG0vOXV0cW9yYWU1UmY3c3NhOEhrV3Z4N2NJM0dQCklJTzNtSm9FaXRhK293N2NJM00yME1EOWYrc3NFeFA0NE5ZVjhqWldOTW1UWGlpcHBkTkRLQk9SaDJuaEJIOS8KSHlOd1JPaGJTNGJtCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K"
+order_service_ecr_repo = "public.ecr.aws/j5a0e3h8/k8s-shopping-site/order_service"
+payment_service_ecr_repo = "public.ecr.aws/j5a0e3h8/k8s-shopping-site/payment_service"
+product_service_ecr_repo = "public.ecr.aws/j5a0e3h8/k8s-shopping-site/product_service"
+site_ecr_repo = "public.ecr.aws/j5a0e3h8/k8s-shopping-site"
+user_service_ecr_repo = "public.ecr.aws/j5a0e3h8/k8s-shopping-site/user_service"
+        
+[Pipeline] echo
+=====用正則表達式===============================================================
+[Pipeline] echo
+SITE_ECR_REPO: null
+[Pipeline] echo
+USER_SERVICE_ECR_REPO: null
+[Pipeline] echo
+PRODUCT_SERVICE_ECR_REPO: null
+[Pipeline] echo
+ORDER_SERVICE_ECR_REPO: null
+[Pipeline] echo
+PAYMENT_SERVICE_ECR_REPO: null
+[Pipeline] echo
+EKS_CLUSTER_ARN: null
+[Pipeline] echo
+EKS_CLUSTER_URL: null
+[Pipeline] echo
+LOG_GROUP_NAME: null
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Get Outputs By Split)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+TERRAFORM_OUTPUTS: 
+log_group_name = "/eks/k8s-shopping-site_task"
+eks_cluster_arn = "arn:aws:eks:us-east-1:167804136284:cluster/k8s-shopping-site_cluster"
+eks_cluster_url = "https://48374570160E00AAD1ABCC2641A93BA8.gr7.us-east-1.eks.amazonaws.com"
+kubeconfig_certificate_authority_data = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURCVENDQWUyZ0F3SUJBZ0lJR1lJWks3TlpjNVV3RFFZSktvWklodmNOQVFFTEJRQXdGVEVUTUJFR0ExVUUKQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB5TkRFd01qTXdOVFUzTlRaYUZ3MHpOREV3TWpFd05qQXlOVFphTUJVeApFekFSQmdOVkJBTVRDbXQxWW1WeWJtVjBaWE13Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLCkFvSUJBUURqOHJuaVZZMkpUREIxUzdBWURZNnZRb0hNVHJ5cXZ3RCt5UjJiUlg3VGZFem1RbEltZmYyU0hmYWEKMHdoaFZyNmJYRGVBdDhvbS9YUzdxYUcwQVh4MlVTRi9qWlYxWWN4bDNQOG1acnU5WW5BOFk5WGg3cHZhcVhoTApwaFV0cnpQazVRT2FTT1YwR0RQbFhjSm1vdkt6blJGclUxb0t4SnJmbDBWcXhhMy9qdDRIZWpXd09LRGc3QjhGCklaMWxrZndhZVQ5VEU0a3lkcnVvTkQzSFUyOUVzaTRHTmlreGhpYXF0VitURE45dnJxS1pVT2pvUFNGY2VFM0cKMDJmUFpKR255aFFFK3B3YncwTXpTUmRDVEhVU2c2SUQvdHlNRzEzakhYNldrcW5CL2FGcnNVQUoreWFZUVBkTQpjQnJKVWdmNW9EWHlTbUp0QTRyQkR0TERiK2ExQWdNQkFBR2pXVEJYTUE0R0ExVWREd0VCL3dRRUF3SUNwREFQCkJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXQkJUYUgxWFREdlpNTFhQWHNMRk80UUdVdlVpTDZ6QVYKQmdOVkhSRUVEakFNZ2dwcmRXSmxjbTVsZEdWek1BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQ2JPWm5peUk0agpqSHNQRmlzNTFFT2JQa2NNd0xWR2o3RW9tNk54c1ZWdmdLSDhWV1QrdldJME0zcFZtekYyUStFbjhKaWFhdEh0CjM1dGk2d3RtV21UK0tOOE9XUHdyMHpWV2M2YlhzYzFraU4wVVNjSW5rZkFIRXRzd2hROFNtZ1JMMTFyWlBMRmkKUFZLcG5ydG1yM1F0Vm1idTJoVnFYZzcwbjdkYWpjcmw5b0ZscnZPekRyd1lHR3VGSjY5dzFHNHhIM0FVbU9jawo0Zi9YazYwSERPd1JMRzNJN2hWMzBOQkFwSm1qci96b3JMVG0vOXV0cW9yYWU1UmY3c3NhOEhrV3Z4N2NJM0dQCklJTzNtSm9FaXRhK293N2NJM00yME1EOWYrc3NFeFA0NE5ZVjhqWldOTW1UWGlpcHBkTkRLQk9SaDJuaEJIOS8KSHlOd1JPaGJTNGJtCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K"
+order_service_ecr_repo = "public.ecr.aws/j5a0e3h8/k8s-shopping-site/order_service"
+payment_service_ecr_repo = "public.ecr.aws/j5a0e3h8/k8s-shopping-site/payment_service"
+product_service_ecr_repo = "public.ecr.aws/j5a0e3h8/k8s-shopping-site/product_service"
+site_ecr_repo = "public.ecr.aws/j5a0e3h8/k8s-shopping-site"
+user_service_ecr_repo = "public.ecr.aws/j5a0e3h8/k8s-shopping-site/user_service"
+        
+[Pipeline] echo
+=====用換行符號分割===============================================================
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] }
+[Pipeline] // script
+Error when executing always post condition:
+Also:   org.jenkinsci.plugins.workflow.actions.ErrorAction$ErrorId: b2866829-e7e3-4b88-8cf8-9e4cff4a5468
+java.lang.NoSuchMethodError: No such DSL method 'cleanWS' found among steps [ansibleAdhoc, ansiblePlaybook, ansibleVault, archive, bat, build, catchError, checkout, deleteDir, dir, dockerFingerprintFrom, dockerFingerprintRun, dockerNode, echo, emailext, emailextrecipients, envVarsForTool, error, fileExists, findBuildScans, getContext, git, input, isUnix, junit, library, libraryResource, load, mail, milestone, nexusArtifactUploader, node, parallel, powershell, properties, publishChecks, pwd, pwsh, readFile, readTrusted, resolveScm, retry, script, sh, sleep, stage, stash, step, timeout, timestamps, tm, tool, unarchive, unstable, unstash, validateDeclarativePipeline, waitForBuild, waitForQualityGate, waitUntil, warnError, withChecks, withContext, withCredentials, withDockerContainer, withDockerRegistry, withDockerServer, withEnv, withGradle, withMaven, wrap, writeFile, ws] or symbols [GitUsernamePassword, agent, all, allBranchesSame, allOf, always, ansible, any, anyOf, apiToken, apiTokenProperty, architecture, archiveArtifacts, artifactManager, artifactsPublisher, assembla, attach, authorInChangelog, authorizationMatrix, batchFile, bitbucket, bitbucketServer, booleanParam, branch, brokenBuildSuspects, brokenTestsSuspects, browser, buildButton, buildDiscarder, buildDiscarders, buildRetention, buildSingleRevisionOnly, buildTimestamp, buildTimestampExtraProperties, buildUser, buildingTag, builtInNode, caseInsensitive, caseSensitive, certificate, cgit, changeRequest, changelog, changelogBase, changelogToBranch, changeset, checkoutOption, checkoutToSubdirectory, choice, choiceParam, cleanAfterCheckout, cleanBeforeCheckout, cleanWs, clock, cloneOption, command, concordionPublisher, configFile, configFileProvider, consoleUrlProvider, contributor, cps, credentials, cron, crumb, culprits, dark, darkSystem, default, defaultDisplayUrlProvider, defaultFolderConfiguration, defaultView, demand, dependenciesFingerprintPublisher, developers, disableConcurrentBuilds, disableRestartFromStage, disableResume, discoverOtherRefs, discoverOtherRefsTrait, diskSpace, diskSpaceMonitor, docker, dockerCert, dockerContainer, dockerServer, dockerTool, dockerfile, downstream, dumb, durabilityHint, email-ext, envVars, envVarsFilter, environment, equals, executor, experimentalFlags, expression, extendedEmailPublisher, file, fileParam, filePath, findbugsPublisher, fingerprint, fingerprints, firstBuildChangelog, fisheye, folderConfigFiles, frameOptions, freeStyle, freeStyleJob, fromDocker, fromScm, fromSource, git, gitBranchDiscovery, gitHooks, gitHubBranchDiscovery, gitHubBranchHeadAuthority, gitHubExcludeArchivedRepositories, gitHubExcludeForkedRepositories, gitHubExcludePrivateRepositories, gitHubExcludePublicRepositories, gitHubForkDiscovery, gitHubIgnoreDraftPullRequestFilter, gitHubPullRequestDiscovery, gitHubSshCheckout, gitHubTagDiscovery, gitHubTopicsFilter, gitHubTrustContributors, gitHubTrustEveryone, gitHubTrustNobody, gitHubTrustPermissions, gitLab, gitList, gitSCM, gitTagDiscovery, gitTool, gitUsernamePassword, gitWeb, gitblit, github, githubProjectProperty, githubPush, gitiles, globalConfigFiles, gogs, gradle, group, headRegexFilter, headWildcardFilter, hyperlink, hyperlinkToModels, ignoreOnPush, inbound, inheriting, inheritingGlobal, installSource, invokerPublisher, isRestartedRun, jacocoPublisher, jdk, jdkInstaller, jgit, jgitapache, jgivenPublisher, jnlp, jobBuildDiscarder, jobName, junitPublisher, junitTestResultStorage, kiln, label, lastDuration, lastFailure, lastGrantedAuthorities, lastStable, lastSuccess, legacy, legacySCM, lfs, list, local, localBranch, localBranchTrait, location, logRotator, loggedInUsersCanDoAnything, mailer, masterBuild, maven, maven3Mojos, mavenErrors, mavenGlobalConfig, mavenLinkerPublisher, mavenMojos, mavenWarnings, modernSCM, multiBranchProjectDisplayNaming, multibranch, myView, namedBranchesDifferent, newContainerPerStage, node, nodeProperties, nodejs, nodejsci, nonInheriting, none, nonresumable, not, openTasksPublisher, organizationFolder, overrideIndexTriggers, paneStatus, parallelsAlwaysFailFast, parameters, password, pattern, perBuildTag, permanent, phabricator, pipeline, pipeline-model, pipeline-model-docker, pipelineGraphPublisher, pipelineGraphView, pipelineMaven, pipelineTriggers, plainText, plugin, pollSCM, preserveStashes, previous, projectNamingStrategy, proxy, pruneStaleBranch, pruneStaleTag, pruneTags, queueItemAuthenticator, quietPeriod, rateLimit, rateLimitBuilds, recipients, redmine, refSpecs, remoteName, requestor, resourceRoot, responseTime, retainOnlyVariables, rhodeCode, run, runParam, sSHLauncher, schedule, scmGit, scmRetryCount, scriptApproval, scriptApprovalLink, search, security, shell, simpleBuildDiscarder, skipDefaultCheckout, skipStagesAfterUnstable, slave, snapshotDependencies, sourceRegexFilter, sourceWildcardFilter, sparseCheckout, sparseCheckoutPaths, spotbugsPublisher, ssh, sshPublicKey, sshUserPrivateKey, standard, status, string, stringParam, submodule, submoduleOption, suppressAutomaticTriggering, suppressFolderAutomaticTriggering, swapSpace, tag, teamFoundation, teamSlugFilter, terraform, text, textParam, themeManager, timestamper, timestamperConfig, timezone, tmpSpace, toolLocation, triggeredBy, unsecured, untrusted, upstream, upstreamDevelopers, user, userIdentity, userOrGroup, userSeed, usernameColonPassword, usernamePassword, viewgit, viewsTabBar, weather, withSonarQubeEnv, workspace, x509ClientCert, zip] or globals [currentBuild, docker, env, params, pipeline, scm]
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.DSL.invokeMethod(DSL.java:219)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsScript.invokeMethod(CpsScript.java:124)
+	at jdk.internal.reflect.GeneratedMethodAccessor322.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.codehaus.groovy.reflection.CachedMethod.invoke(CachedMethod.java:98)
+	at groovy.lang.MetaMethod.doMethodInvoke(MetaMethod.java:325)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1225)
+	at groovy.lang.MetaClassImpl.invokeMethod(MetaClassImpl.java:1034)
+	at org.codehaus.groovy.runtime.callsite.PogoMetaClassSite.call(PogoMetaClassSite.java:41)
+	at org.codehaus.groovy.runtime.callsite.CallSiteArray.defaultCall(CallSiteArray.java:47)
+	at org.codehaus.groovy.runtime.callsite.AbstractCallSite.call(AbstractCallSite.java:116)
+	at PluginClassLoader for script-security//org.kohsuke.groovy.sandbox.impl.Checker$1.call(Checker.java:180)
+	at PluginClassLoader for script-security//org.kohsuke.groovy.sandbox.GroovyInterceptor.onMethodCall(GroovyInterceptor.java:23)
+	at PluginClassLoader for script-security//org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SandboxInterceptor.onMethodCall(SandboxInterceptor.java:163)
+	at PluginClassLoader for script-security//org.kohsuke.groovy.sandbox.impl.Checker$1.call(Checker.java:178)
+	at PluginClassLoader for script-security//org.kohsuke.groovy.sandbox.impl.Checker.checkedCall(Checker.java:182)
+	at PluginClassLoader for script-security//org.kohsuke.groovy.sandbox.impl.Checker.checkedCall(Checker.java:152)
+	at PluginClassLoader for script-security//org.kohsuke.groovy.sandbox.impl.Checker.checkedCall(Checker.java:152)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.sandbox.SandboxInvoker.methodCall(SandboxInvoker.java:17)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.LoggingInvoker.methodCall(LoggingInvoker.java:117)
+	at WorkflowScript.run(WorkflowScript:97)
+	at ___cps.transform___(Native Method)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.impl.ContinuationGroup.methodCall(ContinuationGroup.java:90)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.impl.FunctionCallBlock$ContinuationImpl.dispatchOrArg(FunctionCallBlock.java:116)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.impl.FunctionCallBlock$ContinuationImpl.fixName(FunctionCallBlock.java:80)
+	at jdk.internal.reflect.GeneratedMethodAccessor146.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.impl.ContinuationPtr$ContinuationImpl.receive(ContinuationPtr.java:72)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.impl.ConstantBlock.eval(ConstantBlock.java:21)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.Next.step(Next.java:83)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.Continuable.run0(Continuable.java:147)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.SandboxContinuable.access$001(SandboxContinuable.java:17)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.SandboxContinuable.run0(SandboxContinuable.java:49)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsThread.runNextChunk(CpsThread.java:180)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsThreadGroup.run(CpsThreadGroup.java:422)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsThreadGroup$2.call(CpsThreadGroup.java:330)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsThreadGroup$2.call(CpsThreadGroup.java:294)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsVmExecutorService.lambda$wrap$4(CpsVmExecutorService.java:140)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at hudson.remoting.SingleLaneExecutorService$1.run(SingleLaneExecutorService.java:139)
+	at jenkins.util.ContextResettingExecutorService$1.run(ContextResettingExecutorService.java:28)
+	at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:68)
+	at jenkins.util.ErrorLoggingExecutorService.lambda$wrap$0(ErrorLoggingExecutorService.java:51)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsVmExecutorService$1.call(CpsVmExecutorService.java:53)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsVmExecutorService$1.call(CpsVmExecutorService.java:50)
+	at org.codehaus.groovy.runtime.GroovyCategorySupport$ThreadCategoryInfo.use(GroovyCategorySupport.java:136)
+	at org.codehaus.groovy.runtime.GroovyCategorySupport.use(GroovyCategorySupport.java:275)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsVmExecutorService.lambda$categoryThreadFactory$0(CpsVmExecutorService.java:50)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Also:   org.jenkinsci.plugins.workflow.actions.ErrorAction$ErrorId: efae7544-43ae-4ec2-94da-7bf03860c3fb
+groovy.lang.MissingPropertyException: No such property: outputs for class: groovy.lang.Binding
+	at groovy.lang.Binding.getVariable(Binding.java:63)
+	at PluginClassLoader for script-security//org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SandboxInterceptor.onGetProperty(SandboxInterceptor.java:285)
+	at PluginClassLoader for script-security//org.kohsuke.groovy.sandbox.impl.Checker$7.call(Checker.java:375)
+	at PluginClassLoader for script-security//org.kohsuke.groovy.sandbox.impl.Checker.checkedGetProperty(Checker.java:379)
+	at PluginClassLoader for script-security//org.kohsuke.groovy.sandbox.impl.Checker.checkedGetProperty(Checker.java:355)
+	at PluginClassLoader for script-security//org.kohsuke.groovy.sandbox.impl.Checker.checkedGetProperty(Checker.java:355)
+	at PluginClassLoader for script-security//org.kohsuke.groovy.sandbox.impl.Checker.checkedGetProperty(Checker.java:355)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.sandbox.SandboxInvoker.getProperty(SandboxInvoker.java:29)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.LoggingInvoker.getProperty(LoggingInvoker.java:133)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.impl.PropertyAccessBlock.rawGet(PropertyAccessBlock.java:20)
+	at WorkflowScript.run(WorkflowScript:66)
+	at ___cps.transform___(Native Method)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.impl.PropertyishBlock$ContinuationImpl.get(PropertyishBlock.java:73)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.LValueBlock$GetAdapter.receive(LValueBlock.java:30)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.impl.PropertyishBlock$ContinuationImpl.fixName(PropertyishBlock.java:65)
+	at jdk.internal.reflect.GeneratedMethodAccessor152.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.impl.ContinuationPtr$ContinuationImpl.receive(ContinuationPtr.java:72)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.impl.ConstantBlock.eval(ConstantBlock.java:21)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.Next.step(Next.java:83)
+	at PluginClassLoader for workflow-cps//com.cloudbees.groovy.cps.Continuable.run0(Continuable.java:147)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.SandboxContinuable.access$001(SandboxContinuable.java:17)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.SandboxContinuable.run0(SandboxContinuable.java:49)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsThread.runNextChunk(CpsThread.java:180)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsThreadGroup.run(CpsThreadGroup.java:422)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsThreadGroup$2.call(CpsThreadGroup.java:330)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsThreadGroup$2.call(CpsThreadGroup.java:294)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsVmExecutorService.lambda$wrap$4(CpsVmExecutorService.java:140)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at hudson.remoting.SingleLaneExecutorService$1.run(SingleLaneExecutorService.java:139)
+	at jenkins.util.ContextResettingExecutorService$1.run(ContextResettingExecutorService.java:28)
+	at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:68)
+	at jenkins.util.ErrorLoggingExecutorService.lambda$wrap$0(ErrorLoggingExecutorService.java:51)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsVmExecutorService$1.call(CpsVmExecutorService.java:53)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsVmExecutorService$1.call(CpsVmExecutorService.java:50)
+	at org.codehaus.groovy.runtime.GroovyCategorySupport$ThreadCategoryInfo.use(GroovyCategorySupport.java:136)
+	at org.codehaus.groovy.runtime.GroovyCategorySupport.use(GroovyCategorySupport.java:275)
+	at PluginClassLoader for workflow-cps//org.jenkinsci.plugins.workflow.cps.CpsVmExecutorService.lambda$categoryThreadFactory$0(CpsVmExecutorService.java:50)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Finished: FAILURE
