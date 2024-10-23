@@ -69,6 +69,13 @@ pipeline {
                     def outputs = sh(script: 'cd terraform && terraform refresh && terraform output', returnStdout: true).trim()
                     echo "outputs: ${outputs}"
 
+                    def user_service_ecr_repo_Reg = (outputs =~ /user_service_ecr_repo\s+=\s+(\S+)/)[0][1]
+                    echo "user_service_ecr_repo_Reg: ${user_service_ecr_repo}"
+
+                    def outputList = outputs.split('\n')
+                    def user_service_ecr_repo_n = outputList[1].trim()
+                    echo "user_service_ecr_repo_n: ${user_service_ecr_repo_n}"
+
                     // 使用正規表達式來提取各個輸出值
                     env.LOG_GROUP_NAME = (outputs =~ /cloudwatch_log_group_name\s+=\s+(\S+)/)[0][1]
                     env.EKS_CLUSTER_ARN = (outputs =~ /eks_cluster_arn\s+=\s+(\S+)/)[0][1]
@@ -281,6 +288,7 @@ pipeline {
 
         always {
             script {
+                /*
                 // 無論成功與否，確保清理 Jenkins workspace
                 //cleanWS()
                 // Clean after build
@@ -313,7 +321,8 @@ pipeline {
                 } else {
                     echo 'No lock found, proceeding normally.'
                 }
-
+                */
+                
                 sh '''
                     # 清除所有未使用的 build cache
                     docker builder prune -f
