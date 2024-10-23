@@ -307,30 +307,30 @@ pipeline {
                     // 建立 Docker images 的設定，使用參數命名方式
                     //private ECR
                     def images = """
-                        --set services.user-service.image.repository=public.ecr.aws/${env.USER_SERVICE_ECR_REPO} \
+                        --set services.user-service.image.repository=${env.USER_SERVICE_ECR_REPO} \
                         --set services.user-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.product-service.image.repository=public.ecr.aws/${env.PRODUCT_SERVICE_ECR_REPO} \
+                        --set services.product-service.image.repository=${env.PRODUCT_SERVICE_ECR_REPO} \
                         --set services.product-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.order-service.image.repository=public.ecr.aws/${env.ORDER_SERVICE_ECR_REPO} \
+                        --set services.order-service.image.repository=${env.ORDER_SERVICE_ECR_REPO} \
                         --set services.order-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.payment-service.image.repository=public.ecr.aws/${env.PAYMENT_SERVICE_ECR_REPO} \
+                        --set services.payment-service.image.repository=${env.PAYMENT_SERVICE_ECR_REPO} \
                         --set services.payment-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.site-service.image.repository=public.ecr.aws/${env.SITE_ECR_REPO} \
+                        --set services.site-service.image.repository=${env.SITE_ECR_REPO} \
                         --set services.site-service.image.tag=${env.IMAGE_TAG}
                     """                    
 
                     //public ECR
                     // 建立 Docker images 的設定，使用參數命名方式
                     def images = """
-                        --set services.user-service.image.repository=public.ecr.aws/${env.USER_SERVICE_ECR_REPO} \
+                        --set services.user-service.image.repository=${env.USER_SERVICE_ECR_REPO} \
                         --set services.user-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.product-service.image.repository=public.ecr.aws/${env.PRODUCT_SERVICE_ECR_REPO} \
+                        --set services.product-service.image.repository=${env.PRODUCT_SERVICE_ECR_REPO} \
                         --set services.product-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.order-service.image.repository=public.ecr.aws/${env.ORDER_SERVICE_ECR_REPO} \
+                        --set services.order-service.image.repository=${env.ORDER_SERVICE_ECR_REPO} \
                         --set services.order-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.payment-service.image.repository=public.ecr.aws/${env.PAYMENT_SERVICE_ECR_REPO} \
+                        --set services.payment-service.image.repository=${env.PAYMENT_SERVICE_ECR_REPO} \
                         --set services.payment-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.site-service.image.repository=public.ecr.aws/${env.SITE_ECR_REPO} \
+                        --set services.site-service.image.repository=${env.SITE_ECR_REPO} \
                         --set services.site-service.image.tag=${env.IMAGE_TAG}
                     """.stripIndent()
 
@@ -375,15 +375,15 @@ pipeline {
                             --set awsRegion=${env.AWS_REGION} \
                             --set serviceType=${env.SERVICE_TYPE} \
                             --set awsLogsGroup=${env.LOG_GROUP_NAME} \
-                            --set services.user-service.image.repository=public.ecr.aws/${env.USER_SERVICE_ECR_REPO} \
+                            --set services.user-service.image.repository=${env.USER_SERVICE_ECR_REPO} \
                             --set services.user-service.image.tag=${env.IMAGE_TAG} \
-                            --set services.product-service.image.repository=public.ecr.aws/${env.PRODUCT_SERVICE_ECR_REPO} \
+                            --set services.product-service.image.repository=${env.PRODUCT_SERVICE_ECR_REPO} \
                             --set services.product-service.image.tag=${env.IMAGE_TAG} \
-                            --set services.order-service.image.repository=public.ecr.aws/${env.ORDER_SERVICE_ECR_REPO} \
+                            --set services.order-service.image.repository=${env.ORDER_SERVICE_ECR_REPO} \
                             --set services.order-service.image.tag=${env.IMAGE_TAG} \
-                            --set services.payment-service.image.repository=public.ecr.aws/${env.PAYMENT_SERVICE_ECR_REPO} \
+                            --set services.payment-service.image.repository=${env.PAYMENT_SERVICE_ECR_REPO} \
                             --set services.payment-service.image.tag=${env.IMAGE_TAG} \
-                            --set services.site-service.image.repository=public.ecr.aws/${env.SITE_ECR_REPO} \
+                            --set services.site-service.image.repository=${env.SITE_ECR_REPO} \
                             --set services.site-service.image.tag=${env.IMAGE_TAG}
                             set +x  # 關閉命令追蹤
                         """
