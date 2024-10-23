@@ -257,7 +257,7 @@ pipeline {
         
         stage('Config kubectl Connect to EKS Cluster') {
             steps {
-                script {
+                script { 
                     sh """
                     aws eks update-kubeconfig --region ${env.AWS_REGION} --name ${env.EKS_CLUSTER_NAME}
                     """
