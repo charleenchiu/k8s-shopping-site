@@ -41,18 +41,15 @@ pipeline {
         stage('Get Outputs') {
             steps {
                 script {
-                    // 獲取原始輸出
-                    def outputs = sh(script: 'terraform output', returnStdout: true).trim()
-                    
-                    // 使用正規表達式來提取各個輸出值，設定環境變數
-                    env.CLOUDWATCH_LOG_GROUP_NAME = (outputs =~ /cloudwatch_log_group_name\s+=\s+(\S+)/)[0][1]
-                    env.EKS_CLUSTER_ARN = (outputs =~ /eks_cluster_arn\s+=\s+(\S+)/)[0][1]
-                    env.EKS_CLUSTER_URL = (outputs =~ /eks_cluster_url\s+=\s+(\S+)/)[0][1]
-                    env.SITE_ECR_REPO = (outputs =~ /site_ecr_repo\s+=\s+(\S+)/)[0][1]
-                    env.USER_SERVICE_ECR_REPO = (outputs =~ /user_service_ecr_repo\s+=\s+(\S+)/)[0][1]
-                    env.PRODUCT_SERVICE_ECR_REPO = (outputs =~ /product_service_ecr_repo\s+=\s+(\S+)/)[0][1]
-                    env.ORDER_SERVICE_ECR_REPO = (outputs =~ /order_service_ecr_repo\s+=\s+(\S+)/)[0][1]
-                    env.PAYMENT_SERVICE_ECR_REPO = (outputs =~ /payment_service_ecr_repo\s+=\s+(\S+)/)[0][1]
+                    // 提取各個輸出值，設定環境變數
+                    env.CLOUDWATCH_LOG_GROUP_NAME = sh(script: 'terraform output cloudwatch_log_group_name', returnStdout: true).trim()
+                    env.EKS_CLUSTER_ARN = sh(script: 'terraform output eks_cluster_arn', returnStdout: true).trim()
+                    env.EKS_CLUSTER_URL = sh(script: 'terraform output eks_cluster_url', returnStdout: true).trim()
+                    env.SITE_ECR_REPO = sh(script: 'terraform output site_ecr_repo', returnStdout: true).trim()
+                    env.USER_SERVICE_ECR_REPO = sh(script: 'terraform output user_service_ecr_repo', returnStdout: true).trim()
+                    env.PRODUCT_SERVICE_ECR_REPO = sh(script: 'terraform output product_service_ecr_repo', returnStdout: true).trim()
+                    env.ORDER_SERVICE_ECR_REPO = sh(script: 'terraform output order_service_ecr_repo', returnStdout: true).trim()
+                    env.PAYMENT_SERVICE_ECR_REPO = sh(script: 'terraform output payment_service_ecr_repo', returnStdout: true).trim()
                 }
             }
         }
