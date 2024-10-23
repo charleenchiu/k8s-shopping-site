@@ -50,6 +50,9 @@ pipeline {
         stage('Get Outputs') {
             steps {
                 script {
+                    // 獲取原始輸出
+                    def outputs = sh(script: 'terraform output', returnStdout: true).trim()
+                    echo "outputs: ${outputs}"
                     // 提取各個輸出值，設定環境變數
                     env.CLOUDWATCH_LOG_GROUP_NAME = sh(script: 'terraform output cloudwatch_log_group_name', returnStdout: true).trim()
                     env.EKS_CLUSTER_ARN = sh(script: 'terraform output eks_cluster_arn', returnStdout: true).trim()
