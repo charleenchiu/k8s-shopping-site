@@ -28,6 +28,7 @@ pipeline {
             }
         }
 
+        /*
         stage('Terraform Init') {
             steps {
                 script {
@@ -63,6 +64,7 @@ pipeline {
                 }
             }
         }
+        */
 
         stage('Get Outputs') {
             steps {
@@ -146,6 +148,7 @@ pipeline {
             }
         }
 
+        /*
         stage('Login to ECR & Push Image') {
             steps {
                 script {
@@ -176,8 +179,38 @@ pipeline {
                     """
                 }
             }
-        }
+        }*/
 
+        stage('Login to ECR & Push Image') {
+            steps {
+                script {
+                    sh """
+                    echo "SITE_ECR_REPO: ${env.SITE_ECR_REPO}"
+                    echo "USER_SERVICE_ECR_REPO: ${env.USER_SERVICE_ECR_REPO}"
+                    echo "PRODUCT_SERVICE_ECR_REPO: ${env.PRODUCT_SERVICE_ECR_REPO}"
+                    echo "ORDER_SERVICE_ECR_REPO: ${env.ORDER_SERVICE_ECR_REPO}"
+                    echo "PAYMENT_SERVICE_ECR_REPO: ${env.PAYMENT_SERVICE_ECR_REPO}"
+                    echo "EKS_CLUSTER_ARN: ${env.EKS_CLUSTER_ARN}"
+                    echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
+                    echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
+                    set -e  # 開啟 Shell 的錯誤模式，若有錯誤則停止執行
+                    # 透過 AWS CLI 登入公共 ECR
+                    aws ecr-public get-login-password --region ${env.AWS_REGION} | docker login --username AWS --password-stdin public.ecr.aws
+                    # Push Image 到公共 ECR
+                    docker tag ${env.SITE_ECR_REPO}:${env.IMAGE_TAG} public.ecr.aws/j5a0e3h8/k8s-shopping-site:${env.IMAGE_TAG}
+                    docker push public.ecr.aws/j5a0e3h8/k8s-shopping-site:${env.IMAGE_TAG}
+                    docker tag ${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} public.ecr.aws/j5a0e3h8/k8s-shopping-site/user_service:${env.IMAGE_TAG}
+                    docker push public.ecr.aws/j5a0e3h8/k8s-shopping-site/user_service:${env.IMAGE_TAG}
+                    docker tag ${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} public.ecr.aws/j5a0e3h8/k8s-shopping-site/product_service:${env.IMAGE_TAG}
+                    docker push public.ecr.aws/j5a0e3h8/k8s-shopping-site/product_service:${env.IMAGE_TAG}
+                    docker tag ${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} public.ecr.aws/j5a0e3h8/k8s-shopping-site/order_service:${env.IMAGE_TAG}
+                    docker push public.ecr.aws/j5a0e3h8/k8s-shopping-site/order_service:${env.IMAGE_TAG}
+                    docker tag ${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} public.ecr.aws/j5a0e3h8/k8s-shopping-site/payment_service:${env.IMAGE_TAG}
+                    docker push public.ecr.aws/j5a0e3h8/k8s-shopping-site/payment_service:${env.IMAGE_TAG}
+                    """
+                }
+            }
+        }
         
         /*
         stage('Update Kubernetes Deployment') {
