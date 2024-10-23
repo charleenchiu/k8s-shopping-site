@@ -250,7 +250,8 @@ pipeline {
             steps {
                 script {
                     sh """
-                    curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash -s -- --no-sudo --version v3.16.2
+                    curl -L https://get.helm.sh/helm-v3.16.2-linux-amd64.tar.gz -o /tmp/helm.tar.gz
+                    tar -zxvf /tmp/helm.tar.gz -C /tmp
                     export PATH=\$PATH:/tmp/linux-amd64
                     helm version
                     """
