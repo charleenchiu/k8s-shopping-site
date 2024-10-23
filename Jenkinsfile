@@ -7,6 +7,7 @@ pipeline {
         AWS_ACCOUNT_ID = '167804136284' // AWS 帳戶 ID
         IMAGE_TAG = 'latest' // Docker Image Tag
         AWS_REGION = 'us-east-1'    // AWS 區域
+        env.SERVICE_TYPE = "ClusterIP"    // Kubernetes 的 Service Type
         /*
         SITE_ECR_REPO = ''   // ECR Repository 名稱（將在 Terraform 階段後更新）
         USER_SERVICE_ECR_REPO = ''  // User Service 的 ECR Repository
@@ -320,6 +321,7 @@ pipeline {
                     sh """
                         helm upgrade --install k8s-site ./k8s-chart \
                         --set awsRegion=${env.AWS_REGION} \
+                        --set serviceType=${env.SERVICE_TYPE} \
                         --set services.user-service.awsLogsGroup=${env.LOG_GROUP_NAME} \
                         --set services.product-service.awsLogsGroup=${env.LOG_GROUP_NAME} \
                         --set services.order-service.awsLogsGroup=${env.LOG_GROUP_NAME} \
