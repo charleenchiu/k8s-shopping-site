@@ -1,6 +1,7 @@
 replicaCount: 1
 awsRegion: "us-east-1"  # 預設值us-east-1，會被 Jenkins 的 Helm 指令動態設置
 serviceType: "ClusterIP"  # 預設值ClusterIP，會被 Jenkins 的 Helm 指令動態設置
+awsLogsGroup: "" # 這裡會被 Jenkins 的 Helm 指令動態設置
 
 services:
   - name: "user-service"
@@ -9,7 +10,6 @@ services:
       tag: "latest"
     service:
       port: 3001
-    awsLogsGroup: "" # 這裡會被 Jenkins 的 Helm 指令動態設置
 
   - name: "product-service"
     image:
@@ -17,7 +17,6 @@ services:
       tag: "latest"
     service:
       port: 3002
-    awsLogsGroup: "" # 這裡會被 Jenkins 的 Helm 指令動態設置
 
   - name: "order-service"
     image:
@@ -25,7 +24,6 @@ services:
       tag: "latest"
     service:
       port: 3003
-    awsLogsGroup: "" # 這裡會被 Jenkins 的 Helm 指令動態設置
 
   - name: "payment-service"
     image:
@@ -33,7 +31,6 @@ services:
       tag: "latest"
     service:
       port: 3004
-    awsLogsGroup: "" # 這裡會被 Jenkins 的 Helm 指令動態設置
 
   - name: "site-service"
     image:
@@ -41,4 +38,3 @@ services:
       tag: "latest"
     service:
       port: 3000
-    awsLogsGroup: "" # 這裡會被 Jenkins 的 Helm 指令動態設置

@@ -20,7 +20,7 @@ spec:
         - containerPort: {{ .service.port }}
         env:
         - name: AWS_LOG_GROUP
-          value: "{{ .awsLogsGroup }}"
+          value: "{{ $.Values.awsLogsGroup }}"
         - name: AWS_REGION
           value: "{{ $.Values.awsRegion }}"
 {{- end }}

@@ -336,16 +336,12 @@ pipeline {
 
                     // 進入 helm chart 目錄
                     dir('./k8s-chart') {
-                        // 使用 helm 指令，使用參數命名方式動態傳遞 awsRegion 和 awsLogsGroup
+                        // 使用 helm 指令，使用參數命名方式動態傳遞 awsRegion、serviceType 和 awsLogsGroup
                         sh """
                             helm upgrade --install k8s-site . \
                             --set awsRegion=${env.AWS_REGION} \
                             --set serviceType=${env.SERVICE_TYPE} \
-                            --set services.user-service.awsLogsGroup=${env.LOG_GROUP_NAME} \
-                            --set services.product-service.awsLogsGroup=${env.LOG_GROUP_NAME} \
-                            --set services.order-service.awsLogsGroup=${env.LOG_GROUP_NAME} \
-                            --set services.payment-service.awsLogsGroup=${env.LOG_GROUP_NAME} \
-                            --set services.site-service.awsLogsGroup=${env.LOG_GROUP_NAME} \
+                            --set awsLogsGroup=${env.LOG_GROUP_NAME} \
                             ${images}
                         """
                     }
