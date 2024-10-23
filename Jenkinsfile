@@ -34,49 +34,58 @@ pipeline {
                         cd terraform
                         terraform init
                         terraform apply -auto-approve
-                        terraform output
                     '''
-                    def outputs = sh(script: 'terraform output', returnStdout: true).trim()
+                    
+                    // 執行 terraform refresh 以更新狀態
+                    def refreshOutput = sh(script: 'cd terraform && terraform refresh', returnStdout: true).trim()
+                    echo "Terraform refresh output: ${refreshOutput}"
+
+                    // 獲取輸出值
+                    def outputs = sh(script: 'cd terraform && terraform output', returnStdout: true).trim()
                     echo "outputs: ${outputs}"
+
+                    // 格式化輸出
                     def formattedOutputs_1 = outputs.replaceAll(/\r?\n/, "\n")
                     echo "outputs: ${formattedOutputs_1}"
                     def formattedOutputs_2 = outputs.replaceAll(/(\w+\s+=\s+.+?)(?=\w+\s+=\s+)/, '$1\n---\n')
                     echo "outputs: ${formattedOutputs_2}"
+
+                    // 提取 CloudWatch Log Group 名稱
                     def logGroupName = (outputs =~ /cloudwatch_log_group_name\s+=\s+(\S+)/)[0][1]
                     echo "logGroupName: ${logGroupName}"
+
+                    // 設定環境變數
+                    env.CLOUDWATCH_LOG_GROUP_NAME = logGroupName
                 }
             }
         }
+
         stage('Get Outputs') {
             steps {
                 script {
                     // 獲取原始輸出
-                    def outputs = sh(script: 'terraform output', returnStdout: true).trim()
+                    def outputs = sh(script: 'cd terraform && terraform output', returnStdout: true).trim()
                     echo "outputs: ${outputs}"
+
                     // 提取各個輸出值，設定環境變數
-                    env.CLOUDWATCH_LOG_GROUP_NAME = sh(script: 'terraform output cloudwatch_log_group_name', returnStdout: true).trim()
-                    env.EKS_CLUSTER_ARN = sh(script: 'terraform output eks_cluster_arn', returnStdout: true).trim()
-                    env.EKS_CLUSTER_URL = sh(script: 'terraform output eks_cluster_url', returnStdout: true).trim()
-                    env.SITE_ECR_REPO = sh(script: 'terraform output site_ecr_repo', returnStdout: true).trim()
-                    env.USER_SERVICE_ECR_REPO = sh(script: 'terraform output user_service_ecr_repo', returnStdout: true).trim()
-                    env.PRODUCT_SERVICE_ECR_REPO = sh(script: 'terraform output product_service_ecr_repo', returnStdout: true).trim()
-                    env.ORDER_SERVICE_ECR_REPO = sh(script: 'terraform output order_service_ecr_repo', returnStdout: true).trim()
-                    env.PAYMENT_SERVICE_ECR_REPO = sh(script: 'terraform output payment_service_ecr_repo', returnStdout: true).trim()
+                    env.CLOUDWATCH_LOG_GROUP_NAME = sh(script: 'cd terraform && terraform output cloudwatch_log_group_name', returnStdout: true).trim()
+                    env.EKS_CLUSTER_ARN = sh(script: 'cd terraform && terraform output eks_cluster_arn', returnStdout: true).trim()
+                    env.EKS_CLUSTER_URL = sh(script: 'cd terraform && terraform output eks_cluster_url', returnStdout: true).trim()
+                    env.SITE_ECR_REPO = sh(script: 'cd terraform && terraform output site_ecr_repo', returnStdout: true).trim()
+                    env.USER_SERVICE_ECR_REPO = sh(script: 'cd terraform && terraform output user_service_ecr_repo', returnStdout: true).trim()
+                    env.PRODUCT_SERVICE_ECR_REPO = sh(script: 'cd terraform && terraform output product_service_ecr_repo', returnStdout: true).trim()
+                    env.ORDER_SERVICE_ECR_REPO = sh(script: 'cd terraform && terraform output order_service_ecr_repo', returnStdout: true).trim()
+                    env.PAYMENT_SERVICE_ECR_REPO = sh(script: 'cd terraform && terraform output payment_service_ecr_repo', returnStdout: true).trim()
                 }
             }
         }
+
         stage('Verify Outputs') {
             steps {
                 script {
                     // 獲取原始輸出
-                    def outputs = sh(script: 'terraform output', returnStdout: true).trim()
+                    def outputs = sh(script: 'cd terraform && terraform output', returnStdout: true).trim()
                     echo "outputs: ${outputs}"
-                    def formattedOutputs_1 = outputs.replaceAll(/\r?\n/, "\n")
-                    echo "outputs: ${formattedOutputs_1}"
-                    def formattedOutputs_2 = outputs.replaceAll(/(\w+\s+=\s+.+?)(?=\w+\s+=\s+)/, '$1\n---\n')
-                    echo "outputs: ${formattedOutputs_2}"
-                    def logGroupName = (outputs =~ /cloudwatch_log_group_name\s+=\s+(\S+)/)[0][1]
-                    echo "logGroupName: ${logGroupName}"
 
                     // 驗證輸出的變數
                     echo "SITE_ECR_REPO: ${env.SITE_ECR_REPO}"
@@ -86,7 +95,7 @@ pipeline {
                     echo "PAYMENT_SERVICE_ECR_REPO: ${env.PAYMENT_SERVICE_ECR_REPO}"
                     echo "EKS_CLUSTER_ARN: ${env.EKS_CLUSTER_ARN}"
                     echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
-                    echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
+                    echo "CLOUDWATCH_LOG_GROUP_NAME: ${env.CLOUDWATCH_LOG_GROUP_NAME}"
                 }
             }
         }
