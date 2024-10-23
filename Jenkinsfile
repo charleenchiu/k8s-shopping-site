@@ -57,7 +57,6 @@ pipeline {
             steps {
                 script {
                     // 驗證輸出的變數
-                    echo "Verify All Terraform Outputs: ${outputs}"
                     echo "SITE_ECR_REPO: ${env.SITE_ECR_REPO}"
                     echo "USER_SERVICE_ECR_REPO: ${env.USER_SERVICE_ECR_REPO}"
                     echo "PRODUCT_SERVICE_ECR_REPO: ${env.PRODUCT_SERVICE_ECR_REPO}"
