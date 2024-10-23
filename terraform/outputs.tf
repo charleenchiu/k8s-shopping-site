@@ -23,6 +23,11 @@ output "payment_service_ecr_repo" {
     value = aws_ecrpublic_repository.payment_service_repo.repository_uri  # 取得公共 payment_service_repo 的 URI
 }
 
+# 輸出 EKS Cluster 的 Name
+output "eks_cluster_name" {
+  value = aws_eks_cluster.k8s-shopping-site_cluster.name  # 取得 EKS Cluster Name
+}
+
 # 輸出 EKS Cluster 的 ARN
 output "eks_cluster_arn" {
   value = aws_eks_cluster.k8s-shopping-site_cluster.arn  # 取得 EKS Cluster ARN

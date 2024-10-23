@@ -13,6 +13,7 @@ pipeline {
         PRODUCT_SERVICE_ECR_REPO = '' // Product Service 的 ECR Repository
         ORDER_SERVICE_ECR_REPO = '' // Order Service 的 ECR Repository
         PAYMENT_SERVICE_ECR_REPO = '' // Payment Service 的 ECR Repository
+        EKS_CLUSTER_NAME = '' // EKS Cluster Name（將在 Terraform 階段後更新）
         EKS_CLUSTER_ARN = '' // EKS Cluster ARN（將在 Terraform 階段後更新）
         EKS_CLUSTER_URL = '' // EKS Cluster URL（將在 Terraform 階段後更新）
         KUBECONFIG_CERTIFICATE_AUTHORITY_DATA = '' // Kubernetes 憑證授權中心的資料
@@ -81,22 +82,10 @@ pipeline {
                     env.ORDER_SERVICE_ECR_REPO = outputList.find { it.contains("order_service_ecr_repo") }?.split('=')[1]?.trim()
                     env.PAYMENT_SERVICE_ECR_REPO = outputList.find { it.contains("payment_service_ecr_repo") }?.split('=')[1]?.trim()
                     env.LOG_GROUP_NAME = outputList.find { it.contains("log_group_name") }?.split('=')[1]?.trim()
+                    env.EKS_CLUSTER_NAME = outputList.find { it.contains("eks_cluster_name") }?.split('=')[1]?.trim()
                     env.EKS_CLUSTER_ARN = outputList.find { it.contains("eks_cluster_arn") }?.split('=')[1]?.trim()
                     env.EKS_CLUSTER_URL = outputList.find { it.contains("eks_cluster_url") }?.split('=')[1]?.trim()
                     env.KUBECONFIG_CERTIFICATE_AUTHORITY_DATA = outputList.find { it.contains("kubeconfig_certificate_authority_data") }?.split('=')[1]?.trim()
-                    
-
-                    /*
-                    // 提取各個輸出值，設定環境變數
-                    env.SITE_ECR_REPO = sh(script: 'cd terraform && terraform output site_ecr_repo', returnStdout: true).trim()
-                    env.USER_SERVICE_ECR_REPO = sh(script: 'cd terraform && terraform output user_service_ecr_repo', returnStdout: true).trim()
-                    env.PRODUCT_SERVICE_ECR_REPO = sh(script: 'cd terraform && terraform output product_service_ecr_repo', returnStdout: true).trim()
-                    env.ORDER_SERVICE_ECR_REPO = sh(script: 'cd terraform && terraform output order_service_ecr_repo', returnStdout: true).trim()
-                    env.PAYMENT_SERVICE_ECR_REPO = sh(script: 'cd terraform && terraform output payment_service_ecr_repo', returnStdout: true).trim()
-                    env.EKS_CLUSTER_ARN = sh(script: 'cd terraform && terraform output eks_cluster_arn', returnStdout: true).trim()
-                    env.EKS_CLUSTER_URL = sh(script: 'cd terraform && terraform output eks_cluster_url', returnStdout: true).trim()
-                    env.LOG_GROUP_NAME = sh(script: 'cd terraform && terraform output log_group_name', returnStdout: true).trim()
-                    */
                 }
             }
         }
@@ -114,6 +103,7 @@ pipeline {
                     echo "PRODUCT_SERVICE_ECR_REPO: ${env.PRODUCT_SERVICE_ECR_REPO}"
                     echo "ORDER_SERVICE_ECR_REPO: ${env.ORDER_SERVICE_ECR_REPO}"
                     echo "PAYMENT_SERVICE_ECR_REPO: ${env.PAYMENT_SERVICE_ECR_REPO}"
+                    echo "EKS_CLUSTER_NAME: ${env.EKS_CLUSTER_NAME}"
                     echo "EKS_CLUSTER_ARN: ${env.EKS_CLUSTER_ARN}"
                     echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
                     echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
@@ -160,6 +150,7 @@ pipeline {
                     echo "PRODUCT_SERVICE_ECR_REPO: ${env.PRODUCT_SERVICE_ECR_REPO}"
                     echo "ORDER_SERVICE_ECR_REPO: ${env.ORDER_SERVICE_ECR_REPO}"
                     echo "PAYMENT_SERVICE_ECR_REPO: ${env.PAYMENT_SERVICE_ECR_REPO}"
+                    echo "EKS_CLUSTER_NAME: ${env.EKS_CLUSTER_NAME}"
                     echo "EKS_CLUSTER_ARN: ${env.EKS_CLUSTER_ARN}"
                     echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
                     echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
@@ -192,6 +183,7 @@ pipeline {
                     echo "PRODUCT_SERVICE_ECR_REPO: ${env.PRODUCT_SERVICE_ECR_REPO}"
                     echo "ORDER_SERVICE_ECR_REPO: ${env.ORDER_SERVICE_ECR_REPO}"
                     echo "PAYMENT_SERVICE_ECR_REPO: ${env.PAYMENT_SERVICE_ECR_REPO}"
+                    echo "EKS_CLUSTER_NAME: ${env.EKS_CLUSTER_NAME}"
                     echo "EKS_CLUSTER_ARN: ${env.EKS_CLUSTER_ARN}"
                     echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
                     echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
@@ -246,6 +238,7 @@ pipeline {
         }
         */
 
+        /*
         stage('Install Helm') {
             steps {
                 script {
@@ -256,6 +249,17 @@ pipeline {
                     export PATH=\$PATH:/tmp/linux-amd64                    
                     # 確認 Helm 安裝成功
                     helm version
+                    """
+                }
+            }
+        }
+        */
+        
+        stage('Config kubectl Connect to EKS Cluster') {
+            steps {
+                script {
+                    sh """
+                    aws eks update-kubeconfig --region ${env.AWS_REGION} --name ${env.EKS_CLUSTER_NAME}
                     """
                 }
             }
