@@ -39,7 +39,7 @@ pipeline {
                         terraform apply -auto-approve
                     '''
                     
-                    /*
+                    
                     // 執行 terraform refresh 以更新狀態
                     def refreshOutput = sh(script: 'cd terraform && terraform refresh', returnStdout: true).trim()
                     echo "Terraform refresh output: ${refreshOutput}"
@@ -60,7 +60,7 @@ pipeline {
 
                     // 設定環境變數
                     env.LOG_GROUP_NAME = logGroupName
-                    */                    
+                                     
                 }
             }
         }
