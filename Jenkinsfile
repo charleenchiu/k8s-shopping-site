@@ -263,6 +263,7 @@ pipeline {
             }
         }
 
+        /*
         stage('Install Fluent Bit') {
             steps {
                 script {
@@ -275,6 +276,24 @@ pipeline {
                     helm install aws-for-fluent-bit fluent/fluent-bit \
                     --set awsRegion=${env.AWS_REGION} \
                     --set cloudWatch.logGroupName=${env.LOG_GROUP_NAME}
+                    """
+                }
+            }
+        }
+        */
+
+        stage('Install or Upgrade Fluent Bit') {
+            steps {
+                script {
+                    // 將 Helm 二進制檔案路徑加入到 PATH 中
+                    sh """
+                        export PATH=\$PATH:/tmp/linux-amd64
+                        # 安裝或升級 Fluent Bit Helm Chart
+                        helm repo add fluent https://fluent.github.io/helm-charts
+                        helm repo update
+                        helm upgrade --install aws-for-fluent-bit fluent/fluent-bit \
+                        --set awsRegion=${env.AWS_REGION} \
+                        --set cloudWatch.logGroupName=${env.LOG_GROUP_NAME}
                     """
                 }
             }
