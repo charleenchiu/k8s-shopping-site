@@ -238,7 +238,6 @@ pipeline {
         }
         */
 
-        /*
         stage('Install Helm') {
             steps {
                 script {
@@ -253,7 +252,6 @@ pipeline {
                 }
             }
         }
-        */
         
         stage('Config kubectl Connect to EKS Cluster') {
             steps {
