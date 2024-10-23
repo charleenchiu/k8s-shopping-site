@@ -41,21 +41,18 @@ pipeline {
         stage('Get Outputs') {
             steps {
                 script {
-                    def outputs = sh(script: 'terraform output -json', returnStdout: true).trim()
-                    echo "Raw Terraform Output: ${outputs}"
+                    // 獲取原始輸出
+                    def outputs = sh(script: 'terraform output', returnStdout: true).trim()
                     
-                    def json = readJSON(text: outputs)
-                    echo "Parsed JSON: ${json}"
-                    
-                    // 設定環境變數
-                    env.SITE_ECR_REPO = json.site_ecr_repo?.value ?: "null"
-                    env.USER_SERVICE_ECR_REPO = json.user_service_ecr_repo?.value ?: "null"
-                    env.PRODUCT_SERVICE_ECR_REPO = json.product_service_ecr_repo?.value ?: "null"
-                    env.ORDER_SERVICE_ECR_REPO = json.order_service_ecr_repo?.value ?: "null"
-                    env.PAYMENT_SERVICE_ECR_REPO = json.payment_service_ecr_repo?.value ?: "null"
-                    env.EKS_CLUSTER_ARN = json.eks_cluster_arn?.value ?: "null"
-                    env.EKS_CLUSTER_URL = json.eks_cluster_url?.value ?: "null"
-                    env.LOG_GROUP_NAME = json.log_group_name?.value ?: "null"
+                    // 使用正規表達式來提取各個輸出值，設定環境變數
+                    env.CLOUDWATCH_LOG_GROUP_NAME = (outputs =~ /cloudwatch_log_group_name\s+=\s+(\S+)/)[0][1]
+                    env.EKS_CLUSTER_ARN = (outputs =~ /eks_cluster_arn\s+=\s+(\S+)/)[0][1]
+                    env.EKS_CLUSTER_URL = (outputs =~ /eks_cluster_url\s+=\s+(\S+)/)[0][1]
+                    env.SITE_ECR_REPO = (outputs =~ /site_ecr_repo\s+=\s+(\S+)/)[0][1]
+                    env.USER_SERVICE_ECR_REPO = (outputs =~ /user_service_ecr_repo\s+=\s+(\S+)/)[0][1]
+                    env.PRODUCT_SERVICE_ECR_REPO = (outputs =~ /product_service_ecr_repo\s+=\s+(\S+)/)[0][1]
+                    env.ORDER_SERVICE_ECR_REPO = (outputs =~ /order_service_ecr_repo\s+=\s+(\S+)/)[0][1]
+                    env.PAYMENT_SERVICE_ECR_REPO = (outputs =~ /payment_service_ecr_repo\s+=\s+(\S+)/)[0][1]
                 }
             }
         }
