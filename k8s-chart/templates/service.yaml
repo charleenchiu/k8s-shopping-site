@@ -6,7 +6,7 @@ metadata:
   labels:
     app: {{ .name }}
 spec:
-  type: {{ $.Values.serviceType | default "ClusterIP" }}  # 使用全局範圍引用
+  type: {{ $.Values.serviceType | default "ClusterIP" }}  # 若 .service.type 為 nil，則使用預設值 "ClusterIP"
   ports:
   - protocol: TCP
     port: {{ .service.port }}  # 引用每個服務的 port
