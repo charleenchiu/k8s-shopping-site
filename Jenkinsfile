@@ -332,7 +332,7 @@ pipeline {
                         --set services.payment-service.image.tag=${env.IMAGE_TAG} \
                         --set services.site-service.image.repository=public.ecr.aws/${env.SITE_ECR_REPO} \
                         --set services.site-service.image.tag=${env.IMAGE_TAG}
-                    """
+                    """.stripIndent()
 
                     // 進入 helm chart 目錄
                     dir('./k8s-chart') {
