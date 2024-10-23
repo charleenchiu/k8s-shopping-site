@@ -34,7 +34,16 @@ pipeline {
                         cd terraform
                         terraform init
                         terraform apply -auto-approve
+                        terraform output
                     '''
+                    def outputs = sh(script: 'terraform output', returnStdout: true).trim()
+                    echo "outputs: ${outputs}"
+                    def formattedOutputs_1 = outputs.replaceAll(/\r?\n/, "\n")
+                    echo "outputs: ${formattedOutputs_1}"
+                    def formattedOutputs_2 = outputs.replaceAll(/(\w+\s+=\s+.+?)(?=\w+\s+=\s+)/, '$1\n---\n')
+                    echo "outputs: ${formattedOutputs_2}"
+                    def logGroupName = (outputs =~ /cloudwatch_log_group_name\s+=\s+(\S+)/)[0][1]
+                    echo "logGroupName: ${logGroupName}"
                 }
             }
         }
