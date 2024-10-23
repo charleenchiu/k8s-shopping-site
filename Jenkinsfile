@@ -39,7 +39,7 @@ pipeline {
                         terraform apply -auto-approve
                     '''
                     
-                    
+
                     // 執行 terraform refresh 以更新狀態
                     def refreshOutput = sh(script: 'cd terraform && terraform refresh', returnStdout: true).trim()
                     echo "Terraform refresh output: ${refreshOutput}"
@@ -132,7 +132,7 @@ pipeline {
         }
         */
         
-
+        /*
         stage('Build Docker Image') {
             steps {
                 script {
@@ -147,9 +147,10 @@ pipeline {
                 }
             }
         }
+        */
 
         /*
-        stage('Login to ECR & Push Image') {
+        stage('Login to Private ECR & Push Image') {
             steps {
                 script {
                     // 驗證輸出的變數
@@ -181,7 +182,8 @@ pipeline {
             }
         }*/
 
-        stage('Login to ECR & Push Image') {
+        /*
+        stage('Login to Public ECR & Push Image') {
             steps {
                 script {
                     sh """
@@ -211,6 +213,7 @@ pipeline {
                 }
             }
         }
+        */
         
         /*
         stage('Update Kubernetes Deployment') {
@@ -242,6 +245,17 @@ pipeline {
             }
         }
         */
+
+        stage('Install Helm') {
+            steps {
+                script {
+                    sh """
+                    curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+                    helm version
+                    """
+                }
+            }
+        }
 
         stage('Install Fluent Bit') {
             steps {
