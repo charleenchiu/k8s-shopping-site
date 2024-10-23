@@ -7,7 +7,7 @@ pipeline {
         AWS_ACCOUNT_ID = '167804136284' // AWS 帳戶 ID
         IMAGE_TAG = 'latest' // Docker Image Tag
         AWS_REGION = 'us-east-1'    // AWS 區域
-        env.SERVICE_TYPE = "ClusterIP"    // Kubernetes 的 Service Type
+        SERVICE_TYPE = "ClusterIP"    // Kubernetes 的 Service Type
         /*
         SITE_ECR_REPO = ''   // ECR Repository 名稱（將在 Terraform 階段後更新）
         USER_SERVICE_ECR_REPO = ''  // User Service 的 ECR Repository
@@ -304,16 +304,32 @@ pipeline {
             steps {
                 script {
                     // 建立 Docker images 的設定，使用參數命名方式
+                    /* private ECR
                     def images = """
-                        --set services.user-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.USER_SERVICE_ECR_REPO} \
+                        --set services.user-service.image.repository=public.ecr.aws/${env.USER_SERVICE_ECR_REPO} \
                         --set services.user-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.product-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PRODUCT_SERVICE_ECR_REPO} \
+                        --set services.product-service.image.repository=public.ecr.aws/${env.PRODUCT_SERVICE_ECR_REPO} \
                         --set services.product-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.order-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ORDER_SERVICE_ECR_REPO} \
+                        --set services.order-service.image.repository=public.ecr.aws/${env.ORDER_SERVICE_ECR_REPO} \
                         --set services.order-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.payment-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PAYMENT_SERVICE_ECR_REPO} \
+                        --set services.payment-service.image.repository=public.ecr.aws/${env.PAYMENT_SERVICE_ECR_REPO} \
                         --set services.payment-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.site-service.image.repository=${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.SITE_ECR_REPO} \
+                        --set services.site-service.image.repository=public.ecr.aws/${env.SITE_ECR_REPO} \
+                        --set services.site-service.image.tag=${env.IMAGE_TAG}
+                    """
+                    */
+
+                    //public ECR
+                    def images = """
+                        --set services.user-service.image.repository=public.ecr.aws/${env.USER_SERVICE_ECR_REPO} \
+                        --set services.user-service.image.tag=${env.IMAGE_TAG} \
+                        --set services.product-service.image.repository=public.ecr.aws/${env.PRODUCT_SERVICE_ECR_REPO} \
+                        --set services.product-service.image.tag=${env.IMAGE_TAG} \
+                        --set services.order-service.image.repository=public.ecr.aws/${env.ORDER_SERVICE_ECR_REPO} \
+                        --set services.order-service.image.tag=${env.IMAGE_TAG} \
+                        --set services.payment-service.image.repository=public.ecr.aws/${env.PAYMENT_SERVICE_ECR_REPO} \
+                        --set services.payment-service.image.tag=${env.IMAGE_TAG} \
+                        --set services.site-service.image.repository=public.ecr.aws/${env.SITE_ECR_REPO} \
                         --set services.site-service.image.tag=${env.IMAGE_TAG}
                     """
 
