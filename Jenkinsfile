@@ -250,9 +250,11 @@ pipeline {
             steps {
                 script {
                     sh """
+                    # 下載並安裝 Helm 到 /tmp 目錄
                     curl -L https://get.helm.sh/helm-v3.16.2-linux-amd64.tar.gz -o /tmp/helm.tar.gz
                     tar -zxvf /tmp/helm.tar.gz -C /tmp
-                    export PATH=\$PATH:/tmp/linux-amd64
+                    export PATH=\$PATH:/tmp/linux-amd64                    
+                    # 確認 Helm 安裝成功
                     helm version
                     """
                 }
@@ -262,13 +264,15 @@ pipeline {
         stage('Install Fluent Bit') {
             steps {
                 script {
-                    // 安裝 aws-for-fluent-bit Helm Chart
                     sh """
-                        helm repo add fluent https://fluent.github.io/helm-charts
-                        helm repo update
-                        helm install aws-for-fluent-bit fluent/fluent-bit \
-                        --set awsRegion=${env.AWS_REGION} \
-                        --set cloudWatch.logGroupName=${env.LOG_GROUP_NAME}
+                    # 將 Helm 二進制檔案路徑加入到 PATH 中
+                    export PATH=\$PATH:/tmp/linux-amd64                    
+                    # 安裝 Fluent Bit Helm Chart
+                    helm repo add fluent https://fluent.github.io/helm-charts
+                    helm repo update
+                    helm install aws-for-fluent-bit fluent/fluent-bit \
+                    --set awsRegion=${env.AWS_REGION} \
+                    --set cloudWatch.logGroupName=${env.LOG_GROUP_NAME}
                     """
                 }
             }
