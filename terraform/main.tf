@@ -143,7 +143,7 @@ resource "aws_eks_node_group" "k8s-shopping-site_node_group" {
     min_size     = 1
   }
 
-  instance_types = ["t3.micro"]  # 更換實例類型
+  instance_types = ["t3.medium"]  # 更換實例類型
 
   depends_on = [
     aws_eks_cluster.k8s-shopping-site_cluster,
