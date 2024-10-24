@@ -91,6 +91,8 @@ ctrl + X 離開 按Y選擇存檔
 
 5. 依序執行下列指令，移除前次所建置的資源，並刪除臨時檔
 ```sh
+sudo chmod +x ./delete_ecr_images.sh
+./delete_ecr_images.sh
 sudo terraform destroy -auto-approve
 sudo rm -rf .terraform*
 sudo rm -rf terraform.tfstate*
