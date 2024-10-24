@@ -30,7 +30,6 @@ pipeline {
             }
         }
 
-        /*
         stage('Terraform Init') {
             steps {
                 script {
@@ -66,7 +65,6 @@ pipeline {
                 }
             }
         }
-        */
 
         stage('Get Outputs') {
             steps {
