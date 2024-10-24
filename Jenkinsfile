@@ -395,7 +395,6 @@ pipeline {
     }
 
     post {
-        /*
         failure {
             // 如果過程失敗，清除 terraform 建的資源
             sh '''
@@ -405,11 +404,9 @@ pipeline {
                 rm -rf terraform.tfstate*
             '''
         }
-        */
 
         always {
             script {
-                /*
                 // 無論成功與否，確保清理 Jenkins workspace
                 //cleanWS()
                 // Clean after build
@@ -442,7 +439,6 @@ pipeline {
                 } else {
                     echo 'No lock found, proceeding normally.'
                 }
-                */
 
                 sh '''
                     # 清除所有未使用的 build cache
