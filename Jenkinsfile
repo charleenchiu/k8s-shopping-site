@@ -38,30 +38,7 @@ pipeline {
                         cd terraform
                         terraform init
                         terraform apply -auto-approve
-                    '''
-                    
-
-                    // 執行 terraform refresh 以更新狀態
-                    def refreshOutput = sh(script: 'cd terraform && terraform refresh', returnStdout: true).trim()
-                    echo "Terraform refresh output: ${refreshOutput}"
-
-                    // 獲取輸出值
-                    def outputs = sh(script: 'cd terraform && terraform output', returnStdout: true).trim()
-                    echo "outputs: ${outputs}"
-
-                    // 格式化輸出
-                    def formattedOutputs_1 = outputs.replaceAll(/\r?\n/, "\n")
-                    echo "formattedOutputs_1: ${formattedOutputs_1}"
-                    def formattedOutputs_2 = outputs.replaceAll(/(\w+\s+=\s+.+?)(?=\w+\s+=\s+)/, '$1\n---\n')
-                    echo "formattedOutputs_2: ${formattedOutputs_2}"
-
-                    // 提取 CloudWatch Log Group 名稱
-                    def logGroupName = (outputs =~ /LOG_GROUP_NAME\s+=\s+(\S+)/)[0][1]
-                    echo "logGroupName: ${logGroupName}"
-
-                    // 設定環境變數
-                    env.LOG_GROUP_NAME = logGroupName
-                                     
+                    '''                    
                 }
             }
         }
@@ -71,7 +48,7 @@ pipeline {
                 script {
                     // 獲取原始輸出
                     def outputs = sh(script: 'cd terraform && terraform refresh && terraform output', returnStdout: true).trim()
-                    echo "outputs: ${outputs}"
+                    //echo "outputs: ${outputs}"
 
                     // 將結果拆分為各自的變數
                     def outputList = outputs.split('\n').collect { it.trim() }
@@ -92,10 +69,6 @@ pipeline {
         stage('Verify Outputs') {
             steps {
                 script {
-                    // 獲取原始輸出
-                    def outputs = sh(script: 'terraform output', returnStdout: true).trim()
-                    echo "outputs: ${outputs}"
-
                     // 驗證輸出的變數
                     echo "SITE_ECR_REPO: ${env.SITE_ECR_REPO}"
                     echo "USER_SERVICE_ECR_REPO: ${env.USER_SERVICE_ECR_REPO}"
@@ -131,39 +104,6 @@ pipeline {
                     docker build -t ${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} .
                     docker build -t ${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} .
                     docker build -t ${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} .
-                    """
-                }
-            }
-        }
-
-        stage('Login to Private ECR & Push Image') {
-            steps {
-                script {
-                    // 驗證輸出的變數
-                    sh """
-                    echo "SITE_ECR_REPO: ${env.SITE_ECR_REPO}"
-                    echo "USER_SERVICE_ECR_REPO: ${env.USER_SERVICE_ECR_REPO}"
-                    echo "PRODUCT_SERVICE_ECR_REPO: ${env.PRODUCT_SERVICE_ECR_REPO}"
-                    echo "ORDER_SERVICE_ECR_REPO: ${env.ORDER_SERVICE_ECR_REPO}"
-                    echo "PAYMENT_SERVICE_ECR_REPO: ${env.PAYMENT_SERVICE_ECR_REPO}"
-                    echo "EKS_CLUSTER_NAME: ${env.EKS_CLUSTER_NAME}"
-                    echo "EKS_CLUSTER_ARN: ${env.EKS_CLUSTER_ARN}"
-                    echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
-                    echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
-                    set -e  # 開啟 Shell 的錯誤模式，若有錯誤則停止執行
-                    # 透過 AWS CLI 登入 ECR
-                    aws ecr get-login-password --region ${env.AWS_REGION} | docker login --username AWS --password-stdin ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com
-                    # Push Image 到 ECR
-                    docker tag ${env.SITE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.SITE_ECR_REPO}:${env.IMAGE_TAG}
-                    docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.SITE_ECR_REPO}:${env.IMAGE_TAG}
-                    docker tag ${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
-                    docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
-                    docker tag ${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
-                    docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
-                    docker tag ${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
-                    docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
-                    docker tag ${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
-                    docker push ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG}
                     """
                 }
             }
@@ -236,7 +176,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    # 下載並安裝 Helm 到 /tmp 目錄
+                    # 下載並安裝 Helm 到 /tmp 目錄(以防主機沒有安裝)
                     curl -L https://get.helm.sh/helm-v3.16.2-linux-amd64.tar.gz -o /tmp/helm.tar.gz
                     tar -zxvf /tmp/helm.tar.gz -C /tmp
                     export PATH=\$PATH:/tmp/linux-amd64                    
@@ -260,6 +200,7 @@ pipeline {
         stage('Install or Upgrade Fluent Bit') {
             steps {
                 script {
+                    // 用Fluent Bit將Kubernetes的log寫入cloudwatch log group
                     // 將 Helm 二進制檔案路徑加入到 PATH 中
                     sh """
                         export PATH=\$PATH:/tmp/linux-amd64
@@ -329,48 +270,34 @@ pipeline {
 
         always {
             script {
-                // 無論成功與否，確保清理 Jenkins workspace
-                //cleanWS()
-                // Clean after build
-                // 清理工作區設置
+                // 清理 Jenkins 工作區
                 cleanWs(
-                    // 如果構建未完成也進行清理
-                    cleanWhenNotBuilt: false,
-                    // 刪除目錄
-                    deleteDirs: true,
-                    // 禁用延遲清除
-                    disableDeferredWipeout: true,
-                    // 失敗時不會使構建失敗
-                    notFailBuild: true,
-                    // 包含與排除的檔案模式
+                    cleanWhenNotBuilt: false,  // 構建未完成也進行清理
+                    deleteDirs: true,          // 刪除目錄
+                    disableDeferredWipeout: true, // 禁用延遲清除
+                    notFailBuild: true,        // 清理失敗時不影響構建結果
                     patterns: [
-                        // 包含 .gitignore 檔案
-                        [pattern: '.gitignore', type: 'INCLUDE'],
-                        // 排除 .propsfile 檔案
-                        [pattern: '.propsfile', type: 'EXCLUDE']
+                        [pattern: '.gitignore', type: 'INCLUDE'],  // 包含 .gitignore 檔案
+                        [pattern: '.propsfile', type: 'EXCLUDE']  // 排除 .propsfile 檔案
                     ]
                 )
 
-                // 檢查 Terraform 是否被鎖定，並解除鎖定
+                // 檢查並解除 Terraform 狀態鎖定
                 def lockFile = 'terraform.tfstate.lock.info'
                 if (fileExists(lockFile)) {
                     echo 'Terraform state is locked, attempting to unlock...'
-                    // 用 force-unlock 解鎖
-                    def lockId = readFile(lockFile).trim() // 讀取鎖定 ID
+                    def lockId = readFile(lockFile).trim()  // 讀取鎖定 ID
                     sh "terraform force-unlock ${lockId}"
                 } else {
                     echo 'No lock found, proceeding normally.'
                 }
 
+                // 清理 Docker 資源
                 sh '''
-                    # 清除所有未使用的 build cache
-                    docker builder prune -f
-                    # 刪除未使用的容器
-                    docker container prune -f
-                    # 刪除所有未使用的映像
-                    # docker image prune -a -f
-                    # 刪除所有未使用的 docker 磁碟機
-                    # docker volume prune -f
+                    docker builder prune -f        # 清除所有未使用的 build cache
+                    docker container prune -f      # 刪除未使用的容器
+                    # docker image prune -a -f     # 刪除所有未使用的映像
+                    # docker volume prune -f       # 刪除未使用的磁碟機
                 '''
             }
         }
