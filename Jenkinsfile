@@ -253,7 +253,7 @@ pipeline {
             // 如果過程失敗，清除 terraform 建的資源
             sh '''
                 cd terraform     # 切換到 terraform 目錄
-                chmod +x delete_ecr_images.sh   # 確保 delete_ecr_images.sh 可執行
+                sudo chmod +x delete_ecr_images.sh   # 確保 delete_ecr_images.sh 可執行
                 ./delete_ecr_images.sh  # 注意加上 "./" 來執行當前目錄的腳本，執行刪除映像的腳本
                 terraform destroy -auto-approve     # 刪除 terraform 資源
                 rm -rf .terraform*              # 刪除相關的 terraform 檔案
