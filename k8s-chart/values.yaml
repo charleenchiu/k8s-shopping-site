@@ -4,37 +4,37 @@ serviceType: "ClusterIP"  # 預設值ClusterIP，會被 Jenkins 的 Helm 指令�
 awsLogsGroup: "" # 這裡會被 Jenkins 的 Helm 指令動態設置
 
 services:
-  - name: "user-service"
+  site-service:
+    image:
+      repository: "site-service-ecr-repo-uri"
+      tag: "latest"
+    service:
+      port: 3000
+
+  user-service:
     image:
       repository: "user-service-ecr-repo-uri"
       tag: "latest"
     service:
       port: 3001
 
-  - name: "product-service"
+  product-service:
     image:
       repository: "product-service-ecr-repo-uri"
       tag: "latest"
     service:
       port: 3002
 
-  - name: "order-service"
+  order-service:
     image:
       repository: "order-service-ecr-repo-uri"
       tag: "latest"
     service:
       port: 3003
 
-  - name: "payment-service"
+  payment-service:
     image:
       repository: "payment-service-ecr-repo-uri"
       tag: "latest"
     service:
       port: 3004
-
-  - name: "site-service"
-    image:
-      repository: "site-service-ecr-repo-uri"
-      tag: "latest"
-    service:
-      port: 3000

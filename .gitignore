@@ -32,3 +32,5 @@ k8s-chart/*.log
 
 MyNote/#15.txt
 MyNote/#18.txt
+k8s-chart/templates/deployment copy.yaml
+k8s-chart/values copy.yaml

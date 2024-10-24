@@ -1,16 +1,16 @@
-{{- range .Values.services }}
+{{- range $serviceName, $service := .Values.services }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .name }}-service
+  name: {{ $serviceName }}-service
   labels:
-    app: {{ .name }}
+    app: {{ $serviceName }}
 spec:
   type: {{ $.Values.serviceType | default "ClusterIP" }}  # 若 .service.type 為 nil，則使用預設值 "ClusterIP"
   ports:
   - protocol: TCP
-    port: {{ .service.port }}  # 引用每個服務的 port
-    targetPort: {{ .service.port }}  # 引用每個服務的 targetPort
+    port: {{ $service.service.port }}  # 引用每個服務的 port
+    targetPort: {{ $service.service.port }}  # 引用每個服務的 targetPort
   selector:
-    app: {{ .name }}  # 確保 selector 指向正確的服務
+    app: {{ $serviceName }}  # 確保 selector 指向正確的服務
 {{- end }}
