@@ -121,7 +121,6 @@ pipeline {
         }
         */
         
-        /*
         stage('Build Docker Image') {
             steps {
                 script {
@@ -136,9 +135,7 @@ pipeline {
                 }
             }
         }
-        */
 
-        /*
         stage('Login to Private ECR & Push Image') {
             steps {
                 script {
@@ -170,9 +167,8 @@ pipeline {
                     """
                 }
             }
-        }*/
+        }
 
-        /*
         stage('Login to Public ECR & Push Image') {
             steps {
                 script {
@@ -204,7 +200,6 @@ pipeline {
                 }
             }
         }
-        */
         
         /*
         stage('Update Kubernetes Deployment') {
@@ -262,25 +257,6 @@ pipeline {
             }
         }
 
-        /*
-        stage('Install Fluent Bit') {
-            steps {
-                script {
-                    sh """
-                    # 將 Helm 二進制檔案路徑加入到 PATH 中
-                    export PATH=\$PATH:/tmp/linux-amd64                    
-                    # 安裝 Fluent Bit Helm Chart
-                    helm repo add fluent https://fluent.github.io/helm-charts
-                    helm repo update
-                    helm install aws-for-fluent-bit fluent/fluent-bit \
-                    --set awsRegion=${env.AWS_REGION} \
-                    --set cloudWatch.logGroupName=${env.LOG_GROUP_NAME}
-                    """
-                }
-            }
-        }
-        */
-
         stage('Install or Upgrade Fluent Bit') {
             steps {
                 script {
@@ -297,58 +273,6 @@ pipeline {
                 }
             }
         }
-
-        /*
-        stage('Helm Deploy') {
-            steps {
-                script {
-                    // 建立 Docker images 的設定，使用參數命名方式
-                    //private ECR
-                    def images = """
-                        --set services.user-service.image.repository=${env.USER_SERVICE_ECR_REPO} \
-                        --set services.user-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.product-service.image.repository=${env.PRODUCT_SERVICE_ECR_REPO} \
-                        --set services.product-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.order-service.image.repository=${env.ORDER_SERVICE_ECR_REPO} \
-                        --set services.order-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.payment-service.image.repository=${env.PAYMENT_SERVICE_ECR_REPO} \
-                        --set services.payment-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.site-service.image.repository=${env.SITE_ECR_REPO} \
-                        --set services.site-service.image.tag=${env.IMAGE_TAG}
-                    """                    
-
-                    //public ECR
-                    // 建立 Docker images 的設定，使用參數命名方式
-                    def images = """
-                        --set services.user-service.image.repository=${env.USER_SERVICE_ECR_REPO} \
-                        --set services.user-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.product-service.image.repository=${env.PRODUCT_SERVICE_ECR_REPO} \
-                        --set services.product-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.order-service.image.repository=${env.ORDER_SERVICE_ECR_REPO} \
-                        --set services.order-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.payment-service.image.repository=${env.PAYMENT_SERVICE_ECR_REPO} \
-                        --set services.payment-service.image.tag=${env.IMAGE_TAG} \
-                        --set services.site-service.image.repository=${env.SITE_ECR_REPO} \
-                        --set services.site-service.image.tag=${env.IMAGE_TAG}
-                    """.stripIndent()
-
-                    // 進入 helm chart 目錄
-                    dir('./k8s-chart') {
-                        // 使用 helm 指令，使用參數命名方式動態傳遞 awsRegion、serviceType 和 awsLogsGroup
-                        sh """
-                            set -x  # 啟用命令追蹤
-                            helm upgrade --install k8s-site . \
-                            --set awsRegion=${env.AWS_REGION} \
-                            --set serviceType=${env.SERVICE_TYPE} \
-                            --set awsLogsGroup=${env.LOG_GROUP_NAME} \
-                            ${images}
-                            set +x  # 關閉命令追蹤
-                        """
-                    }
-                }
-            }
-        }
-        */
 
         stage('Helm Deploy') {
             steps {
