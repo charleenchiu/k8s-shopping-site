@@ -8,9 +8,9 @@ metadata:
 spec:
   type: {{ $.Values.serviceType | default "ClusterIP" }}  # 若 .service.type 為 nil，則使用預設值 "ClusterIP"
   ports:
-  - protocol: TCP
-    port: {{ $service.service.port }}  # 引用每個服務的 port
-    targetPort: {{ $service.service.port }}  # 引用每個服務的 targetPort
+    - protocol: TCP
+      port: {{ $service.service.port | default 80 }}    # 引用每個服務的 port。提供預設值以防止 nil
+      targetPort: {{ $service.service.port | default 80 }}  # 引用每個服務的 targetPort。提供預設值以防止 nil
   selector:
-    app: {{ $serviceName }}  # 確保 selector 指向正確的服務
+    app: {{ $serviceName }} # 確保 selector 指向正確的服務
 {{- end }}

@@ -1,6 +1,6 @@
 # 如何刪除先前jenkins建置失敗，但terraform已建立的AWS資源：
 
-1. 首先要確認Jenkins Server這台EC2存取其他資源的role(例如本專案會用到的EC2、ECR、EKS、CloudWatch等)有足夠的權限，例如：
+1. 首先要確認Jenkins Server這台EC2存取其他資源的role "Jenkins_Role"(例如本專案會用到的EC2、ECR、EKS、CloudWatch等)有足夠的權限，例如：
 政策名稱：
 AmazonEC2ContainerRegistryFullAccess  (AWS 受管)
 AmazonEC2ReadOnlyAccess  (AWS 受管)
@@ -23,6 +23,9 @@ ekspolicy (客戶內嵌)
 			"Action": [
 				"eks:DescribeCluster",
 				"eks:ListClusters",
+				"eks:UpdateClusterConfig",
+				"eks:CreateCluster",
+				"eks:DeleteCluster",
 				"eks:DescribeNodegroup",
 				"eks:ListNodegroups",
 				"eks:CreateNodegroup",

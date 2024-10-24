@@ -17,7 +17,7 @@ spec:
       - name: {{ $serviceName }}
         image: "{{ $service.image.repository }}:{{ $service.image.tag }}"
         ports:
-        - containerPort: {{ $service.service.port }}
+        - containerPort: {{ $service.service.port | default 80 }}  # 使用預設值以防止 nil
         env:
         - name: AWS_LOG_GROUP
           value: "{{ $.Values.awsLogsGroup }}"
