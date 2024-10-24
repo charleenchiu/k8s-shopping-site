@@ -26,6 +26,7 @@ ekspolicy (客戶內嵌)
 				"eks:UpdateClusterConfig",
 				"eks:CreateCluster",
 				"eks:DeleteCluster",
+				"eks:UpdateClusterConfig",
 				"eks:DescribeNodegroup",
 				"eks:ListNodegroups",
 				"eks:CreateNodegroup",

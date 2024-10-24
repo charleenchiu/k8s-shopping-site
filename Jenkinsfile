@@ -7,18 +7,9 @@ pipeline {
         AWS_ACCOUNT_ID = '167804136284' // AWS 帳戶 ID
         IMAGE_TAG = 'latest' // Docker Image Tag
         AWS_REGION = 'us-east-1'    // AWS 區域
-        SERVICE_TYPE = "ClusterIP"    // Kubernetes 的 Service Type
+        SERVICE_TYPE = "LoadBalancer"    // Kubernetes 的 Service Type
         /*
-        SITE_ECR_REPO = ''   // ECR Repository 名稱（將在 Terraform 階段後更新）
-        USER_SERVICE_ECR_REPO = ''  // User Service 的 ECR Repository
-        PRODUCT_SERVICE_ECR_REPO = '' // Product Service 的 ECR Repository
-        ORDER_SERVICE_ECR_REPO = '' // Order Service 的 ECR Repository
-        PAYMENT_SERVICE_ECR_REPO = '' // Payment Service 的 ECR Repository
-        EKS_CLUSTER_NAME = '' // EKS Cluster Name（將在 Terraform 階段後更新）
-        EKS_CLUSTER_ARN = '' // EKS Cluster ARN（將在 Terraform 階段後更新）
-        EKS_CLUSTER_URL = '' // EKS Cluster URL（將在 Terraform 階段後更新）
-        KUBECONFIG_CERTIFICATE_AUTHORITY_DATA = '' // Kubernetes 憑證授權中心的資料
-        LOG_GROUP_NAME = ''   // CloudWatch Log Group 名稱（將在 Terraform 階段後更新）
+        將在 Terraform 階段後更新的環境變數，不可在這裡給預設值，會無法在建置過程中賦值
         */
     }
 
