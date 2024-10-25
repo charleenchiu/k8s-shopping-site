@@ -1,0 +1,19 @@
+#確認 Service 與 Deployment 的 Selector 配對
+#deployment.yaml 中的 .spec.selector.matchLabels 和 service.yaml 中的 .spec.selector 要完全匹配。確保 app 標籤在 Deployment 和 Service 中一致。
+
+{{- range $serviceName, $service := .Values.services }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $serviceName }}-service
+  labels:
+    app: {{ $serviceName }}
+spec:
+  type: {{ $.Values.serviceType | default "ClusterIP" }}  # 若 .service.type 為 nil，則使用預設值 "ClusterIP"
+  ports:
+    - protocol: TCP
+      port: {{ $service.service.port | default 80 }}    # 引用每個服務的 port。提供預設值以防止 nil
+      targetPort: {{ $service.service.port | default 80 }}  # 引用每個服務的 targetPort。提供預設值以防止 nil
+  selector:
+    app: {{ $serviceName }} # 確保 selector 指向正確的服務
+{{- end }}

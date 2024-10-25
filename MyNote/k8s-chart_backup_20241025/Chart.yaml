@@ -1,0 +1,12 @@
+apiVersion: v2
+name: k8s-shopping-site
+description: A Helm chart for deploying the k8s shopping site microservices
+
+# This chart is an application chart containing multiple microservices
+type: application
+
+# The version of the chart, increment this each time you modify the chart
+version: 0.1.0
+
+# The version of the application being deployed. Update this when you make changes to your services.
+appVersion: "1.16.0"
