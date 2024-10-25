@@ -1,4 +1,12 @@
 # 我能否用http://<node的external ip>:<service的port>來連到我的微服務？
+```sh
+# service.yaml裡的service type要指定為 LoadBalancer
+kubectl get deployments
+kubectl get nodes -o wide
+kubectl get pods
+kubectl get services
+# 瀏覽網址和port？
+```
 ubuntu@ip-172-16-10-31:~$ kubectl get nodes -o wide
 NAME                           STATUS   ROLES    AGE   VERSION               INTERNAL-IP    EXTERNAL-IP    OS-IMAGE                       KERNEL-VERSION                    CONTAINER-RUNTIME
 ip-172-16-11-46.ec2.internal   Ready    <none>   89m   v1.31.0-eks-a737599   172.16.11.46   54.174.230.1   Amazon Linux 2023.6.20241010   6.1.112-122.189.amzn2023.x86_64   containerd://1.7.22

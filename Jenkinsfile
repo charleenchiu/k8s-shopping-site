@@ -5,6 +5,7 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         AWS_ACCOUNT_ID = '167804136284' // AWS 帳戶 ID
+        HELM_RELEASE_NAME="k8s-site"    // Helm upgrade 時用的release name
         IMAGE_TAG = 'latest' // Docker Image Tag
         AWS_REGION = 'us-east-1'    // AWS 區域
         SERVICE_TYPE = "LoadBalancer"    // Kubernetes 的 Service Type
@@ -225,7 +226,7 @@ pipeline {
                         // 使用 helm 指令，使用參數命名方式動態傳遞 awsRegion、serviceType 和 awsLogsGroup
                         sh """
                             set -x  # 啟用命令追蹤
-                            helm upgrade --install k8s-site . \
+                            helm upgrade --install ${env.HELM_RELEASE_NAME} . \
                             --set awsRegion=${env.AWS_REGION} \
                             --set serviceType=${env.SERVICE_TYPE} \
                             --set awsLogsGroup=${env.LOG_GROUP_NAME} \
@@ -252,6 +253,8 @@ pipeline {
         failure {
             // 如果過程失敗，清除 terraform 建的資源
             sh '''
+                helm uninstall ${env.HELM_RELEASE_NAME} # 刪除Helm建立的資源，例如ELB。但不會自動刪除 Docker 映像
+                helm uninstall aws-for-fluent-bit
                 cd terraform     # 切換到 terraform 目錄
                 sudo chmod +x delete_ecr_images.sh   # 確保 delete_ecr_images.sh 可執行
                 ./delete_ecr_images.sh  # 注意加上 "./" 來執行當前目錄的腳本，執行刪除映像的腳本

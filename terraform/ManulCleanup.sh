@@ -4,6 +4,11 @@
 read -p "請輸入 AWS access_key: " access_key
 read -p "請輸入 AWS secret_key: " secret_key
 
+# 刪除Helm建立的資源，例如ELB。但不會自動刪除 Docker 映像
+# helm uninstall <release-name>
+helm uninstall k8s-site
+helm uninstall aws-for-fluent-bit
+
 # 檢查 Jenkins 專案目錄是否存在
 cd /var/lib/jenkins/workspace/K8S_Shopping_Site/terraform || { echo "找不到 Jenkins 專案目錄，請確認路徑是否正確"; exit 1; }
 
