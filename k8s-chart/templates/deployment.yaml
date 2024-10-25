@@ -11,16 +11,16 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ $serviceName }}
+        app: {{ .Values.appName }}
     spec:
       containers:
-      - name: {{ $serviceName }}
-        image: "{{ $service.image.repository }}:{{ $service.image.tag }}"
-        ports:
-        - containerPort: {{ $service.service.port | default 80 }}  # 使用預設值以防止 nil
-        env:
-        - name: AWS_LOG_GROUP
-          value: "{{ $.Values.awsLogsGroup }}"
-        - name: AWS_REGION
-          value: "{{ $.Values.awsRegion }}"
+        - name: {{ $serviceName }}
+          image: "{{ $service.image.repository }}:{{ $service.image.tag }}"
+          ports:
+          - containerPort: {{ $service.service.port | default 80 }}
+          env:
+          - name: AWS_LOG_GROUP
+            value: "{{ $.Values.awsLogsGroup }}"
+          - name: AWS_REGION
+            value: "{{ $.Values.awsRegion }}"
 {{- end }}
