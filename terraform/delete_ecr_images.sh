@@ -8,10 +8,10 @@ for repo in "${repositories[@]}"; do
     echo "Processing repository: $repo"
 
     # 取得所有映像的 Digest
-    image_digests=$(aws ecr describe-images --repository-name "$repo" --query 'imageDetails[].imageDigest' --output text)
+    image_digests=$(aws ecr describe-images --repository-name "$repo" --query 'imageDetails[].imageDigest' --output text 2>/dev/null)
 
     if [ -z "$image_digests" ]; then
-        echo "No images found in $repo"
+        echo "No images found in $repo or repository does not exist."
         continue
     fi
 
@@ -19,7 +19,13 @@ for repo in "${repositories[@]}"; do
 
     # 逐個刪除映像
     for digest in $image_digests; do
-        aws ecr batch-delete-image --repository-name "$repo" --image-ids imageDigest=$digest
+        echo "Deleting image with digest: $digest"
+        aws ecr batch-delete-image --repository-name "$repo" --image-ids imageDigest="$digest"
+        if [ $? -ne 0 ]; then
+            echo "Failed to delete image with digest: $digest from $repo"
+        else
+            echo "Successfully deleted image with digest: $digest from $repo"
+        fi
     done
 done
 
