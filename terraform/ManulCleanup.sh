@@ -25,7 +25,7 @@ sudo chmod +x ./delete_ecr_images.sh
 
 # 執行 terraform destroy 並清理 terraform 臨時檔案
 sudo terraform destroy -auto-approve || { echo "Terraform 資源刪除失敗"; exit 1; }
-sudo rm -rf .terraform*
+sudo rm -rf .terraform* 
 sudo rm -rf terraform.tfstate*
 
 # 執行 Docker 清理命令
