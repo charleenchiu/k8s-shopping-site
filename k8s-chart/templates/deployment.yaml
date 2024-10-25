@@ -10,7 +10,7 @@ metadata:
     app: {{ $serviceName }}
 spec:
   replicas: {{ $.Values.replicaCount }}
-  selector:
+  selector:火火火火火
     matchLabels:
       app: {{ $serviceName }}
   template:

@@ -1,0 +1,938 @@
+---
+Metadata:
+  TemplateId: "arn:aws:cloudformation:us-east-1:167804136284:generatedTemplate/7d107a81-b70d-4ceb-8c1b-e8b9e8d60d05"
+Resources:
+  ECRPublicRepository00k8sshoppingsiteuserservice00RtCZ3:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::ECR::PublicRepository"
+    DeletionPolicy: "Delete"
+    Properties:
+      RepositoryName: "k8s-shopping-site/user_service"
+      RepositoryCatalogData: {}
+      Tags: []
+  EC2NetworkInterface00eni00a404cbdbba32d3100SG3tM:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::NetworkInterface"
+    DeletionPolicy: "Delete"
+    Properties:
+      Description: "aws-K8S-i-0d0a27725b24bf4e5"
+      PrivateIpAddress: "172.16.11.176"
+      PrivateIpAddresses:
+      - PrivateIpAddress: "172.16.11.176"
+        Primary: true
+      - PrivateIpAddress: "172.16.11.130"
+        Primary: false
+      - PrivateIpAddress: "172.16.11.68"
+        Primary: false
+      - PrivateIpAddress: "172.16.11.71"
+        Primary: false
+      - PrivateIpAddress: "172.16.11.252"
+        Primary: false
+      - PrivateIpAddress: "172.16.11.239"
+        Primary: false
+      SecondaryPrivateIpAddressCount: 5
+      Ipv6PrefixCount: 0
+      Ipv4Prefixes: []
+      Ipv4PrefixCount: 0
+      GroupSet:
+      - "sg-03f4ea426bab22efa"
+      Ipv6Prefixes: []
+      SubnetId:
+        Ref: "EC2Subnet00subnet01a1ebac945fa585300ruM1x"
+      SourceDestCheck: true
+      InterfaceType: "interface"
+      Tags:
+      - Value: "k8s-shopping-site_cluster"
+        Key: "cluster.k8s.amazonaws.com/name"
+      - Value: "2024-10-25T16:15:31Z"
+        Key: "node.k8s.amazonaws.com/createdAt"
+      - Value: "i-0d0a27725b24bf4e5"
+        Key: "node.k8s.amazonaws.com/instance_id"
+  EC2NetworkInterface00eni0e27d680db953de7000GR46A:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::NetworkInterface"
+    DeletionPolicy: "Delete"
+    Properties:
+      Description: ""
+      PrivateIpAddress: "172.16.11.19"
+      PrivateIpAddresses:
+      - PrivateIpAddress: "172.16.11.19"
+        Primary: true
+      - PrivateIpAddress: "172.16.11.52"
+        Primary: false
+      - PrivateIpAddress: "172.16.11.149"
+        Primary: false
+      - PrivateIpAddress: "172.16.11.246"
+        Primary: false
+      - PrivateIpAddress: "172.16.11.11"
+        Primary: false
+      - PrivateIpAddress: "172.16.11.15"
+        Primary: false
+      SecondaryPrivateIpAddressCount: 5
+      Ipv6PrefixCount: 0
+      Ipv4Prefixes: []
+      Ipv4PrefixCount: 0
+      GroupSet:
+      - "sg-03f4ea426bab22efa"
+      Ipv6Prefixes: []
+      SubnetId:
+        Ref: "EC2Subnet00subnet01a1ebac945fa585300ruM1x"
+      SourceDestCheck: true
+      InterfaceType: "interface"
+      Tags:
+      - Value: "k8s-shopping-site_cluster"
+        Key: "cluster.k8s.amazonaws.com/name"
+      - Value: "i-0d0a27725b24bf4e5"
+        Key: "node.k8s.amazonaws.com/instance_id"
+  IAMRole00eksNodeGroupRole00TSG8b:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Delete"
+    Properties:
+      Path: "/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+      - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPullOnly"
+      - "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+      - "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+      - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+      MaxSessionDuration: 3600
+      RoleName: "eksNodeGroupRole"
+      Description: "Allows EC2 instances to call AWS services on your behalf."
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "ec2.amazonaws.com"
+  IAMInstanceProfile00eksNodeRole00uxB6j:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::IAM::InstanceProfile"
+    DeletionPolicy: "Delete"
+    Properties:
+      Path: "/"
+      Roles:
+      - Ref: "IAMRole00eksNodeRole000SS78"
+      InstanceProfileName:
+        Ref: "IAMRole00eksNodeRole000SS78"
+  EC2NetworkInterface00eni0256b258e3726963700A3D1k:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::NetworkInterface"
+    DeletionPolicy: "Delete"
+    Properties:
+      Description: ""
+      PrivateIpAddress: "172.16.10.31"
+      PrivateIpAddresses:
+      - PrivateIpAddress: "172.16.10.31"
+        Primary: true
+      SecondaryPrivateIpAddressCount: 0
+      Ipv6PrefixCount: 0
+      Ipv4Prefixes: []
+      Ipv4PrefixCount: 0
+      GroupSet:
+      - "sg-0f8aa01fc499922a6"
+      Ipv6Prefixes: []
+      SubnetId:
+        Ref: "EC2Subnet00subnet0153eaf2e8d59b0a0002Lk5b"
+      SourceDestCheck: true
+      InterfaceType: "interface"
+      Tags: []
+  EC2SecurityGroup00sg0f8aa01fc499922a600DXcDO:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::SecurityGroup"
+    DeletionPolicy: "Delete"
+    Properties:
+      GroupDescription: "JenkinsSG"
+      GroupName: "JenkinsSG"
+      VpcId:
+        Ref: "EC2VPC00vpc02fb581658eb58d45000YBs6"
+      SecurityGroupIngress:
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "tcp"
+        Description: "All IP to port8080"
+        FromPort: 8080
+        ToPort: 8080
+      - CidrIp:
+          Fn::GetAtt:
+          - "EC2VPC00vpc02fb581658eb58d45000YBs6"
+          - "CidrBlock"
+        IpProtocol: "tcp"
+        Description: "Private IP to port8080"
+        FromPort: 8080
+        ToPort: 8080
+      - IpProtocol: "tcp"
+        Description: "SonarSG to port8080"
+        FromPort: 8080
+        SourceSecurityGroupId: "sg-045c57d2935ed51b9"
+        ToPort: 8080
+        SourceSecurityGroupOwnerId: "167804136284"
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "tcp"
+        Description: "SSH"
+        FromPort: 22
+        ToPort: 22
+      SecurityGroupEgress:
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "-1"
+        FromPort: -1
+        ToPort: -1
+      Tags:
+      - Value: "JenkinsSG"
+        Key: "Name"
+  EC2Volume00vol0f87a5fde9dc8061600ER634:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::Volume"
+    DeletionPolicy: "Delete"
+    Properties:
+      MultiAttachEnabled: false
+      SnapshotId: "snap-0dac0a971aab77879"
+      VolumeType: "gp3"
+      Encrypted: false
+      Size: 20
+      AutoEnableIO: true
+      AvailabilityZone: "us-east-1a"
+      Throughput: 125
+      Iops: 3000
+      Tags: []
+  EKSNodegroup00k8sshoppingsiteclusterk8sshoppingsitenodegroup00ojPHB:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EKS::Nodegroup"
+    DeletionPolicy: "Delete"
+    Properties:
+      UpdateConfig:
+        MaxUnavailable: 1
+      ScalingConfig:
+        MinSize: 1
+        DesiredSize: 1
+        MaxSize: 2
+      Labels: {}
+      Taints: []
+      CapacityType: "ON_DEMAND"
+      ReleaseVersion: "1.31.0-20241024"
+      NodegroupName: "k8s-shopping-site_node_group"
+      NodeRole:
+        Fn::GetAtt:
+        - "IAMRole00eksNodeGroupRole00TSG8b"
+        - "Arn"
+      Subnets:
+      - Ref: "EC2Subnet00subnet01a1ebac945fa585300ruM1x"
+      - Ref: "EC2Subnet00subnet0153eaf2e8d59b0a0002Lk5b"
+      AmiType: "AL2023_x86_64_STANDARD"
+      Version: "1.31"
+      DiskSize: 20
+      ClusterName:
+        Ref: "EKSCluster00k8sshoppingsitecluster00ek8Fc"
+      InstanceTypes:
+      - "t3.medium"
+      Tags: {}
+  EC2Instance00i0d0a27725b24bf4e500v7mbD:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::Instance"
+    DeletionPolicy: "Delete"
+    Properties:
+      Tenancy: "default"
+      SecurityGroups:
+      - "eks-cluster-sg-k8s-shopping-site_cluster-107531360"
+      PrivateIpAddress: "172.16.11.19"
+      UserData: "TUlNRS1WZXJzaW9uOiAxLjAKQ29udGVudC1UeXBlOiBtdWx0aXBhcnQvbWl4ZWQ7IGJvdW5kYXJ5PSIvLyIKCi0tLy8KQ29udGVudC1UeXBlOiBhcHBsaWNhdGlvbi9ub2RlLmVrcy5hd3MKCi0tLQphcGlWZXJzaW9uOiBub2RlLmVrcy5hd3MvdjFhbHBoYTEKa2luZDogTm9kZUNvbmZpZwpzcGVjOgogIGNsdXN0ZXI6CiAgICBhcGlTZXJ2ZXJFbmRwb2ludDogaHR0cHM6Ly9ENTJDQTg1RTZFN0U5MDA3RTBBQjQ1RDEyQjlDNzVBMy5ncjcudXMtZWFzdC0xLmVrcy5hbWF6b25hd3MuY29tCiAgICBjZXJ0aWZpY2F0ZUF1dGhvcml0eTogTFMwdExTMUNSVWRKVGlCRFJWSlVTVVpKUTBGVVJTMHRMUzB0Q2sxSlNVUkNWRU5EUVdVeVowRjNTVUpCWjBsSlNXTk1VbFY1V0ZCNFRqUjNSRkZaU2t0dldrbG9kbU5PUVZGRlRFSlJRWGRHVkVWVVRVSkZSMEV4VlVVS1FYaE5TMkV6Vm1sYVdFcDFXbGhTYkdONlFXVkdkekI1VGtSRmQwMXFWWGhPVkZVMFRYcEtZVVozTUhwT1JFVjNUV3BOZUU1cVFYcE5la3BoVFVKVmVBcEZla0ZTUW1kT1ZrSkJUVlJEYlhReFdXMVdlV0p0VmpCYVdFMTNaMmRGYVUxQk1FZERVM0ZIVTBsaU0wUlJSVUpCVVZWQlFUUkpRa1IzUVhkblowVkxDa0Z2U1VKQlVVTnVTRXQ1WlZac2VHTk9ZWE5sWmlzNVVUaEVWV2huWTNkeWEyUkhTblF3VFU0M09DOWxjRUl3Ym5obk5XVXhiazFMZWpOdlozRlFjR0lLTjNGNVVqZGxiV1pDUTNSdGRVazVRbkYzTlRJNFFubFpPRzF5T0VRd1NHMUxNVTVDZEhBelVVZFpWWGxrTjJWQ1MxVlFiVmxPYUVaVGVscDBlVTA1VFFwQk16STNXRGdyY3pkc1UwRndOVmxDVUdwV2QxUkhPV1J2VFdwTmMwRXJWVVV2ZERGSVpXZFljRlF3YVRoNVYyNUJSbmRwU1VkVWFsQm9NRTExT1VKUUNsbzJSRXBFYUdjeVNqTXdSbTVyTkRKTmNVTXpjMG9yUWtGRVJraEVSR2g0TVd0MlUwZ3dRekpKTVdWRlltSXpZamhXWTFSM0wyMVFkMlZwVm1zd01TOEtNR3RaVkUxQ09UaFdiblJSV1hkQ00yUjRRbUo2VFhnNFJVUlpVRkZTUmtwYVNWcG5NSFZVUjNaalkwWnNWa3R3VFU5dldpODFjMGQ1YTFKRmNFRlVNUXBDVkVNd1NHMTRjelZXV0RWc1RFaDFPV0pzWWtWbk5FdFFiSEIwUVdkTlFrRkJSMnBYVkVKWVRVRTBSMEV4VldSRWQwVkNMM2RSUlVGM1NVTndSRUZRQ2tKblRsWklVazFDUVdZNFJVSlVRVVJCVVVndlRVSXdSMEV4VldSRVoxRlhRa0pTVkRsYVMxTmlOR3BUYTI1RmVWTktPRTVuZG5KR2JFOTVTWEpVUVZZS1FtZE9Wa2hTUlVWRWFrRk5aMmR3Y21SWFNteGpiVFZzWkVkV2VrMUJNRWREVTNGSFUwbGlNMFJSUlVKRGQxVkJRVFJKUWtGUlFuQjRObHBSYUdOS1pBcG1WVVJPTVhWTFMyTldlRTEzT0RWWlkwZERiR0U0VUdSQk9XRldhMUJ5TW5CTVZWQkxabEEzZEhGcFFqSXhjMGxJZVd0M1FYZDFRVTkxTDNWd1RIRlpDamxtTjFvMFJWUm5iMW9yU1hOVmVETlRkR3BEVVU1bU0zcHpjWGxtWkZJMGQzUnNkbXAzV0hwWWRXMTVaa2QxSzNkSmFrWTVhRUZoTUdoNlZsQmpXbGNLUTFFd1FVaGtaemwxVWxCdVJEUm1SamRGWkdWaGJUbFpObWh5WVU5RGFqWTJORmxhUlRrdk1qRTFhREp4UjFkWWVGSm1SblpxV0VWeWEyeEtlVEpoZUFvM0wzTkNWRFZhT0ZaMU1TdEVSbTFOVEVKQlQwZzRSbXBoU25OUlFqUjJaV3hYVjNSbVZrdFNOa1pNUmpaelFsTmtiVVZWU2s1Q1ZHWkNha2g0TUdNd0NsQkdjRXhYWjJWTWRrazVXR1ZOT1daTFFXWnhWV3RtZVd0cVpreENVbTl4ZGl0NGQwMUhOR2haWTNGd1JGbHJRVlJsZVdsTmIwcFJaVGxzZEdab2R6RUtSSEZFSzNKUlNISlhlRWcxQ2kwdExTMHRSVTVFSUVORlVsUkpSa2xEUVZSRkxTMHRMUzBLCiAgICBjaWRyOiAxMC4xMDAuMC4wLzE2CiAgICBuYW1lOiBrOHMtc2hvcHBpbmctc2l0ZV9jbHVzdGVyCiAga3ViZWxldDoKICAgIGNvbmZpZzoKICAgICAgbWF4UG9kczogMTcKICAgICAgY2x1c3RlckROUzoKICAgICAgLSAxMC4xMDAuMC4xMAogICAgZmxhZ3M6CiAgICAtICItLW5vZGUtbGFiZWxzPWVrcy5hbWF6b25hd3MuY29tL25vZGVncm91cC1pbWFnZT1hbWktMGE1OTBkNmFlMWQ0NDkwODAsZWtzLmFtYXpvbmF3cy5jb20vY2FwYWNpdHlUeXBlPU9OX0RFTUFORCxla3MuYW1hem9uYXdzLmNvbS9ub2RlZ3JvdXA9azhzLXNob3BwaW5nLXNpdGVfbm9kZV9ncm91cCIKCi0tLy8tLQ=="
+      BlockDeviceMappings:
+      - Ebs:
+          SnapshotId: "snap-07098ce05b5bf7c9f"
+          VolumeType: "gp3"
+          Iops: 3000
+          VolumeSize: 20
+          Encrypted: false
+          DeleteOnTermination: true
+        DeviceName: "/dev/xvda"
+      IamInstanceProfile:
+        Ref: "IAMInstanceProfile00eks8ec96236d856002def64e3319299a23400dRREx"
+      SubnetId:
+        Ref: "EC2Subnet00subnet01a1ebac945fa585300ruM1x"
+      EbsOptimized: false
+      Volumes:
+      - VolumeId: "vol-0a953d8b189dbaa18"
+        Device: "/dev/xvda"
+      NetworkInterfaces:
+      - PrivateIpAddresses:
+        - PrivateIpAddress: "172.16.11.19"
+          Primary: true
+        - PrivateIpAddress: "172.16.11.52"
+          Primary: false
+        - PrivateIpAddress: "172.16.11.149"
+          Primary: false
+        - PrivateIpAddress: "172.16.11.246"
+          Primary: false
+        - PrivateIpAddress: "172.16.11.11"
+          Primary: false
+        - PrivateIpAddress: "172.16.11.15"
+          Primary: false
+        SecondaryPrivateIpAddressCount: 5
+        DeviceIndex: "0"
+        GroupSet:
+        - Ref: "EC2SecurityGroup00sg03f4ea426bab22efa00oT1TJ"
+        Ipv6Addresses: []
+        SubnetId:
+          Ref: "EC2Subnet00subnet01a1ebac945fa585300ruM1x"
+        AssociatePublicIpAddress: true
+        NetworkInterfaceId:
+          Ref: "EC2NetworkInterface00eni0e27d680db953de7000GR46A"
+        DeleteOnTermination: true
+      - Description: "aws-K8S-i-0d0a27725b24bf4e5"
+        PrivateIpAddresses:
+        - PrivateIpAddress: "172.16.11.133"
+          Primary: true
+        - PrivateIpAddress: "172.16.11.216"
+          Primary: false
+        - PrivateIpAddress: "172.16.11.10"
+          Primary: false
+        - PrivateIpAddress: "172.16.11.27"
+          Primary: false
+        - PrivateIpAddress: "172.16.11.187"
+          Primary: false
+        - PrivateIpAddress: "172.16.11.220"
+          Primary: false
+        SecondaryPrivateIpAddressCount: 5
+        DeviceIndex: "1"
+        GroupSet:
+        - Ref: "EC2SecurityGroup00sg03f4ea426bab22efa00oT1TJ"
+        Ipv6Addresses: []
+        SubnetId:
+          Ref: "EC2Subnet00subnet01a1ebac945fa585300ruM1x"
+        AssociatePublicIpAddress: false
+        NetworkInterfaceId:
+          Ref: "EC2NetworkInterface00eni05448275bf4e1de6900OnQNs"
+        DeleteOnTermination: true
+      - Description: "aws-K8S-i-0d0a27725b24bf4e5"
+        PrivateIpAddresses:
+        - PrivateIpAddress: "172.16.11.176"
+          Primary: true
+        - PrivateIpAddress: "172.16.11.130"
+          Primary: false
+        - PrivateIpAddress: "172.16.11.68"
+          Primary: false
+        - PrivateIpAddress: "172.16.11.71"
+          Primary: false
+        - PrivateIpAddress: "172.16.11.252"
+          Primary: false
+        - PrivateIpAddress: "172.16.11.239"
+          Primary: false
+        SecondaryPrivateIpAddressCount: 5
+        DeviceIndex: "2"
+        GroupSet:
+        - Ref: "EC2SecurityGroup00sg03f4ea426bab22efa00oT1TJ"
+        Ipv6Addresses: []
+        SubnetId:
+          Ref: "EC2Subnet00subnet01a1ebac945fa585300ruM1x"
+        AssociatePublicIpAddress: false
+        NetworkInterfaceId:
+          Ref: "EC2NetworkInterface00eni00a404cbdbba32d3100SG3tM"
+        DeleteOnTermination: true
+      ImageId: "ami-0a590d6ae1d449080"
+      InstanceType: "t3.medium"
+      Monitoring: false
+      Tags:
+      - Value: "owned"
+        Key: "kubernetes.io/cluster/k8s-shopping-site_cluster"
+      - Value: "true"
+        Key: "k8s.io/cluster-autoscaler/enabled"
+      - Value: "k8s-shopping-site_node_group"
+        Key: "eks:nodegroup-name"
+      - Value: "owned"
+        Key: "k8s.io/cluster-autoscaler/k8s-shopping-site_cluster"
+      - Value: "k8s-shopping-site_cluster"
+        Key: "eks:cluster-name"
+      InstanceInitiatedShutdownBehavior: "stop"
+      CpuOptions:
+        ThreadsPerCore: 2
+        CoreCount: 1
+      AvailabilityZone: "us-east-1b"
+      PrivateDnsNameOptions:
+        EnableResourceNameDnsARecord: false
+        HostnameType: "ip-name"
+        EnableResourceNameDnsAAAARecord: false
+      SecurityGroupIds:
+      - "sg-03f4ea426bab22efa"
+      DisableApiTermination: false
+      SourceDestCheck: true
+      PlacementGroupName: ""
+      VpcId: "vpc-02fb581658eb58d45"
+      State:
+        Code: "16"
+        Name: "running"
+      CreditSpecification:
+        CPUCredits: "unlimited"
+  AutoScalingLifecycleHook00LaunchLCHook007GUqZ:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::AutoScaling::LifecycleHook"
+    DeletionPolicy: "Delete"
+    Properties:
+      LifecycleHookName: "Launch-LC-Hook"
+      HeartbeatTimeout: 1800
+      DefaultResult: "CONTINUE"
+      LifecycleTransition: "autoscaling:EC2_INSTANCE_LAUNCHING"
+      NotificationTargetARN: "arn:aws:sns:us-east-1:886005959465:eks-asg-lifecycle-hook-topic"
+      AutoScalingGroupName:
+        Ref: "AutoScalingAutoScalingGroup00eksk8sshoppingsitenodegroup8ec96236d856002def64e3319299a23400xoWPa"
+  EC2VolumeAttachment00vol0a953d8b189dbaa1800iihf1:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::VolumeAttachment"
+    DeletionPolicy: "Delete"
+    Properties:
+      InstanceId: "i-0d0a27725b24bf4e5"
+      VolumeId: "vol-0a953d8b189dbaa18"
+      Device: "/dev/xvda"
+  AutoScalingLifecycleHook00TerminateLCHook00kmU2I:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::AutoScaling::LifecycleHook"
+    DeletionPolicy: "Delete"
+    Properties:
+      LifecycleHookName: "Terminate-LC-Hook"
+      HeartbeatTimeout: 1800
+      DefaultResult: "CONTINUE"
+      LifecycleTransition: "autoscaling:EC2_INSTANCE_TERMINATING"
+      NotificationTargetARN: "arn:aws:sns:us-east-1:886005959465:eks-asg-lifecycle-hook-topic"
+      AutoScalingGroupName:
+        Ref: "AutoScalingAutoScalingGroup00eksk8sshoppingsitenodegroup8ec96236d856002def64e3319299a23400xoWPa"
+  ECRPublicRepository00k8sshoppingsiteproductservice00TkI3F:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::ECR::PublicRepository"
+    DeletionPolicy: "Delete"
+    Properties:
+      RepositoryName: "k8s-shopping-site/product_service"
+      RepositoryCatalogData: {}
+      Tags: []
+  EC2Instance00i0e8a944443bd5f05900B5gvx:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::Instance"
+    DeletionPolicy: "Delete"
+    Properties:
+      Tenancy: "default"
+      SecurityGroups:
+      - "JenkinsSG"
+      PrivateIpAddress: "172.16.10.31"
+      BlockDeviceMappings:
+      - Ebs:
+          SnapshotId: "snap-0dac0a971aab77879"
+          VolumeType: "gp3"
+          Iops: 3000
+          VolumeSize: 20
+          Encrypted: false
+          DeleteOnTermination: true
+        DeviceName: "/dev/sda1"
+      IamInstanceProfile:
+        Ref: "IAMInstanceProfile00JenkinsRole00GKhcv"
+      SubnetId:
+        Ref: "EC2Subnet00subnet0153eaf2e8d59b0a0002Lk5b"
+      EbsOptimized: false
+      Volumes:
+      - VolumeId: "vol-0f87a5fde9dc80616"
+        Device: "/dev/sda1"
+      NetworkInterfaces:
+      - PrivateIpAddresses:
+        - PrivateIpAddress: "172.16.10.31"
+          Primary: true
+        SecondaryPrivateIpAddressCount: 0
+        DeviceIndex: "0"
+        GroupSet:
+        - Ref: "EC2SecurityGroup00sg0f8aa01fc499922a600DXcDO"
+        Ipv6Addresses: []
+        SubnetId:
+          Ref: "EC2Subnet00subnet0153eaf2e8d59b0a0002Lk5b"
+        AssociatePublicIpAddress: true
+        NetworkInterfaceId:
+          Ref: "EC2NetworkInterface00eni0256b258e3726963700A3D1k"
+        DeleteOnTermination: true
+      ImageId: "ami-0093eb248654c6932"
+      InstanceType: "t3.medium"
+      Monitoring: false
+      Tags:
+      - Value: "JenkinsServer"
+        Key: "Name"
+      InstanceInitiatedShutdownBehavior: "stop"
+      CpuOptions:
+        ThreadsPerCore: 2
+        CoreCount: 1
+      AvailabilityZone: "us-east-1a"
+      PrivateDnsNameOptions:
+        EnableResourceNameDnsARecord: false
+        HostnameType: "ip-name"
+        EnableResourceNameDnsAAAARecord: false
+      SecurityGroupIds:
+      - "sg-0f8aa01fc499922a6"
+      DisableApiTermination: false
+      KeyName: "jenkins-key"
+      SourceDestCheck: true
+      PlacementGroupName: ""
+      VpcId: "vpc-02fb581658eb58d45"
+      State:
+        Code: "16"
+        Name: "running"
+      CreditSpecification:
+        CPUCredits: "unlimited"
+  AutoScalingAutoScalingGroup00eksk8sshoppingsitenodegroup8ec96236d856002def64e3319299a23400xoWPa:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::AutoScaling::AutoScalingGroup"
+    DeletionPolicy: "Delete"
+    Properties:
+      LifecycleHookSpecificationList:
+      - LifecycleHookName: "Launch-LC-Hook"
+        HeartbeatTimeout: 1800
+        DefaultResult: "CONTINUE"
+        LifecycleTransition: "autoscaling:EC2_INSTANCE_LAUNCHING"
+        NotificationTargetARN: "arn:aws:sns:us-east-1:886005959465:eks-asg-lifecycle-hook-topic"
+      - LifecycleHookName: "Terminate-LC-Hook"
+        HeartbeatTimeout: 1800
+        DefaultResult: "CONTINUE"
+        LifecycleTransition: "autoscaling:EC2_INSTANCE_TERMINATING"
+        NotificationTargetARN: "arn:aws:sns:us-east-1:886005959465:eks-asg-lifecycle-hook-topic"
+      LoadBalancerNames: []
+      ServiceLinkedRoleARN: "arn:aws:iam::167804136284:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+      CapacityRebalance: true
+      TargetGroupARNs: []
+      Cooldown: "300"
+      NotificationConfigurations:
+      - TopicARN: "arn:aws:sns:us-east-1:886005959465:eks-asg-notifications-topic"
+        NotificationTypes:
+        - "autoscaling:EC2_INSTANCE_LAUNCH"
+        - "autoscaling:EC2_INSTANCE_LAUNCH_ERROR"
+        - "autoscaling:EC2_INSTANCE_TERMINATE"
+        - "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
+      AvailabilityZones:
+      - "us-east-1a"
+      - "us-east-1b"
+      DesiredCapacity: "1"
+      HealthCheckGracePeriod: 15
+      MetricsCollection:
+      - Granularity: "1Minute"
+        Metrics:
+        - "GroupTotalCapacity"
+        - "WarmPoolDesiredCapacity"
+        - "WarmPoolTotalCapacity"
+        - "GroupTerminatingInstances"
+        - "GroupStandbyCapacity"
+        - "WarmPoolWarmedCapacity"
+        - "WarmPoolTerminatingCapacity"
+        - "GroupTerminatingCapacity"
+        - "GroupInServiceInstances"
+        - "WarmPoolPendingCapacity"
+        - "GroupPendingCapacity"
+        - "GroupTotalInstances"
+        - "GroupAndWarmPoolDesiredCapacity"
+        - "GroupAndWarmPoolTotalCapacity"
+        - "GroupInServiceCapacity"
+        - "GroupDesiredCapacity"
+        - "GroupMaxSize"
+        - "GroupMinSize"
+        - "GroupStandbyInstances"
+        - "WarmPoolMinSize"
+        - "GroupPendingInstances"
+      MaxSize: "2"
+      NewInstancesProtectedFromScaleIn: false
+      MinSize: "1"
+      TerminationPolicies:
+      - "AllocationStrategy"
+      - "OldestLaunchTemplate"
+      - "OldestInstance"
+      AutoScalingGroupName: "eks-k8s-shopping-site_node_group-8ec96236-d856-002d-ef64-e3319299a234"
+      MixedInstancesPolicy:
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            Version: "1"
+            LaunchTemplateName: "eks-8ec96236-d856-002d-ef64-e3319299a234"
+            LaunchTemplateId: "lt-0809ff9ce8ac224e4"
+          Overrides:
+          - InstanceType: "t3.medium"
+        InstancesDistribution:
+          OnDemandAllocationStrategy: "prioritized"
+          SpotInstancePools: 2
+          OnDemandBaseCapacity: 0
+          SpotAllocationStrategy: "lowest-price"
+          OnDemandPercentageAboveBaseCapacity: 100
+      VPCZoneIdentifier:
+      - Ref: "EC2Subnet00subnet0153eaf2e8d59b0a0002Lk5b"
+      - Ref: "EC2Subnet00subnet01a1ebac945fa585300ruM1x"
+      Tags:
+      - Value: "k8s-shopping-site_cluster"
+        Key: "eks:cluster-name"
+        PropagateAtLaunch: true
+      - Value: "k8s-shopping-site_node_group"
+        Key: "eks:nodegroup-name"
+        PropagateAtLaunch: true
+      - Value: "true"
+        Key: "k8s.io/cluster-autoscaler/enabled"
+        PropagateAtLaunch: true
+      - Value: "owned"
+        Key: "k8s.io/cluster-autoscaler/k8s-shopping-site_cluster"
+        PropagateAtLaunch: true
+      - Value: "owned"
+        Key: "kubernetes.io/cluster/k8s-shopping-site_cluster"
+        PropagateAtLaunch: true
+      HealthCheckType: "EC2"
+  IAMInstanceProfile00eksNodeGroupRole00U1Iir:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::IAM::InstanceProfile"
+    DeletionPolicy: "Delete"
+    Properties:
+      Path: "/"
+      Roles:
+      - Ref: "IAMRole00eksNodeGroupRole00TSG8b"
+      InstanceProfileName:
+        Ref: "IAMRole00eksNodeGroupRole00TSG8b"
+  EC2Volume00vol0a953d8b189dbaa1800nN3Fr:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::Volume"
+    DeletionPolicy: "Delete"
+    Properties:
+      MultiAttachEnabled: false
+      SnapshotId: "snap-07098ce05b5bf7c9f"
+      VolumeType: "gp3"
+      Encrypted: false
+      Size: 20
+      AutoEnableIO: true
+      AvailabilityZone: "us-east-1b"
+      Throughput: 125
+      Iops: 3000
+      Tags: []
+  EC2Subnet00subnet0153eaf2e8d59b0a0002Lk5b:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::Subnet"
+    DeletionPolicy: "Delete"
+    Properties:
+      VpcId:
+        Ref: "EC2VPC00vpc02fb581658eb58d45000YBs6"
+      MapPublicIpOnLaunch: true
+      EnableDns64: false
+      AvailabilityZoneId: "use1-az2"
+      PrivateDnsNameOptionsOnLaunch:
+        EnableResourceNameDnsARecord: false
+        HostnameType: "ip-name"
+        EnableResourceNameDnsAAAARecord: false
+      CidrBlock: "172.16.10.0/24"
+      Ipv6Native: false
+      Tags:
+      - Value: "charleensideproject-web-1a"
+        Key: "Name"
+  ECRPublicRepository00k8sshoppingsiteorderservice00mmh0m:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::ECR::PublicRepository"
+    DeletionPolicy: "Delete"
+    Properties:
+      RepositoryName: "k8s-shopping-site/order_service"
+      RepositoryCatalogData: {}
+      Tags: []
+  EC2Subnet00subnet01a1ebac945fa585300ruM1x:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::Subnet"
+    DeletionPolicy: "Delete"
+    Properties:
+      VpcId:
+        Ref: "EC2VPC00vpc02fb581658eb58d45000YBs6"
+      MapPublicIpOnLaunch: true
+      EnableDns64: false
+      AvailabilityZoneId: "use1-az4"
+      PrivateDnsNameOptionsOnLaunch:
+        EnableResourceNameDnsARecord: false
+        HostnameType: "ip-name"
+        EnableResourceNameDnsAAAARecord: false
+      CidrBlock: "172.16.11.0/24"
+      Ipv6Native: false
+      Tags:
+      - Value: "charleensideproject-web-1b"
+        Key: "Name"
+  ECRPublicRepository00k8sshoppingsite00b0r8i:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::ECR::PublicRepository"
+    DeletionPolicy: "Delete"
+    Properties:
+      RepositoryName: "k8s-shopping-site"
+      RepositoryCatalogData: {}
+      Tags: []
+  EC2NetworkInterface00eni05448275bf4e1de6900OnQNs:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::NetworkInterface"
+    DeletionPolicy: "Delete"
+    Properties:
+      Description: "aws-K8S-i-0d0a27725b24bf4e5"
+      PrivateIpAddress: "172.16.11.133"
+      PrivateIpAddresses:
+      - PrivateIpAddress: "172.16.11.133"
+        Primary: true
+      - PrivateIpAddress: "172.16.11.216"
+        Primary: false
+      - PrivateIpAddress: "172.16.11.10"
+        Primary: false
+      - PrivateIpAddress: "172.16.11.27"
+        Primary: false
+      - PrivateIpAddress: "172.16.11.187"
+        Primary: false
+      - PrivateIpAddress: "172.16.11.220"
+        Primary: false
+      SecondaryPrivateIpAddressCount: 5
+      Ipv6PrefixCount: 0
+      Ipv4Prefixes: []
+      Ipv4PrefixCount: 0
+      GroupSet:
+      - "sg-03f4ea426bab22efa"
+      Ipv6Prefixes: []
+      SubnetId:
+        Ref: "EC2Subnet00subnet01a1ebac945fa585300ruM1x"
+      SourceDestCheck: true
+      InterfaceType: "interface"
+      Tags:
+      - Value: "k8s-shopping-site_cluster"
+        Key: "cluster.k8s.amazonaws.com/name"
+      - Value: "i-0d0a27725b24bf4e5"
+        Key: "node.k8s.amazonaws.com/instance_id"
+      - Value: "2024-10-25T16:07:57Z"
+        Key: "node.k8s.amazonaws.com/createdAt"
+  EC2SecurityGroup00sg03f4ea426bab22efa00oT1TJ:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::SecurityGroup"
+    DeletionPolicy: "Delete"
+    Properties:
+      GroupDescription: "EKS created security group applied to ENI that is attached\
+        \ to EKS Control Plane master nodes, as well as any managed workloads."
+      GroupName: "eks-cluster-sg-k8s-shopping-site_cluster-107531360"
+      VpcId:
+        Ref: "EC2VPC00vpc02fb581658eb58d45000YBs6"
+      SecurityGroupIngress:
+      - IpProtocol: "-1"
+        FromPort: -1
+        SourceSecurityGroupId: "sg-03f4ea426bab22efa"
+        ToPort: -1
+        SourceSecurityGroupOwnerId: "167804136284"
+      - IpProtocol: "-1"
+        FromPort: -1
+        SourceSecurityGroupId: "sg-060dad64f4daca234"
+        ToPort: -1
+        SourceSecurityGroupOwnerId: "167804136284"
+      - IpProtocol: "-1"
+        FromPort: -1
+        SourceSecurityGroupId: "sg-023c292363cc3c44d"
+        ToPort: -1
+        SourceSecurityGroupOwnerId: "167804136284"
+      - IpProtocol: "-1"
+        FromPort: -1
+        SourceSecurityGroupId: "sg-09e17eecd20a725ba"
+        ToPort: -1
+        SourceSecurityGroupOwnerId: "167804136284"
+      - IpProtocol: "-1"
+        FromPort: -1
+        SourceSecurityGroupId: "sg-0b1803342b8200d0d"
+        ToPort: -1
+        SourceSecurityGroupOwnerId: "167804136284"
+      - IpProtocol: "-1"
+        FromPort: -1
+        SourceSecurityGroupId: "sg-08cab84cc8a0e586c"
+        ToPort: -1
+        SourceSecurityGroupOwnerId: "167804136284"
+      SecurityGroupEgress:
+      - CidrIp: "0.0.0.0/0"
+        IpProtocol: "-1"
+        FromPort: -1
+        ToPort: -1
+      Tags:
+      - Value: "owned"
+        Key: "kubernetes.io/cluster/k8s-shopping-site_cluster"
+      - Value: "eks-cluster-sg-k8s-shopping-site_cluster-107531360"
+        Key: "Name"
+  EC2VolumeAttachment00vol0f87a5fde9dc8061600Jyuhb:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::VolumeAttachment"
+    DeletionPolicy: "Delete"
+    Properties:
+      InstanceId: "i-0e8a944443bd5f059"
+      VolumeId: "vol-0f87a5fde9dc80616"
+      Device: "/dev/sda1"
+  EKSCluster00k8sshoppingsitecluster00ek8Fc:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EKS::Cluster"
+    DeletionPolicy: "Delete"
+    Properties:
+      Logging:
+        ClusterLogging:
+          EnabledTypes: []
+      UpgradePolicy:
+        SupportType: "EXTENDED"
+      Version: "1.31"
+      AccessConfig:
+        AuthenticationMode: "CONFIG_MAP"
+      EncryptionConfig: []
+      KubernetesNetworkConfig:
+        ServiceIpv4Cidr: "10.100.0.0/16"
+        IpFamily: "ipv4"
+      RoleArn:
+        Fn::GetAtt:
+        - "IAMRole00eksClusterRole00mhNCq"
+        - "Arn"
+      ResourcesVpcConfig:
+        EndpointPublicAccess: true
+        PublicAccessCidrs:
+        - "0.0.0.0/0"
+        SecurityGroupIds: []
+        SubnetIds:
+        - Ref: "EC2Subnet00subnet01a1ebac945fa585300ruM1x"
+        - Ref: "EC2Subnet00subnet0153eaf2e8d59b0a0002Lk5b"
+        EndpointPrivateAccess: false
+      Name: "k8s-shopping-site_cluster"
+  EC2KeyPair00jenkinskey00yGw9j:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::KeyPair"
+    DeletionPolicy: "Delete"
+    Properties:
+      KeyName: "jenkins-key"
+      KeyType: "rsa"
+      PublicKeyMaterial: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCR27USAHFXYS3KVYES/jEewPI9sPt++6Cl+C7rA6eCjshBPPl68GUdBR27yXZQsmvjSUZAAJ8vacfHZtRTBcaghn7xsM1W2vNZo5CPwUWhyfUMjgQo2+jwQjW31JS/V8U18v2h+ZTMPlWq9Q5KKkD44CdqvXGwZfzM1XljxDKxgceb5WIROHpG9DUYbov/Ruep5wCVnfhQhJ36T6ffgij7aHWxr2erm/lWcB31QRYjIAeLypKHh/pPW+n5PFfx8vGBruAcHD7Ur1O1C98YZiSX8Zu1/AkTN+AGVx3f3BnnfywqDQY+A1c5aUr/r06epHocy8RVM68SsfSpHHJGQORZ\
+        \ jenkins-key\n"
+      Tags: []
+  EC2KeyPair00sonarkey00PTmXe:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::KeyPair"
+    DeletionPolicy: "Delete"
+    Properties:
+      KeyName: "sonar-key"
+      KeyType: "rsa"
+      PublicKeyMaterial: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC84rc3mBkzUdU1KsQLSDsVQGYVlSlM+lYJqT0K4EJ40PMbwtvK84xoL0PlDefeRXl+UPIBIepz8tnE72SEKLSU8XWtZpagtIlbwOmFcaiTbmkT6S24w25OqNo+RXgCS4qN6fqzee0JqllEpYTaXNkWImMbQysRvqU6HCBZIxGwPFaqaBDUJejS2TnHpTyz4jXHkgWa228u1pr84TbI/aTKtej4Y3lIFqIIoV7OHwLJJHMdygfO+ic4lg8MKuGj+gp891d7gla5GLb2FkCDVC8B3nR8fykp5IClSClVflob/lukEFhmZcPIZCwMXwlgTZgoy8bMkLlNsB6hnXZrkv9J\
+        \ sonar-key\n"
+      Tags: []
+  ECRPublicRepository00k8sshoppingsitepaymentservice0040DsJ:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::ECR::PublicRepository"
+    DeletionPolicy: "Delete"
+    Properties:
+      RepositoryName: "k8s-shopping-site/payment_service"
+      RepositoryCatalogData: {}
+      Tags: []
+  IAMRole00eksNodeRole000SS78:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Delete"
+    Properties:
+      Path: "/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+      - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPullOnly"
+      - "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+      - "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+      - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+      MaxSessionDuration: 3600
+      RoleName: "eksNodeRole"
+      Description: "Allows EC2 instances to call AWS services on your behalf."
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "ec2.amazonaws.com"
+  IAMInstanceProfile00JenkinsRole00GKhcv:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::IAM::InstanceProfile"
+    DeletionPolicy: "Delete"
+    Properties:
+      Path: "/"
+      Roles:
+      - Ref: "IAMRole00JenkinsRole00vr8HO"
+      InstanceProfileName:
+        Ref: "IAMRole00JenkinsRole00vr8HO"
+  IAMRole00eksClusterRole00mhNCq:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Delete"
+    Properties:
+      Path: "/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+      - "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+      - "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+      - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
+      - "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+      - "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
+      MaxSessionDuration: 3600
+      RoleName: "eksClusterRole"
+      Description: "Allows access to other AWS service resources that are required\
+        \ to operate clusters managed by EKS."
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "eks.amazonaws.com"
+  EC2VPC00vpc02fb581658eb58d45000YBs6:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::EC2::VPC"
+    DeletionPolicy: "Delete"
+    Properties:
+      CidrBlock: "172.16.0.0/16"
+      EnableDnsSupport: true
+      InstanceTenancy: "default"
+      EnableDnsHostnames: true
+      Tags:
+      - Value: "charleensideproject-vpc"
+        Key: "Name"
+  IAMInstanceProfile00eks8ec96236d856002def64e3319299a23400dRREx:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::IAM::InstanceProfile"
+    DeletionPolicy: "Delete"
+    Properties:
+      Path: "/"
+      Roles:
+      - Ref: "IAMRole00eksNodeGroupRole00TSG8b"
+      InstanceProfileName: "eks-8ec96236-d856-002d-ef64-e3319299a234"
+  IAMRole00JenkinsRole00vr8HO:
+    UpdateReplacePolicy: "Delete"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Delete"
+    Properties:
+      Path: "/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
+      - "arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicReadOnly"
+      - "arn:aws:iam::aws:policy/CloudWatchLogsReadOnlyAccess"
+      - "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+      - "arn:aws:iam::aws:policy/AmazonEKSLocalOutpostClusterPolicy"
+      - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
+      - "arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicFullAccess"
+      - "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
+      - "arn:aws:iam::aws:policy/IAMReadOnlyAccess"
+      MaxSessionDuration: 3600
+      RoleName: "Jenkins_Role"
+      Description: "Allows EC2 instances to call AWS services on your behalf."
+      Policies:
+      - PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Resource:
+            - "arn:aws:eks:us-east-1:167804136284:cluster/k8s-shopping-site_cluster"
+            - "arn:aws:eks:us-east-1:167804136284:nodegroup/k8s-shopping-site_cluster/*"
+            Action:
+            - "eks:DescribeCluster"
+            - "eks:ListClusters"
+            - "eks:UpdateClusterConfig"
+            - "eks:CreateCluster"
+            - "eks:DeleteCluster"
+            - "eks:UpdateClusterConfig"
+            - "eks:DescribeNodegroup"
+            - "eks:ListNodegroups"
+            - "eks:CreateNodegroup"
+            - "eks:DeleteNodegroup"
+            - "eks:UpdateNodegroupConfig"
+            - "eks:DeleteCluster"
+            Effect: "Allow"
+          - Resource: "arn:aws:logs:us-east-1:167804136284:log-group:/eks/k8s-shopping-site_task:*"
+            Action:
+            - "logs:DeleteLogGroup"
+            - "logs:DescribeLogGroups"
+            - "logs:PutLogEvents"
+            - "logs:GetLogEvents"
+            Effect: "Allow"
+        PolicyName: "ekspolicy"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "ec2.amazonaws.com"
