@@ -21,8 +21,14 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# 執行清理腳本並刪除 terraform 建立的資源和臨時檔案
 echo "正在執行清理操作..."
+
+# 執行 Docker 清理命令
+echo "正在清理 Docker 資源..."
+docker builder prune -f || { echo "清理 Docker build cache 失敗"; exit 1; }
+docker container prune -f || { echo "清理未使用的容器失敗"; exit 1; }
+docker image prune -a -f || { echo "清理未使用的映像失敗"; exit 1; }
+docker volume prune -f || { echo "清理未使用的卷失敗"; exit 1; }
 
 # 給清理腳本賦予執行權限
 sudo chmod +x ./delete_ecr_images.sh
@@ -32,12 +38,5 @@ sudo chmod +x ./delete_ecr_images.sh
 sudo terraform destroy -auto-approve || { echo "Terraform 資源刪除失敗"; exit 1; }
 sudo rm -rf .terraform* 
 sudo rm -rf terraform.tfstate*
-
-# 執行 Docker 清理命令
-echo "正在清理 Docker 資源..."
-docker builder prune -f || { echo "清理 Docker build cache 失敗"; exit 1; }
-docker container prune -f || { echo "清理未使用的容器失敗"; exit 1; }
-docker image prune -a -f || { echo "清理未使用的映像失敗"; exit 1; }
-docker volume prune -f || { echo "清理未使用的卷失敗"; exit 1; }
 
 echo "所有操作已完成。"
