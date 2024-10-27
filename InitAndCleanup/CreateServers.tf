@@ -7,6 +7,7 @@ data "aws_iam_role" "Jenkins_Role" {
   name = "Jenkins_Role"
 }
 
+
 // Launching new EC2 instance
 resource "aws_instance" "JenkinsServer" {
   //ami = "ami-03e7e7eac160da024"  //JenkinsServerImg13_EBS_add_2GiB with t2.small
@@ -27,7 +28,8 @@ resource "aws_instance" "JenkinsServer" {
   }
 }
 
-/*
+
+
 // Launching new EC2 instance
 resource "aws_instance" "SonarServer" {
   ami = "ami-0d0ff2521dcc4bb94"  //SonarServerImg4_QG_webhook_JKImg14 with t2.medium
@@ -42,7 +44,6 @@ resource "aws_instance" "SonarServer" {
   }
 }
 
-*/
 
 output "JenkinsServerURL_PrivateIP" {
   value = "http://${aws_instance.JenkinsServer.private_ip}:8080"
@@ -54,7 +55,8 @@ output "JenkinsServer_SSH" {
   value = "ssh -i ${aws_instance.JenkinsServer.key_name}.pem ubuntu@${aws_instance.JenkinsServer.public_ip}"
 }
 
-/*
+
+
 output "SonarServerURL_PrivateIP" {
   value = "http://${aws_instance.SonarServer.private_ip}:9000"
 }
@@ -64,4 +66,3 @@ output "SonarServerURL_PublicIP" {
 output "SonarServer_SSH" {
   value = "ssh -i ${aws_instance.SonarServer.key_name}.pem ubuntu@${aws_instance.SonarServer.public_ip}"
 }
-*/
