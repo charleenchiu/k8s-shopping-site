@@ -3,7 +3,7 @@ README目錄：不列出目錄名稱
 node_modules目錄：只列出目錄名稱。不列出目錄下的所有子目錄及檔案
 
 ```sh
-Get-ChildItem -Recurse -Force | Where-Object { $_.FullName -notmatch "README|MyNote|node_modules|.git|gitignore|.gitignore\\.*" } | ForEach-Object { $_.FullName }
+Get-ChildItem -Recurse -Force | Where-Object { $_.FullName -notmatch "README|MyNote|node_modules|.terraform|.git|gitignore|.gitignore\\.*" } | ForEach-Object { $_.FullName }
 ```
 
 列出的所有檔案COPY給AI, 請它畫出樹狀圖
@@ -113,48 +113,47 @@ C:\charleen\LearnDevops\vprofile-project\ShoppingSite
 //====k8s-shopping-site=============================================================================
 
 C:\charleen\LearnDevops\k8s-shopping-site_1_simple
-├── ansible
-│   ├── inventory
-│   └── playbook.yml
-├── k8s
-│   ├── order-service-deployment.yaml
-│   ├── payment-service-deployment.yaml
-│   ├── product-service-deployment.yaml
-│   ├── site-service-deployment.yaml
-│   └── user-service-deployment.yaml
-├── order-service
+├── InitAndCleanup
+│   ├── CreateJenkinsServer.tf
+├── k8s-chart
+│   ├── charts
+│   ├── templates
+│   │   ├── deployment.yaml
+│   │   ├── service.yaml
+│   ├── .helmignore
+│   ├── Chart.yaml
+│   ├── values.yaml
+├── user-service (port: 3001)
 │   ├── Dockerfile
-│   ├── index.js (http://localhost:3003)
-│   ├── node_modules
+│   ├── index.js
 │   ├── package-lock.json
-│   └── package.json
-├── payment-service
+│   ├── package.json
+├── product-service (port: 3002)
 │   ├── Dockerfile
-│   ├── index.js (http://localhost:3004)
-│   ├── node_modules
+│   ├── index.js
 │   ├── package-lock.json
-│   └── package.json
-├── product-service
+│   ├── package.json
+├── order-service (port: 3003)
 │   ├── Dockerfile
-│   ├── index.js (http://localhost:3002)
-│   ├── node_modules
+│   ├── index.js
 │   ├── package-lock.json
-│   └── package.json
+│   ├── package.json
+├── payment-service (port: 3004)
+│   ├── Dockerfile
+│   ├── index.js
+│   ├── package-lock.json
+│   ├── package.json
 ├── terraform
+│   ├── delete_ecr_images.sh
 │   ├── main.tf
+│   ├── ManulCleanup.sh
 │   ├── outputs.tf
-│   └── variables.tf
-├── user-service
-│   ├── Dockerfile
-│   ├── index.js (http://localhost:3001)
-│   ├── node_modules
-│   ├── package-lock.json
-│   └── package.json
+│   ├── variables.tf
 ├── .env
 ├── docker-compose.yml
 ├── Dockerfile
-├── index.js
+├── index.js (port: 3000)
 ├── Jenkinsfile
-├── node_modules
 ├── package-lock.json
 └── package.json
+

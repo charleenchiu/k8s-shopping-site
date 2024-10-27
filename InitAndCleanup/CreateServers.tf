@@ -13,7 +13,8 @@ resource "aws_instance" "JenkinsServer" {
   //ami = "ami-0e0b480b46e7c831c"  //JenkinsServerImg14_SonarQG_Webhook with t2.small
   //ami = "ami-01154da512f2d3d4b"  //JenkinsServerImg15_Sonar_Docker_ECR with t2.small
   //這個好像忘了用？但ROLE不會建到AMI裡//ami = "ami-0c9398badf30203fb"  //JenkinsServerImg16_RoleFor_ECR_ECS with t2.small EBS 11G
-  ami = "ami-0093eb248654c6932"  //JenkinsServerImg17_upgrade_instancetype_and_ebs with t3.medium EBS 20G
+  //ami = "ami-0093eb248654c6932"  //JenkinsServerImg17_upgrade_instancetype_and_ebs with t3.medium EBS 20G
+  ami = "ami-0945b35a46339ddcc"  //JenkinsServerImg18_update_helm_kubectl with t3.medium EBS 20G
   instance_type = "t3.medium"
   key_name = "jenkins-key"
   vpc_security_group_ids = ["sg-0f8aa01fc499922a6"] //JenkinsSG
