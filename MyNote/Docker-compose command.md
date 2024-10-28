@@ -16,6 +16,7 @@
 
 2. **檢查服務的狀態**：
    開啟瀏覽器，並根據你設置的埠號訪問各個服務，例如：
+   - `http://localhost:3000` (Site Service) 網站根目錄
    - `http://localhost:3001` (User Service)
    - `http://localhost:3002` (Product Service)
    - `http://localhost:3003` (Order Service)

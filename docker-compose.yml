@@ -12,7 +12,7 @@ services:
       - backend
 
   user-service:
-    build: ./user-service
+    build: ./src/user-service
     ports:
       - "${USER_SERVICE_PORT}:3001"
     environment:
@@ -23,7 +23,7 @@ services:
       - backend
 
   product-service:
-    build: ./product-service
+    build: ./src/product-service
     ports:
       - "${PRODUCT_SERVICE_PORT}:3002"
     environment:
@@ -34,7 +34,7 @@ services:
       - backend
 
   order-service:
-    build: ./order-service
+    build: ./src/order-service
     ports:
       - "${ORDER_SERVICE_PORT}:3003"
     environment:
@@ -45,7 +45,7 @@ services:
       - backend
 
   payment-service:
-    build: ./payment-service
+    build: ./src/payment-service
     ports:
       - "${PAYMENT_SERVICE_PORT}:3004"
     environment:

@@ -273,3 +273,123 @@ pipeline {
   - 將 `Setup-AWS-Resources` 的輸出，例如 ECR repository URIs、EKS Cluster 名稱等，儲存在 Jenkins 的全域變數中，讓 `Build and Deploy` Pipeline 可以直接引用。
 
 這樣可以達到只在首次部署或 AWS 資源變更時初始化資源，後續的部署僅執行 `Build Docker Image` 和 `Helm Deploy` 階段，有效提升 Pipeline 執行效率並減少資源消耗。
+
+# //============================================================================
+試做Multibranch的小專案： C:\charleen\LearnDevops\testJKMB
+來看看你的問題：
+
+1. `'your-shared-library'`應該替換成你的 Jenkins 上共用庫的名稱。這個名稱可以在 Jenkins 的「Manage Jenkins」>「Configure System」>「Global Pipeline Libraries」中找到。如果你尚未設定共用庫，可以在此處新增，並給它一個名稱供 pipeline 使用。
+
+2. 是的，共用庫與`def terraformOutput = sh(script: 'terraform output -json', returnStdout: true)`可以並用。共用庫提供變數和函數，而這行程式碼則用來直接從 Terraform 的輸出讀取 JSON 資料。兩者不會衝突。
+
+3. 代碼上有些需要注意的地方和優化，以下是修改建議：
+
+   - **Setup-AWS-Resources Jenkinsfile** 中：
+     - `parseJson` 是個假設的函數。如果未自定義，可用 Jenkins 預設的 `readJSON` 函數。
+     - 建議 Terraform 輸出結果存成 JSON 文件，方便後續 pipeline 閱讀。
+
+   - **Stable-Build-and-Deploy Jenkinsfile** 和 **Canary-Build-and-Deploy Jenkinsfile** 中：
+     - `copyArtifacts` 步驟假設 Setup-AWS-Resources 成功生成 `terraform_output.json` 並存於 artifact，確保此 JSON 文件存在。
+     - 輸出錯誤回饋並優化變數調用。
+
+以下為修改後程式碼：
+
+---
+
+### `Setup-AWS-Resources Jenkinsfile`
+```groovy
+@Library('your-shared-library') _
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Setup AWS Resources') {
+            steps {
+                script {
+                    // 執行 Terraform 並將結果儲存為 JSON 檔案
+                    sh 'terraform apply -auto-approve'
+                    sh 'terraform output -json > terraform_output.json'
+                    archiveArtifacts artifacts: 'terraform_output.json', onlyIfSuccessful: true
+                }
+            }
+        }
+        
+        stage('Example Stage') {
+            steps {
+                script {
+                    def vars = globalVars()
+                    echo "AWS_REGION: ${vars.AWS_REGION}"
+                    env.teststr_aws = 'Hi From Setup-AWS-Resources.'
+                }
+            }
+        }
+    }
+}
+```
+
+### `Stable-Build-and-Deploy Jenkinsfile`
+```groovy
+@Library('your-shared-library') _
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Retrieve Terraform Outputs') {
+            steps {
+                copyArtifacts projectName: 'Setup-AWS-Resources', filter: 'terraform_output.json'
+                script {
+                    def terraformOutput = readJSON file: 'terraform_output.json'
+                    env.CLUSTER_URL = terraformOutput.cluster_url.value
+                    env.CERT_AUTH_DATA = terraformOutput.certificate_authority_data.value
+                }
+            }
+        }
+ 
+        stage('Example Stage') {
+            steps {
+                script {
+                    def vars = globalVars()
+                    echo "HELM_RELEASE_NAME: ${vars.HELM_RELEASE_NAME}"
+                    env.teststr_stable = 'Hi From Stable-Build-and-Deploy.'
+                }
+            }
+        }
+    }
+}
+```
+
+### `Canary-Build-and-Deploy Jenkinsfile`
+```groovy
+@Library('your-shared-library') _
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Retrieve Terraform Outputs') {
+            steps {
+                copyArtifacts projectName: 'Setup-AWS-Resources', filter: 'terraform_output.json'
+                script {
+                    def terraformOutput = readJSON file: 'terraform_output.json'
+                    env.CLUSTER_URL = terraformOutput.cluster_url.value
+                    env.CERT_AUTH_DATA = terraformOutput.certificate_authority_data.value
+                }
+            }
+        }
+ 
+        stage('Example Stage') {
+            steps {
+                script {
+                    def vars = globalVars()
+                    echo "SERVICE_TYPE: ${vars.SERVICE_TYPE}"
+                    env.teststr_canary = 'Hi From Canary-Build-and-Deploy.'
+                }
+            }
+        }
+    }
+}
+```
+
+這些更新確保了所有變數與資料能夠正確流通，並讓你的 Jenkins Multibranch Pipeline 更具穩定性！
