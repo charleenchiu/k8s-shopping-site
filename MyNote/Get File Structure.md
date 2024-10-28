@@ -114,7 +114,10 @@ C:\charleen\LearnDevops\vprofile-project\ShoppingSite
 
 C:\charleen\LearnDevops\k8s-shopping-site_1_simple
 ├── InitAndCleanup
-│   ├── CreateJenkinsServer.tf
+│   ├── CreateServers.tf
+│   ├── ansible
+│   │   ├── inventory
+│   │   ├── playbook.yml
 ├── k8s-chart
 │   ├── charts
 │   ├── templates
@@ -123,37 +126,34 @@ C:\charleen\LearnDevops\k8s-shopping-site_1_simple
 │   ├── .helmignore
 │   ├── Chart.yaml
 │   ├── values.yaml
-├── user-service (port: 3001)
-│   ├── Dockerfile
-│   ├── index.js
-│   ├── package-lock.json
-│   ├── package.json
-├── product-service (port: 3002)
-│   ├── Dockerfile
-│   ├── index.js
-│   ├── package-lock.json
-│   ├── package.json
-├── order-service (port: 3003)
-│   ├── Dockerfile
-│   ├── index.js
-│   ├── package-lock.json
-│   ├── package.json
-├── payment-service (port: 3004)
-│   ├── Dockerfile
-│   ├── index.js
-│   ├── package-lock.json
-│   ├── package.json
-├── terraform
-│   ├── delete_ecr_images.sh
-│   ├── main.tf
-│   ├── ManulCleanup.sh
-│   ├── outputs.tf
-│   ├── variables.tf
+├── src
+│   ├── user-service
+│   │   ├── Dockerfile
+│   │   ├── index.js   (port: 3001)
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   ├── product-service
+│   │   ├── Dockerfile
+│   │   ├── index.js   (port: 3002)
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   ├── order-service
+│   │   ├── Dockerfile
+│   │   ├── index.js   (port: 3002)
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   ├── payment-service   (port: 3004)
+│   │   ├── Dockerfile
+│   │   ├── index.js
+│   │   ├── package-lock.json
+│   │   ├── package.json
+├── index.js   (port: 3000)
 ├── .env
 ├── docker-compose.yml
 ├── Dockerfile
-├── index.js (port: 3000)
 ├── Jenkinsfile
 ├── package-lock.json
-└── package.json
+├── package.json
+└── pom.xml
+
 

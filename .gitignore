@@ -29,3 +29,9 @@ k8s-chart/templates/*.rendered
 k8s-chart/test/
 k8s-chart/tmp/
 k8s-chart/*.log
+
+# Ignore Maven build output
+target/
+
+# 待做Jenkins Multibranch
+MyNote/ForJenkinsMultibranch
