@@ -80,7 +80,7 @@ PS C:\charleen\LearnDevops\k8s-shopping-site_1_simple\test-chart> kubectl
 
 
 
-                                                                  kubectl get service
+kubectl get service
 NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
 kubernetes      ClusterIP   10.96.0.1       <none>        443/TCP    12m
 nginx-service   ClusterIP   10.97.133.125   <none>        80/TCP     104s
@@ -223,3 +223,26 @@ kubectl port-forward svc/nginx-service 8080:80
 
 ### 與你的專案的關係
 這個命令不會對你的 Helm Chart 或 Kubernetes 部署進行任何更改，它只是暫時讓你在本地訪問 Kubernetes 中的服務。當你停止 `port-forward`，這個連接就會中斷。這對你在開發過程中測試服務非常有用，但最終如果你想讓應用程式公開給使用者使用，你需要配置正確的 Kubernetes 服務類型（如 `NodePort` 或 `LoadBalancer`）來實現對外部的持久性訪問。
+
+
+# 要停止 Kubernetes 集群，可以按以下步驟操作：
+
+停止特定的 Pod：
+
+sh
+
+Copy
+kubectl delete pod <pod-name>
+停止特定的 Service：
+
+sh
+
+Copy
+kubectl delete service <service-name>
+停止整個 Kubernetes 集群（例如在 Minikube 中）：
+
+sh
+
+Copy
+minikube stop
+這樣你就可以有選擇性地停止 Pods、Services 或整個集群。
