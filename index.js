@@ -4,10 +4,10 @@ const app = express();
 const port = 3000; // 根目錄的網站入口
 
 // 設定環境變數：本地和 EKS 環境的不同微服務 URL
-const userServiceUrl = process.env.USER_SERVICE_URL || 'http://localhost:3001';
-const productServiceUrl = process.env.PRODUCT_SERVICE_URL || 'http://localhost:3002';
-const orderServiceUrl = process.env.ORDER_SERVICE_URL || 'http://localhost:3003';
-const paymentServiceUrl = process.env.PAYMENT_SERVICE_URL || 'http://localhost:3004';
+const userServiceUrl = process.env.USER_SERVICE_URL || 'http://user-service:3001';
+const productServiceUrl = process.env.PRODUCT_SERVICE_URL || 'http://product-service:3002';
+const orderServiceUrl = process.env.ORDER_SERVICE_URL || 'http://order-service:3003';
+const paymentServiceUrl = process.env.PAYMENT_SERVICE_URL || 'http://payment-service:3004';
 
 // 根目錄
 app.get('/', (req, res) => {
