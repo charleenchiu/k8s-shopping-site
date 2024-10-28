@@ -9,7 +9,6 @@ pipeline {
         //IMAGE_TAG = 'latest' // Docker Image Tag
         IMAGE_TAG = 'stable' // Docker Image Tag
         AWS_REGION = 'us-east-1'    // AWS 區域
-        SERVICE_TYPE = "LoadBalancer"    // Kubernetes 的 Service Type
         /*
         將在 Terraform 階段後更新的環境變數，不可在這裡給預設值，會無法在建置過程中賦值
         */
@@ -242,7 +241,6 @@ pipeline {
                             set -x  # 啟用命令追蹤
                             helm upgrade --install ${env.HELM_RELEASE_NAME} . \
                             --set awsRegion=${env.AWS_REGION} \
-                            --set serviceType=${env.SERVICE_TYPE} \
                             --set awsLogsGroup=${env.LOG_GROUP_NAME} \
                             --set services.user-service.image.repository=${env.USER_SERVICE_ECR_REPO} \
                             --set services.user-service.image.tag=${env.IMAGE_TAG} \
