@@ -1,4 +1,5 @@
 const express = require('express');
+const { createProxyMiddleware } = require('http-proxy-middleware'); // 引入代理中介
 const app = express();
 const port = 3000; // 根目錄的網站入口
 
@@ -16,22 +17,12 @@ app.get('/', (req, res) => {
     `);
 });
 
-// 四個 API 的路由
-app.get('/user-service', (req, res) => {
-    res.send('This is the User Service API!');
-});
+// 使用 http-proxy-middleware 將請求轉發到對應的微服務
+app.use('/user-service', createProxyMiddleware({ target: 'http://localhost:3001', changeOrigin: true }));
+app.use('/product-service', createProxyMiddleware({ target: 'http://localhost:3002', changeOrigin: true }));
+app.use('/order-service', createProxyMiddleware({ target: 'http://localhost:3003', changeOrigin: true }));
+app.use('/payment-service', createProxyMiddleware({ target: 'http://localhost:3004', changeOrigin: true }));
 
-app.get('/product-service', (req, res) => {
-    res.send('This is the Product Service API!');
-});
-
-app.get('/order-service', (req, res) => {
-    res.send('This is the Order Service API!');
-});
-
-app.get('/payment-service', (req, res) => {
-    res.send('This is the Payment Service API!');
-});
 
 // 啟動伺服器
 app.listen(port, () => {

@@ -1,5 +1,7 @@
 gitignore/
 
+node_modules/
+
 # terraform 運作時產生的檔案
 terraform/.terraform/
 terraform/.terraform.lock.hcl
