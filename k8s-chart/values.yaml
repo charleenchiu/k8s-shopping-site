@@ -1,6 +1,5 @@
 replicaCount: 1
 awsRegion: "us-east-1"
-serviceType: "ClusterIP"
 awsLogsGroup: ""
 
 services:
@@ -9,7 +8,7 @@ services:
       repository: "site-service-ecr-repo-uri"
       tag: "latest"
     service:
-      serviceType: LoadBalancer
+      serviceType: "LoadBalancer"
       port: 3000
     env:
       USER_SERVICE_URL: "http://user-service.default.svc.cluster.local:3001"
@@ -22,6 +21,7 @@ services:
       repository: "user-service-ecr-repo-uri"
       tag: "latest"
     service:
+      serviceType: "ClusterIP"
       port: 3001
 
   product-service:
@@ -29,6 +29,7 @@ services:
       repository: "product-service-ecr-repo-uri"
       tag: "latest"
     service:
+      serviceType: "ClusterIP"
       port: 3002
 
   order-service:
@@ -36,6 +37,7 @@ services:
       repository: "order-service-ecr-repo-uri"
       tag: "latest"
     service:
+      serviceType: "ClusterIP"
       port: 3003
 
   payment-service:
@@ -43,4 +45,5 @@ services:
       repository: "payment-service-ecr-repo-uri"
       tag: "latest"
     service:
+      serviceType: "ClusterIP"
       port: 3004
