@@ -6,7 +6,8 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         AWS_ACCOUNT_ID = '167804136284' // AWS 帳戶 ID
         HELM_RELEASE_NAME="k8s-site"    // Helm upgrade 時用的release name
-        IMAGE_TAG = 'latest' // Docker Image Tag
+        //IMAGE_TAG = 'latest' // Docker Image Tag
+        IMAGE_TAG = 'stable' // Docker Image Tag
         AWS_REGION = 'us-east-1'    // AWS 區域
         SERVICE_TYPE = "LoadBalancer"    // Kubernetes 的 Service Type
         /*
