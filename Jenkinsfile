@@ -306,8 +306,8 @@ pipeline {
                 sh '''
                     docker builder prune -f        # 清除所有未使用的 build cache
                     docker container prune -f      # 刪除未使用的容器
-                    # docker image prune -a -f     # 刪除所有未使用的映像
-                    # docker volume prune -f       # 刪除未使用的磁碟機
+                    docker image prune -a -f     # 刪除所有未使用的映像
+                    docker volume prune -f       # 刪除未使用的磁碟機
                 '''
             }
         }
