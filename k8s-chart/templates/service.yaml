@@ -12,8 +12,8 @@ spec:
   type: {{ $service.service.serviceType | default "ClusterIP" }}  # 使用 serviceType
   ports:
     - protocol: TCP
-      port: {{ $service.service.port | default 80 }}  # 服務的端口
-      targetPort: {{ $service.service.port | default 80 }}  # 容器的端口
+      port: {{ $service.service.port | default 80 }}
+      targetPort: {{ $service.service.port | default 80 }}
   selector:
     app: {{ $serviceName }}
 
