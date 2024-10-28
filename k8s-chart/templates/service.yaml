@@ -9,7 +9,7 @@ metadata:
   labels:
     app: {{ $serviceName }}
 spec:
-  type: {{ $service.service.serviceType | default "ClusterIP" }}  # 使用 serviceType
+  type: {{ $service.service.serviceType | default "ClusterIP" }}
   ports:
     - protocol: TCP
       port: {{ $service.service.port | default 80 }}
