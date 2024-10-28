@@ -5,6 +5,10 @@ services:
     ports:
       - "${SITE_PORT}:3000"
     environment:
+      - USER_SERVICE_URL=http://localhost:3001
+      - PRODUCT_SERVICE_URL=http://localhost:3002
+      - ORDER_SERVICE_URL=http://localhost:3003
+      - PAYMENT_SERVICE_URL=http://localhost:3004
       - NODE_ENV=production
       - EC2_PRIVATE_IP=${EC2_PRIVATE_IP}
       - USE_CONTAINER=${USE_CONTAINER}

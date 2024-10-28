@@ -1,7 +1,7 @@
 replicaCount: 1
-awsRegion: "us-east-1"  # 預設值us-east-1，會被 Jenkins 的 Helm 指令動態設置
-serviceType: "ClusterIP"  # 預設值ClusterIP，會被 Jenkins 的 Helm 指令動態設置
-awsLogsGroup: "" # 這裡會被 Jenkins 的 Helm 指令動態設置
+awsRegion: "us-east-1"
+serviceType: "ClusterIP"
+awsLogsGroup: ""
 
 services:
   site-service:
@@ -9,7 +9,13 @@ services:
       repository: "site-service-ecr-repo-uri"
       tag: "latest"
     service:
+      serviceType: LoadBalancer
       port: 3000
+    env:
+      USER_SERVICE_URL: "http://user-service.default.svc.cluster.local:3001"
+      PRODUCT_SERVICE_URL: "http://product-service.default.svc.cluster.local:3002"
+      ORDER_SERVICE_URL: "http://order-service.default.svc.cluster.local:3003"
+      PAYMENT_SERVICE_URL: "http://payment-service.default.svc.cluster.local:3004"
 
   user-service:
     image:

@@ -3,6 +3,12 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const app = express();
 const port = 3000; // 根目錄的網站入口
 
+// 設定環境變數：本地和 EKS 環境的不同微服務 URL
+const userServiceUrl = process.env.USER_SERVICE_URL || 'http://localhost:3001';
+const productServiceUrl = process.env.PRODUCT_SERVICE_URL || 'http://localhost:3002';
+const orderServiceUrl = process.env.ORDER_SERVICE_URL || 'http://localhost:3003';
+const paymentServiceUrl = process.env.PAYMENT_SERVICE_URL || 'http://localhost:3004';
+
 // 根目錄
 app.get('/', (req, res) => {
     res.send(`
@@ -19,25 +25,25 @@ app.get('/', (req, res) => {
 
 // 使用 http-proxy-middleware 將請求轉發到對應的微服務
 app.use('/user-service', createProxyMiddleware({ 
-    target: 'http://localhost:3001', 
+    target: userServiceUrl, 
     changeOrigin: true, 
     pathRewrite: { '^/user-service': '/' },  // 重寫路徑
     logLevel: 'debug' 
 }));
 app.use('/product-service', createProxyMiddleware({ 
-    target: 'http://localhost:3002', 
+    target: productServiceUrl, 
     changeOrigin: true, 
     pathRewrite: { '^/product-service': '/' }, 
     logLevel: 'debug' 
 }));
 app.use('/order-service', createProxyMiddleware({ 
-    target: 'http://localhost:3003', 
+    target: orderServiceUrl, 
     changeOrigin: true, 
     pathRewrite: { '^/order-service': '/' }, 
     logLevel: 'debug' 
 }));
 app.use('/payment-service', createProxyMiddleware({ 
-    target: 'http://localhost:3004', 
+    target: paymentServiceUrl, 
     changeOrigin: true, 
     pathRewrite: { '^/payment-service': '/' }, 
     logLevel: 'debug' 
