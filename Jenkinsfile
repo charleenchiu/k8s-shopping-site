@@ -78,6 +78,7 @@ pipeline {
         }
         */
 
+        /*
         stage('Ansible Version'){
             steps{
                 sh '''
@@ -87,6 +88,7 @@ pipeline {
                 '''
             }
         }
+        */
 
         /*
         //取回Terraform建好的私鑰，改權限
