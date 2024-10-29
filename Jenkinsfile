@@ -259,6 +259,30 @@ pipeline {
             }
         }
 
+        stage('Get ELB Information') {
+            steps {
+                script {
+                    // 取得並拆解 ELB 的 DNS 和端口資訊
+                    def elbInfo = sh(
+                        script: "kubectl get svc site-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}:{.spec.ports[0].port}'",
+                        returnStdout: true
+                    ).trim()
+
+                    if (elbInfo) {
+                        // 使用 split 分解出 DNS 和 port
+                        def elbParts = elbInfo.split(':')
+                        def elbDns = elbParts[0]
+                        def elbPort = elbParts[1]
+
+                        // 組成完整 URL
+                        def elbUrl = "http://${elbDns}:${elbPort}"
+                        echo "檢視佈署結果的 ELB URL: ${elbUrl}"
+                    } else {
+                        error("ELB information not yet available. Please check if the service has an assigned LoadBalancer.")
+                    }
+                }
+            }
+        }
     }
 
     post {
