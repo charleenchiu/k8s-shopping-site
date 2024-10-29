@@ -206,14 +206,14 @@ pipeline {
                     '''
 
                     // 確保 shopping-site namespace 存在
-                    sh '''
-                    kubectl apply -f - <<EOF
-                    apiVersion: v1
-                    kind: Namespace
-                    metadata:
-                    name: shopping-site
-                    EOF
-                    '''
+            sh '''
+            kubectl apply -f - <<EOF
+apiVersion:v1
+kind:Namespace
+metadata:
+  name:shopping-site
+EOF
+            '''
 
                     // 安裝或升級 ExternalDNS
                     sh '''
