@@ -196,29 +196,10 @@ pipeline {
             steps {
                 // 新增 ExternalDNS Helm repo 並安裝 ExternalDNS
                 script {
-                    // 判斷 bitnami repo 是否已存在
                     sh '''
-                    if ! helm repo list | grep -q bitnami; then
-                        helm repo add bitnami https://charts.bitnami.com/bitnami
-                    else
-                        echo "bitnami repo already exists, skipping..."
-                    fi
-                    '''
-
-                    // 確保 shopping-site namespace 存在
-            sh '''
-            kubectl apply -f - <<EOF
-apiVersion:v1
-kind:Namespace
-metadata:
-  name:shopping-site
-EOF
-            '''
-
-                    // 安裝或升級 ExternalDNS
-                    sh '''
+                    helm repo add bitnami https://charts.bitnami.com/bitnami
+                    helm repo update
                     helm upgrade --install externaldns bitnami/external-dns \
-                    --namespace shopping-site \
                     --set provider=aws \
                     --set aws.zoneType=public
                     '''
