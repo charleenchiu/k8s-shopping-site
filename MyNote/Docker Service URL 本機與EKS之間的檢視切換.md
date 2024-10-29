@@ -39,8 +39,8 @@ app.use('/order-service', createProxyMiddleware({ target: orderServiceUrl, chang
 app.use('/payment-service', createProxyMiddleware({ target: paymentServiceUrl, changeOrigin: true }));
 
 // 啟動伺服器
-app.listen(port, () => {
-    console.log(`Index Page listening at http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Index Page listening at http://0.0.0.0:${port}`);
 });
 ```
 

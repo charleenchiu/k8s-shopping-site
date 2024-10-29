@@ -6,6 +6,7 @@ app.get('/', (req, res) => {
     res.send('Hi, this is order-service!');
 });
 
-app.listen(port, () => {
-    console.log(`Order Service listening at http://localhost:${port}`);
+// 啟動伺服器
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Order Service listening at http://0.0.0.0:${port}`);
 });

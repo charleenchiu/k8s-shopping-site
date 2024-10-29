@@ -249,7 +249,7 @@ import app from './product-service.js';   // 正確的路徑
 const PORT = process.env.PORT || 3000;
 
 // 啟動伺服器
-app.listen(PORT, () => {
+app.listen(port, '0.0.0.0', () => {
     console.log(`Product service running on port ${PORT}`);
 });
 

@@ -38,8 +38,8 @@ app.get('/payment-service', (req, res) => {
 });
 
 // 啟動伺服器
-app.listen(port, () => {
-    console.log(Index Page listening at http://localhost:${port});
+app.listen(port, '0.0.0.0', () => {
+    console.log(Index Page listening at http://0.0.0.0:${port});
 });
 
 
@@ -82,8 +82,8 @@ app.use('/order-service', createProxyMiddleware({ target: 'http://localhost:3003
 app.use('/payment-service', createProxyMiddleware({ target: 'http://localhost:3004', changeOrigin: true }));
 
 // 啟動伺服器
-app.listen(port, () => {
-    console.log(`Index Page listening at http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Index Page listening at http://0.0.0.0:${port}`);
 });
 ```
 
