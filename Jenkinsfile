@@ -310,16 +310,19 @@ pipeline {
     post {
         failure {
             // 如果過程失敗，清除 terraform 建的資源
-            sh '''
+            sh """
+                helm repo remove bitnami
+                helm repo remove fluent
                 helm uninstall ${env.HELM_RELEASE_NAME} # 刪除Helm建立的資源，例如ELB。但不會自動刪除 Docker 映像
                 helm uninstall aws-for-fluent-bit
+                helm uninstall externaldns
                 cd terraform     # 切換到 terraform 目錄
                 sudo chmod +x delete_ecr_images.sh   # 確保 delete_ecr_images.sh 可執行
                 ./delete_ecr_images.sh  # 注意加上 "./" 來執行當前目錄的腳本，執行刪除映像的腳本
                 terraform destroy -auto-approve     # 刪除 terraform 資源
                 rm -rf .terraform*              # 刪除相關的 terraform 檔案
                 rm -rf terraform.tfstate*       # 刪除相關的 terraform 檔案
-            '''
+            """
         }
 
         always {
