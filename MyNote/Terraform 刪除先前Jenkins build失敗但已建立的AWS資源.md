@@ -32,7 +32,13 @@ ekspolicy (客戶內嵌)
 				"eks:CreateNodegroup",
 				"eks:DeleteNodegroup",
 				"eks:UpdateNodegroupConfig",
-				"eks:DeleteCluster"
+				"eks:DeleteCluster",
+				"route53:ChangeResourceRecordSets",
+				"route53:GetChange",
+				"route53:ListHostedZones",
+				"route53:ListResourceRecordSets",
+				"route53:CreateHostedZone",
+				"route53:DeleteHostedZone"
 			],
 			"Resource": [
 				"arn:aws:eks:us-east-1:167804136284:cluster/k8s-shopping-site_cluster",

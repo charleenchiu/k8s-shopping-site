@@ -271,6 +271,13 @@ pipeline {
             }
         }
 
+        stage('Deploy Ingress') {
+            steps {
+                // 部署 Ingress
+                sh 'kubectl apply -f ingress.yaml'
+            }
+        }
+
         stage('Get ELB Information') {
             steps {
                 script {
