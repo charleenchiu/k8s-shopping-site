@@ -77,6 +77,6 @@ app.use('/payment-service', createProxyMiddleware({
 }));
 
 // 啟動伺服器
-app.listen(port, () => {
-    console.log(`Index Page listening at http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Index Page listening at http://0.0.0.0:${port}`);
 });
