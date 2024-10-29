@@ -1,6 +1,11 @@
 replicaCount: 1
 awsRegion: "us-east-1"
 awsLogsGroup: ""
+env:
+  USER_SERVICE_URL: "http://user-service.default.svc.cluster.local:3001"
+  PRODUCT_SERVICE_URL: "http://product-service.default.svc.cluster.local:3002"
+  ORDER_SERVICE_URL: "http://order-service.default.svc.cluster.local:3003"
+  PAYMENT_SERVICE_URL: "http://payment-service.default.svc.cluster.local:3004"
 
 services:
   site-service:
@@ -10,12 +15,7 @@ services:
     service:
       serviceType: "LoadBalancer"
       port: 3000
-    env:
-      USER_SERVICE_URL: "http://user-service.default.svc.cluster.local:3001"
-      PRODUCT_SERVICE_URL: "http://product-service.default.svc.cluster.local:3002"
-      ORDER_SERVICE_URL: "http://order-service.default.svc.cluster.local:3003"
-      PAYMENT_SERVICE_URL: "http://payment-service.default.svc.cluster.local:3004"
-
+ 
   user-service:
     image:
       repository: "user-service-ecr-repo-uri"

@@ -1,0 +1,38 @@
+{{- range $serviceName, $service := .Values.services }}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $serviceName }}-deployment
+  labels:
+    app: {{ $serviceName }}
+spec:
+  replicas: {{ $.Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ $serviceName }}
+  template:
+    metadata:
+      labels:
+        app: {{ $serviceName }}
+    spec:
+      containers:
+        - name: {{ $serviceName }}
+          image: "{{ $service.image.repository }}:{{ $service.image.tag }}"
+          ports:
+          - containerPort: {{ $service.service.port | default 80 }}
+          env:
+          - name: AWS_LOG_GROUP
+            value: "{{ $.Values.awsLogsGroup }}"
+          - name: AWS_REGION
+            value: "{{ $.Values.awsRegion }}"
+          {{- if $.Values.env }}
+          {{- range $key, $url := $.Values.env }}
+          - name: {{ $key }}
+            value: {{ $url | quote }}
+          {{- end }}
+          {{- end }}
+
+{{- end }}

@@ -9,6 +9,19 @@ const productServiceUrl = process.env.PRODUCT_SERVICE_URL || 'http://product-ser
 const orderServiceUrl = process.env.ORDER_SERVICE_URL || 'http://order-service:3003';
 const paymentServiceUrl = process.env.PAYMENT_SERVICE_URL || 'http://payment-service:3004';
 
+console.log('User Service URL:', userServiceUrl);
+console.log('Product Service URL:', productServiceUrl);
+console.log('Order Service URL:', orderServiceUrl);
+console.log('Payment Service URL:', paymentServiceUrl);
+
+/*
+// 使用 http-proxy-middleware 來代理請求至 Kubernetes 內部的 ClusterIP 服務
+app.use('/user-service', createProxyMiddleware({ target: 'http://user-service.default.svc.cluster.local:3001', changeOrigin: true }));
+app.use('/product-service', createProxyMiddleware({ target: 'http://product-service.default.svc.cluster.local:3002', changeOrigin: true }));
+app.use('/order-service', createProxyMiddleware({ target: 'http://order-service.default.svc.cluster.local:3003', changeOrigin: true }));
+app.use('/payment-service', createProxyMiddleware({ target: 'http://payment-service.default.svc.cluster.local:3004', changeOrigin: true }));
+*/
+
 // 根目錄
 app.get('/', (req, res) => {
     res.send(`
