@@ -192,6 +192,18 @@ pipeline {
             }
         }
         
+        stage('Setup Helm') {
+            steps {
+                // 新增 ExternalDNS Helm repo 並安裝 ExternalDNS
+                sh 'helm repo add bitnami https://charts.bitnami.com/bitnami'
+                sh '''
+                helm install externaldns bitnami/external-dns \
+                  --set provider=aws \
+                  --set aws.zoneType=public
+                '''
+            }
+        }
+
         stage('Config kubectl Connect to EKS Cluster') {
             steps {
                 script { 

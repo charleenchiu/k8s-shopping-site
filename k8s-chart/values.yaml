@@ -13,7 +13,7 @@ services:
       repository: "site-service-ecr-repo-uri"
       tag: "latest"
     service:
-      serviceType: "ClusterIP"
+      serviceType: "LoadBalancer"
       port: 3000
  
   user-service:
@@ -21,7 +21,7 @@ services:
       repository: "user-service-ecr-repo-uri"
       tag: "latest"
     service:
-      serviceType: "LoadBalancer"
+      serviceType: "ClusterIP"
       port: 3001
 
   product-service:
