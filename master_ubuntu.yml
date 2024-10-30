@@ -72,7 +72,7 @@
     - name: 設置 EFS DNS 名稱
       set_fact:
         aws_region: "{{ ansible_ec2_placement_region }}"
-        efs_dns_name: "{{ file_sys_id }}.efs.{{ aws_region }}.amazonaws.com"
+        efs_dns_name: "{{ efs_id }}.efs.{{ aws_region }}.amazonaws.com"
 
     - name: 掛載 EFS
       mount:
@@ -118,13 +118,12 @@
 
     # 以 sudo 權限執行 echo 命令，將 EFS 文件系統的掛載信息添加到 /etc/fstab 文件中，以便在重啟時自動掛載。
     - name: Edit fstab so EFS automatically loads on reboot
-      command: echo {{ file_sys_id }}:/ {{ efs_mount_dir }} efs defaults,_netdev 0 0 >> /etc/fstab
+      command: echo {{ efs_id }}:/ {{ efs_mount_dir }} efs defaults,_netdev 0 0 >> /etc/fstab
       become: yes
       become_method: sudo
       become_user: root
     # 等於下列shell指令：
-    # sudo bash -c 'echo ${file_sys_id}:/ /var/www/html efs defaults,_netdev 0 0 >> /etc/fstab'
-
+    # sudo bash -c 'echo ${efs_id}:/ /var/www/html efs defaults,_netdev 0 0 >> /etc/fstab'
 
     # 以 sudo 權限執行，並切換到 /var/www/html 目錄後執行 git clone 命令，將代碼庫複製到該目錄中。
     - name: Copy the code from github to the /var/www/html
@@ -140,3 +139,36 @@
     #    echo "Clone completed"
     # }'
 
+    # Clone repository 並將內容同步到 S3 Bucket
+    - name: Clone repository and upload to S3
+      hosts: all
+      become: true
+      vars:
+        github_repo: "https://github.com/charleenchiu/StaticWebSite.git"  # 要從中 clone 的 GitHub repository
+        s3_bucket_name: "charleen-terra-bucket-test"                      # 之前在 Terraform 中創建的 S3 Bucket 名稱
+        s3_target_dir: "/var/www/html"                                    # clone 後放置網站內容的本地目錄
+      tasks:
+
+        # 使用 apt 安裝 awscli，用來與 AWS 進行交互操作
+        - name: Install awscli
+          apt:
+            name: awscli
+            state: present
+
+        # 將指定的 GitHub repository clone 到 s3_target_dir 目錄
+        - name: Clone website repository
+          git:
+            repo: "{{ github_repo }}"          # 指定要 clone 的 Git repository
+            dest: "{{ s3_target_dir }}"        # 本地目標目錄
+            version: main                      # 使用指定的 branch 或版本
+
+        # 將 s3_target_dir 目錄中的內容同步到 S3 Bucket
+        - name: Upload website content to S3 bucket
+          command: aws s3 sync "{{ s3_target_dir }}" "s3://{{ s3_bucket_name }}/"
+          register: s3_upload                  # 將同步結果記錄在變量 s3_upload 中
+          ignore_errors: yes                   # 忽略錯誤，以防止同步過程中的非致命錯誤中止 Playbook
+
+        # 檢查 S3 同步結果
+        - name: Verify S3 upload
+          debug:
+            var: s3_upload                     # 輸出變量 s3_upload 的內容，以便檢查同步狀態

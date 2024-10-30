@@ -1,35 +1,35 @@
-// Configuring the provider information
+// 設定 AWS provider 區域資訊
 provider "aws" {
     region = "us-east-1"
 }
 
 // 獲取當前工作目錄並存儲在一個文件中
 resource "null_resource" "get_pwd" {
-  //pwd 路徑會是：/var/lib/jenkins/workspace/vprofile-project/terraform
+  // pwd 路徑會是：/var/lib/jenkins/workspace/vprofile-project/terraform
   provisioner "local-exec" {
     command = "pwd > ${path.module}/current_dir.txt"
   }
 }
 
-// 讀取當前工作目錄
+// 讀取當前工作目錄的資料
 data "local_file" "current_dir" {
   depends_on = [null_resource.get_pwd]
   filename   = "${path.module}/current_dir.txt"
 }
 
-// Creating the EC2 private key
+// 建立 EC2 私鑰變數
 variable "key_name" {
   default = "charleen_Terraform_test_nfs"
 }
 
-// Generate the private key
+// 生成 EC2 私鑰
 resource "tls_private_key" "ec2_private_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
 
-// Write the private key to a file
-// 不在上段產生private key時，用local-exec寫入檔案，以免造成循環
+// 將私鑰寫入文件
+// 不在上段產生 private key 時寫入檔案，以免造成循環依賴
 resource "null_resource" "write_private_key" {
   provisioner "local-exec" {
     command = <<EOT
@@ -39,49 +39,48 @@ resource "null_resource" "write_private_key" {
   }
 }
 
-
 // 產生公鑰
-// 不用depends_on以免造成循環
+// 不用 depends_on 以避免循環依賴
 resource "aws_key_pair" "ec2_key_pair" {
   key_name   = var.key_name
   public_key = tls_private_key.ec2_private_key.public_key_openssh
 }
 
-// Jenkins public key
-// 不用depends_on以免造成循環
+// Jenkins 的公鑰
+// 不用 depends_on 以避免循環依賴
 locals {
   jenkins_public_key = aws_key_pair.ec2_key_pair.public_key
 }
 
-// Creating aws security resource
+// 建立 AWS Security Group
 resource "aws_security_group" "allow_tcp_nfs" {
   name        = "allow_tcp_nfs"
-  description = "Allow TCP and NFS inbound traffic"
+  description = "允許 TCP 和 NFS 的入站流量"
   vpc_id      = "vpc-02fb581658eb58d45"
 
   ingress {
-    description = "TCP from VPC"
+    description = "TCP 流量來自 VPC"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
    ingress {
-    description = "SSH from VPC"
+    description = "SSH 流量來自 VPC"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    description = "HTTPS from VPC"
+    description = "HTTPS 流量來自 VPC"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    description = "NFS from VPC"
+    description = "NFS 流量來自 VPC"
     from_port   = 2049
     to_port     = 2049
     protocol    = "tcp"
@@ -100,7 +99,7 @@ resource "aws_security_group" "allow_tcp_nfs" {
   }
 }
 
-// Launching new EC2 instance
+// 啟動新的 EC2 實例
 resource "aws_instance" "myWebServer" {
   ami = "ami-0e86e20dae9224db8"
   instance_type = "t2.micro"
@@ -112,8 +111,7 @@ resource "aws_instance" "myWebServer" {
       Name = "myWebServer"
   }
 
-  //file provisioner：將設置好權限的私鑰文件從本地複製到遠端機器。
-  //file provisioner 是 Terraform 中的一種 provisioner，用來將本地文件複製到遠端機器上。使用 file provisioner 可以避免使用 sudo 命令來設置文件權限，因為你可以在本地設置好文件權限後再將文件複製到遠端機器。
+  // file provisioner：將設置好權限的私鑰文件從本地複製到遠端機器
   provisioner "file" {
     source      = "${path.module}/${var.key_name}.pem"
     destination = "/home/ubuntu/.ssh/${var.key_name}.pem"
@@ -126,7 +124,7 @@ resource "aws_instance" "myWebServer" {
     }
   }
  
-  //remote-exec provisioner：在遠端機器上設置私鑰文件的權限並添加 jenkins 用戶的公鑰到 authorized_keys 文件中。
+  // remote-exec provisioner：設置私鑰文件的權限並添加 Jenkins 公鑰到 authorized_keys
   provisioner "remote-exec" {
     inline = [
       "echo '${local.jenkins_public_key}' >> /home/ubuntu/.ssh/authorized_keys"
@@ -141,7 +139,7 @@ resource "aws_instance" "myWebServer" {
   }
 }
 
-// Creating EFS
+// 建立 EFS 檔案系統
 resource "aws_efs_file_system" "myWebEFS" {
   creation_token = "CharleenWebFile"
 
@@ -150,24 +148,31 @@ resource "aws_efs_file_system" "myWebEFS" {
   }
 }
 
-// Mounting EFS
+// 掛載 EFS
 resource "aws_efs_mount_target" "mountefs" {
   file_system_id  = aws_efs_file_system.myWebEFS.id
   subnet_id       = "subnet-0153eaf2e8d59b0a0"
   security_groups = [aws_security_group.allow_tcp_nfs.id]
 }
 
-// Configuring the external volume
+// 設定外部儲存體
 resource "null_resource" "setupVol" {
-  depends_on = [aws_efs_mount_target.mountefs]
+  depends_on = [aws_instance.myWebServer, aws_efs_mount_target.mountefs, aws_s3_bucket.tera_bucket]
 
-  //從本機連到新建的EC2，執行Ansible playbook，並將建好的EFS ID傳給那台EC2
+  // 連到新建的 EC2 並執行 Ansible playbook，傳入 EFS ID 和 S3 資訊
   provisioner "local-exec" {
-    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu --private-key ${path.module}/${var.key_name}.pem -i '${aws_instance.myWebServer.public_ip},' master_ubuntu.yml -e 'file_sys_id=${aws_efs_file_system.myWebEFS.id}'"
+    command = <<EOT
+      ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
+      -u ubuntu --private-key ${path.module}/${var.key_name}.pem \
+      -i '${aws_instance.myWebServer.public_ip},' master_ubuntu.yml \
+      -e "efs_id=${aws_efs_file_system.myWebEFS.id}" \
+      -e "s3_bucket_name=${aws_s3_bucket.tera_bucket.bucket}" \
+      -e "s3_bucket_arn=${aws_s3_bucket.tera_bucket.arn}"
+    EOT
   }
 }
 
-// Creating private S3 Bucket
+// 建立 S3 私有 Bucket
 resource "aws_s3_bucket" "tera_bucket" {
   bucket = "charleen-terra-bucket-test"
 
@@ -176,9 +181,8 @@ resource "aws_s3_bucket" "tera_bucket" {
   }
 }
 
-
-//S3 ACL ↓
-// S3 Bucket Ownership Controls
+// S3 權限控制設定
+// 設定 S3 Bucket 擁有權控制
 resource "aws_s3_bucket_ownership_controls" "tera_bucket_ownership" {
   bucket = aws_s3_bucket.tera_bucket.id
   rule {
@@ -186,7 +190,7 @@ resource "aws_s3_bucket_ownership_controls" "tera_bucket_ownership" {
   }
 }
 
-// Block Public Access
+// 公開訪問限制設定
 resource "aws_s3_bucket_public_access_block" "tera_bucket_acblock" {
   bucket = aws_s3_bucket.tera_bucket.id
 
@@ -204,18 +208,18 @@ resource "aws_s3_bucket_acl" "tera_bucket_acl" {
   bucket = aws_s3_bucket.tera_bucket.id
   acl    = "private"
 }
-// S3 ACL ↑
 
-// Local variables
+// 本地變數
 locals {
   s3_origin_id = "myS3Origin"
 }
 
-// Creating Origin Access Identity for CloudFront
+// 為 CloudFront 建立 Origin Access Identity
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
   comment = "Tera Access Identity"
 }
 
+// CloudFront 分佈設定
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
     domain_name = aws_s3_bucket.tera_bucket.bucket_regional_domain_name
@@ -249,7 +253,6 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     max_ttl                = 86400
   }
 
-  // Cache behavior with precedence 0
   ordered_cache_behavior {
     path_pattern     = "/content/immutable/*"
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
@@ -269,88 +272,46 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     default_ttl            = 86400
     max_ttl                = 31536000
     compress               = true
+
+
     viewer_protocol_policy = "redirect-to-https"
   }
-
-  // Cache behavior with precedence 1
-  ordered_cache_behavior {
-    path_pattern     = "/content/*"
-    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id = local.s3_origin_id
-
-    forwarded_values {
-      query_string = false
-
-      cookies {
-        forward = "none"
-      }
-    }
-
-    min_ttl                = 0
-    default_ttl            = 3600
-    max_ttl                = 86400
-    compress               = true
-    viewer_protocol_policy = "redirect-to-https"
-  }
-
-  price_class = "PriceClass_200"
 
   restrictions {
     geo_restriction {
-      restriction_type = "blacklist"
-      locations        = ["CA"]
+      restriction_type = "whitelist"
+      locations        = ["US", "CA"]
     }
-  }
-
-  tags = {
-    Environment = "production"
   }
 
   viewer_certificate {
     cloudfront_default_certificate = true
   }
 
-  retain_on_delete = true
-}
-
-// AWS Bucket Policy for CloudFront
-data "aws_iam_policy_document" "s3_policy" {
-  statement {
-    actions   = ["s3:GetObject"]
-    resources = ["${aws_s3_bucket.tera_bucket.arn}/*"]
-
-    principals {
-      type        = "AWS"
-      identifiers = [aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn]
-    }
-  }
-
-  statement {
-    actions   = ["s3:ListBucket"]
-    resources = [aws_s3_bucket.tera_bucket.arn]
-
-    principals {
-      type        = "AWS"
-      identifiers = [aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn]
-    }
+  tags = {
+    Name = "Tera Access Identity"
   }
 }
 
-resource "aws_s3_bucket_policy" "s3BucketPolicy" {
-  bucket = aws_s3_bucket.tera_bucket.id
-  policy = data.aws_iam_policy_document.s3_policy.json
-}
-
-resource "aws_s3_object" "bucketObject" {
-  for_each = fileset("/var/www/html/", "*")
-  bucket = aws_s3_bucket.tera_bucket.id
-
-  key    = each.value
-  source = each.value
-  etag   = filemd5("${each.value}")
-}
-
-output "myWebServer_public_ip" {
+// 輸出
+output "ec2_public_ip" {
   value = aws_instance.myWebServer.public_ip
 }
+
+output "efs_id" {
+  value = aws_efs_file_system.myWebEFS.id
+}
+
+// 新增輸出 EFS 和 S3 Bucket 的資訊
+output "s3_bucket_name" {
+  value = aws_s3_bucket.tera_bucket.bucket
+}
+
+output "s3_bucket_arn" {
+  value = aws_s3_bucket.tera_bucket.arn
+}
+
+output "efs_id" {
+  value = aws_efs_file_system.myWebEFS.id
+}
+
