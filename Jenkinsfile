@@ -9,7 +9,7 @@ pipeline {
         //IMAGE_TAG = 'latest' // Docker Image Tag
         IMAGE_TAG = 'stable' // Docker Image Tag
         AWS_REGION = 'us-east-1'    // AWS 區域
-        KUBECONFIG = '/home/ubuntu/.kube/config'
+        KUBECONFIG = '/var/lib/jenkins/.kube/config'
         /*
         將在 Terraform 階段後更新的環境變數，不可在這裡給預設值，會無法在建置過程中賦值
         */
