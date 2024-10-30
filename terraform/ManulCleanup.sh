@@ -4,7 +4,7 @@
 read -p "請輸入 AWS access_key: " access_key
 read -p "請輸入 AWS secret_key: " secret_key
 
-# 刪除Helm建立的資源，例如ELB。但不會自動刪除 Docker 映像
+# 刪除 Helm 建立的資源，例如 ELB。但不會自動刪除 Docker 映像
 # helm uninstall <release-name>
 helm repo remove bitnami
 helm repo remove fluent
@@ -17,11 +17,17 @@ cd /var/lib/jenkins/workspace/K8S_Shopping_Site/terraform || { echo "找不到 J
 
 # 修改 main.tf，將 access_key 和 secret_key 加入 Terraform 配置
 echo "正在修改 main.tf 檔案..."
-sudo sed -i '1i provider "aws" {\n  region = "us-east-1"\n  access_key = "'"$access_key"'"\n  secret_key = "'"$secret_key"'"\n}\n' main.tf
 
-if [ $? -ne 0 ]; then
-    echo "修改 main.tf 失敗！"
-    exit 1
+# 檢查 main.tf 是否已包含 provider "aws" 的配置
+if ! grep -q 'provider "aws"' main.tf; then
+    sudo sed -i '1i provider "aws" {\n  region = "us-east-1"\n  access_key = "'"$access_key"'"\n  secret_key = "'"$secret_key"'"\n}\n' main.tf
+
+    if [ $? -ne 0 ]; then
+        echo "修改 main.tf 失敗！"
+        exit 1
+    fi
+else
+    echo "main.tf 已包含 provider 'aws' 的配置，跳過修改。"
 fi
 
 echo "正在執行清理操作..."
