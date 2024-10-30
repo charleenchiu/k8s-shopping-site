@@ -315,16 +315,15 @@ pipeline {
             sh """
                 # 檢查 bitnami repository 是否存在再刪除
                 if helm repo list | grep -q 'bitnami'; then
-                helm repo remove bitnami
+                    helm repo remove bitnami
                 else
-                echo "bitnami repository 不存在，跳過刪除。"
+                    echo "bitnami repository 不存在，跳過刪除。"
                 fi
-
                 # 檢查 fluent repository 是否存在再刪除
                 if helm repo list | grep -q 'fluent'; then
-                helm repo remove fluent
+                    helm repo remove fluent
                 else
-                echo "fluent repository 不存在，跳過刪除。"
+                    echo "fluent repository 不存在，跳過刪除。"
                 fi
                 helm uninstall ${env.HELM_RELEASE_NAME} # 刪除Helm建立的資源，例如ELB。但不會自動刪除 Docker 映像
                 helm uninstall aws-for-fluent-bit
