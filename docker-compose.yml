@@ -1,6 +1,6 @@
 version: '3'
 services:
-  k8s-shopping-site:
+  site-service:
     build: .
     ports:
       - "${SITE_PORT}:3000"

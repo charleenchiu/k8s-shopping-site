@@ -9,6 +9,27 @@ const productServiceUrl = process.env.PRODUCT_SERVICE_URL || 'http://product-ser
 const orderServiceUrl = process.env.ORDER_SERVICE_URL || 'http://order-service:3003';
 const paymentServiceUrl = process.env.PAYMENT_SERVICE_URL || 'http://payment-service:3004';
 
+// 根目錄，顯示各微服務的 URL
+app.get('/', (req, res) => {
+    res.send(`
+        <h1>Welcome to the Shopping Site</h1>
+        <p>Click the links below to access the APIs:</p>
+        <ul>
+            <li><a href="/user-service">User Service</a> - URL: ${userServiceUrl}</li>
+            <li><a href="/product-service">Product Service</a> - URL: ${productServiceUrl}</li>
+            <li><a href="/order-service">Order Service</a> - URL: ${orderServiceUrl}</li>
+            <li><a href="/payment-service">Payment Service</a> - URL: ${paymentServiceUrl}</li>
+        </ul>
+        <p>Debug:</p>
+        <ul>
+            <li><a href="/user-service">User Service</a> - URL: ${process.env.USER_SERVICE_URL}</li>
+            <li><a href="/product-service">Product Service</a> - URL: ${process.env.PRODUCT_SERVICE_URL}</li>
+            <li><a href="/order-service">Order Service</a> - URL: ${process.env.ORDER_SERVICE_URL}</li>
+            <li><a href="/payment-service">Payment Service</a> - URL: ${process.env.PAYMENT_SERVICE_URL}</li>
+        </ul>
+    `);
+});
+
 /*
 // 使用 http-proxy-middleware 來代理請求至 Kubernetes 內部的 ClusterIP 服務
 app.use('/user-service', createProxyMiddleware({ target: 'http://user-service.default.svc.cluster.local:3001', changeOrigin: true }));
@@ -16,20 +37,6 @@ app.use('/product-service', createProxyMiddleware({ target: 'http://product-serv
 app.use('/order-service', createProxyMiddleware({ target: 'http://order-service.default.svc.cluster.local:3003', changeOrigin: true }));
 app.use('/payment-service', createProxyMiddleware({ target: 'http://payment-service.default.svc.cluster.local:3004', changeOrigin: true }));
 */
-
-// 根目錄
-app.get('/', (req, res) => {
-    res.send(`
-        <h1>Welcome to the Shopping Site</h1>
-        <p>Click the links below to access the APIs:</p>
-        <ul>
-            <li><a href="/user-service">User Service</a></li>
-            <li><a href="/product-service">Product Service</a></li>
-            <li><a href="/order-service">Order Service</a></li>
-            <li><a href="/payment-service">Payment Service</a></li>
-        </ul>
-    `);
-});
 
 // 使用 http-proxy-middleware 將請求轉發到對應的微服務
 app.use('/user-service', createProxyMiddleware({ 
