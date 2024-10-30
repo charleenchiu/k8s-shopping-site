@@ -212,6 +212,8 @@ pipeline {
                 script { 
                     sh """
                     aws eks update-kubeconfig --region ${env.AWS_REGION} --name ${env.EKS_CLUSTER_NAME}
+                    export KUBECONFIG=~/.kube/config
+                    kubectl config current-context
                     """
                 }
             }
