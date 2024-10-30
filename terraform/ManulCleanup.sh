@@ -6,8 +6,20 @@ read -p "請輸入 AWS secret_key: " secret_key
 
 # 刪除 Helm 建立的資源，例如 ELB。但不會自動刪除 Docker 映像
 # helm uninstall <release-name>
-helm repo remove bitnami
-helm repo remove fluent
+# 檢查 bitnami repository 是否存在再刪除
+if helm repo list | grep -q 'bitnami'; then
+    helm repo remove bitnami
+else
+    echo "bitnami repository 不存在，跳過刪除。"
+fi
+
+# 檢查 fluent repository 是否存在再刪除
+if helm repo list | grep -q 'fluent'; then
+    helm repo remove fluent
+else
+    echo "fluent repository 不存在，跳過刪除。"
+fi
+
 helm uninstall k8s-site
 helm uninstall aws-for-fluent-bit
 helm uninstall externaldns

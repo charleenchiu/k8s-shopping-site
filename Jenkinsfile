@@ -313,11 +313,29 @@ pipeline {
         failure {
             // 如果過程失敗，清除 terraform 建的資源
             sh """
+                # 檢查 bitnami repository 是否存在再刪除
+                if helm repo list | grep -q 'bitnami'; then
                 helm repo remove bitnami
+                else
+                echo "bitnami repository 不存在，跳過刪除。"
+                fi
+
+                # 檢查 fluent repository 是否存在再刪除
+                if helm repo list | grep -q 'fluent'; then
                 helm repo remove fluent
+                else
+                echo "fluent repository 不存在，跳過刪除。"
+                fi
                 helm uninstall ${env.HELM_RELEASE_NAME} # 刪除Helm建立的資源，例如ELB。但不會自動刪除 Docker 映像
                 helm uninstall aws-for-fluent-bit
                 helm uninstall externaldns
+                // 清理 Docker 資源
+                sh '''
+                    docker builder prune -f        # 清除所有未使用的 build cache
+                    docker container prune -f      # 刪除未使用的容器
+                    docker image prune -a -f     # 刪除所有未使用的映像
+                    docker volume prune -f       # 刪除未使用的磁碟機
+                '''
                 cd terraform     # 切換到 terraform 目錄
                 sudo chmod +x delete_ecr_images.sh   # 確保 delete_ecr_images.sh 可執行
                 ./delete_ecr_images.sh  # 注意加上 "./" 來執行當前目錄的腳本，執行刪除映像的腳本
@@ -351,13 +369,6 @@ pipeline {
                     echo 'No lock found, proceeding normally.'
                 }
 
-                // 清理 Docker 資源
-                sh '''
-                    docker builder prune -f        # 清除所有未使用的 build cache
-                    docker container prune -f      # 刪除未使用的容器
-                    docker image prune -a -f     # 刪除所有未使用的映像
-                    docker volume prune -f       # 刪除未使用的磁碟機
-                '''
             }
         }
     }
