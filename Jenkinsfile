@@ -9,6 +9,7 @@ pipeline {
         //IMAGE_TAG = 'latest' // Docker Image Tag
         IMAGE_TAG = 'stable' // Docker Image Tag
         AWS_REGION = 'us-east-1'    // AWS 區域
+        KUBECONFIG = '/home/ubuntu/.kube/config'
         /*
         將在 Terraform 階段後更新的環境變數，不可在這裡給預設值，會無法在建置過程中賦值
         */
@@ -212,8 +213,6 @@ pipeline {
                 script { 
                     sh """
                     aws eks update-kubeconfig --region ${env.AWS_REGION} --name ${env.EKS_CLUSTER_NAME}
-                    export KUBECONFIG=~/.kube/config
-                    kubectl config current-context
                     """
                 }
             }
@@ -313,28 +312,12 @@ pipeline {
         failure {
             // 如果過程失敗，清除 terraform 建的資源
             sh """
-                # 檢查 bitnami repository 是否存在再刪除
-                if helm repo list | grep -q 'bitnami'; then
-                    helm repo remove bitnami
-                else
-                    echo "bitnami repository 不存在，跳過刪除。"
-                fi
-                # 檢查 fluent repository 是否存在再刪除
-                if helm repo list | grep -q 'fluent'; then
-                    helm repo remove fluent
-                else
-                    echo "fluent repository 不存在，跳過刪除。"
-                fi
+                set +e
+                helm repo remove bitnami
+                helm repo remove fluent
                 helm uninstall ${env.HELM_RELEASE_NAME} # 刪除Helm建立的資源，例如ELB。但不會自動刪除 Docker 映像
                 helm uninstall aws-for-fluent-bit
                 helm uninstall externaldns
-                // 清理 Docker 資源
-                sh '''
-                    docker builder prune -f        # 清除所有未使用的 build cache
-                    docker container prune -f      # 刪除未使用的容器
-                    docker image prune -a -f     # 刪除所有未使用的映像
-                    docker volume prune -f       # 刪除未使用的磁碟機
-                '''
                 cd terraform     # 切換到 terraform 目錄
                 sudo chmod +x delete_ecr_images.sh   # 確保 delete_ecr_images.sh 可執行
                 ./delete_ecr_images.sh  # 注意加上 "./" 來執行當前目錄的腳本，執行刪除映像的腳本
@@ -368,6 +351,13 @@ pipeline {
                     echo 'No lock found, proceeding normally.'
                 }
 
+                // 清理 Docker 資源
+                sh '''
+                    docker builder prune -f        # 清除所有未使用的 build cache
+                    docker container prune -f      # 刪除未使用的容器
+                    docker image prune -a -f     # 刪除所有未使用的映像
+                    docker volume prune -f       # 刪除未使用的磁碟機
+                '''
             }
         }
     }
