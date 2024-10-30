@@ -32,7 +32,8 @@ resource "aws_instance" "JenkinsServer" {
 
 // Launching new EC2 instance
 resource "aws_instance" "SonarServer" {
-  ami = "ami-0d0ff2521dcc4bb94"  //SonarServerImg4_QG_webhook_JKImg14 with t2.medium
+  //ami = "ami-0d0ff2521dcc4bb94"  //SonarServerImg4_QG_webhook_JKImg14 with t2.medium
+  ami = "ami-02f743ccd2da10d1e"  //SonarServerImg5_k8s_site_QG_webhook_JKImg18 with t2.medium
   instance_type = "t2.medium"
   key_name = "sonar-key"
   vpc_security_group_ids = ["sg-045c57d2935ed51b9"] //SonarSG
