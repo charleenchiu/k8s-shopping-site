@@ -40,3 +40,36 @@ exit
 ```
 
 這樣就可以回到您原本的 shell 環境。
+
+//===========================================================================
+你可以透過以下步驟來進入 `site-service` pod，並檢查是否能夠連到 `http://user-service.default.svc.cluster.local:3001`：
+
+### 1. 使用 `kubectl exec` 進入 `site-service` pod
+執行以下指令進入 `site-service` pod：
+
+```bash
+kubectl exec -it <site-service-pod-name> -- /bin/sh
+```
+
+將 `<site-service-pod-name>` 替換成你的 `site-service` pod 名稱，例如：`site-service-deployment-6ddbd789d6-dml8m`。
+
+### 2. 使用 `curl` 測試連接
+
+進入 `site-service` pod 內之後，使用 `curl` 指令測試是否能連接 `user-service`：
+
+```bash
+curl http://user-service.default.svc.cluster.local:3001
+```
+
+如果 `curl` 請求成功，應該會返回 `user-service` 的回應內容，這表示 `site-service` 可以正常訪問 `user-service`。
+
+### 確認 URL 編寫正確
+
+- `user-service` 是 `user-service` 服務的名稱。
+- `default` 是這些服務所在的 namespace（預設為 default）。
+- `svc.cluster.local` 是 Kubernetes 的內部域名後綴，用於標示該服務屬於內部 ClusterIP 網路。
+
+因此，`http://user-service.default.svc.cluster.local:3001` 應該是正確的 URL。如果連接失敗，可以檢查：
+
+- 確認 `user-service` 的名稱是否正確。
+- 確認 `user-service` 的端口是否正確配置為 3001。

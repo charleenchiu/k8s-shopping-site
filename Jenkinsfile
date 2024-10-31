@@ -202,7 +202,8 @@ pipeline {
                 }
             }
         }
-        
+
+        /*
         stage('Install or Upgrade ExternalDNS') {
             steps {
                 // 新增 ExternalDNS Helm repo 並安裝 ExternalDNS
@@ -217,6 +218,7 @@ pipeline {
                 }
             }
         }
+        */
 
         stage('Install or Upgrade Fluent Bit') {
             steps {

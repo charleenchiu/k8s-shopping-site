@@ -2,11 +2,12 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: shopping-site-ingress
+  namespace: default
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: "shop.example.com"
+    external-dns.alpha.kubernetes.io/hostname: elb_dns
 spec:
   rules:
-    - host: shop.example.com
+    - host: elb_dns
       http:
         paths:
           - path: /user-service
