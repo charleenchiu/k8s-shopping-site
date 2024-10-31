@@ -193,7 +193,17 @@ pipeline {
             }
         }
         
-        stage('Setup Helm') {
+        stage('Config kubectl Connect to EKS Cluster') {
+            steps {
+                script { 
+                    sh """
+                    aws eks update-kubeconfig --region ${env.AWS_REGION} --name ${env.EKS_CLUSTER_NAME}
+                    """
+                }
+            }
+        }
+        
+        stage('Install or Upgrade ExternalDNS') {
             steps {
                 // 新增 ExternalDNS Helm repo 並安裝 ExternalDNS
                 script {
@@ -204,16 +214,6 @@ pipeline {
                     --set provider=aws \
                     --set aws.zoneType=public
                     '''
-                }
-            }
-        }
-
-        stage('Config kubectl Connect to EKS Cluster') {
-            steps {
-                script { 
-                    sh """
-                    aws eks update-kubeconfig --region ${env.AWS_REGION} --name ${env.EKS_CLUSTER_NAME}
-                    """
                 }
             }
         }
