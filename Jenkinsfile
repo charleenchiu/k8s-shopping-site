@@ -159,10 +159,11 @@ pipeline {
                     echo "EKS_CLUSTER_ARN: ${env.EKS_CLUSTER_ARN}"
                     echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
                     echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
+
                     set -e  # 開啟 Shell 的錯誤模式，若有錯誤則停止執行
-                    // 取得當前日期並格式化為 `yyyy-mm-dd_HH:mm:ss`
+                    # 取得當前日期並格式化為 `yyyy-mm-dd_HH-mm-ss`
                     def image_name_prefix = 'public.ecr.aws/j5a0e3h8/k8s-shopping-site'
-					// 定義 allServices 陣列，只在此 script 區域內使用
+                    # 定義 allServices 陣列，只在此 script 區域內使用
                     def allServices = [
                         [name: 'site-service', repo: env.SITE_ECR_REPO],
                         [name: 'user_service', repo: env.USER_SERVICE_ECR_REPO],
@@ -171,24 +172,24 @@ pipeline {
                         [name: 'payment_service', repo: env.PAYMENT_SERVICE_ECR_REPO]
                     ]
 
-                    // 取得當前日期並格式化為 `yyyy-mm-dd_HH-mm-ss`
+                    # 取得當前日期並格式化為 `yyyy-mm-dd_HH-mm-ss`
                     def currentDate = sh(script: "date '+%Y-%m-%d_%H-%M-%S'", returnStdout: true).trim()
                     
-                    // 標籤清單
+                    # 標籤清單
                     def tags = [env.IMAGE_TAG, currentDate]
 
-                    // 逐一處理每個服務
+                    # 逐一處理每個服務
                     for (service in allServices) {
                         def serviceName = service.name
                         def serviceRepo = service.repo
                         def imageName = "${image_name_prefix}/${serviceName}"
 
-                        // 建立 Docker image，使用主要的 env.IMAGE_TAG 標籤
+                        # 建立 Docker image，使用主要的 env.IMAGE_TAG 標籤
                         sh "docker build -t ${serviceRepo}:${env.IMAGE_TAG} ."
 
-                        // 標籤和推送其他標籤
+                        # 標籤和推送其他標籤
                         for (tag in tags) {
-                            // 標籤和推送操作
+                            # 標籤和推送操作
                             sh "docker tag ${serviceRepo}:${env.IMAGE_TAG} ${imageName}:${tag}"
                             sh "docker push ${imageName}:${tag}"
                         }
