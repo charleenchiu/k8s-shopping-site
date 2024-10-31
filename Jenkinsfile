@@ -160,19 +160,39 @@ pipeline {
                     echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
                     echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
                     set -e  # 開啟 Shell 的錯誤模式，若有錯誤則停止執行
-                    # 透過 AWS CLI 登入公共 ECR
-                    aws ecr-public get-login-password --region ${env.AWS_REGION} | docker login --username AWS --password-stdin public.ecr.aws
-                    # Push Image 到公共 ECR
-                    docker tag ${env.SITE_ECR_REPO}:${env.IMAGE_TAG} public.ecr.aws/j5a0e3h8/k8s-shopping-site:${env.IMAGE_TAG}
-                    docker push public.ecr.aws/j5a0e3h8/k8s-shopping-site:${env.IMAGE_TAG}
-                    docker tag ${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} public.ecr.aws/j5a0e3h8/k8s-shopping-site/user_service:${env.IMAGE_TAG}
-                    docker push public.ecr.aws/j5a0e3h8/k8s-shopping-site/user_service:${env.IMAGE_TAG}
-                    docker tag ${env.PRODUCT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} public.ecr.aws/j5a0e3h8/k8s-shopping-site/product_service:${env.IMAGE_TAG}
-                    docker push public.ecr.aws/j5a0e3h8/k8s-shopping-site/product_service:${env.IMAGE_TAG}
-                    docker tag ${env.ORDER_SERVICE_ECR_REPO}:${env.IMAGE_TAG} public.ecr.aws/j5a0e3h8/k8s-shopping-site/order_service:${env.IMAGE_TAG}
-                    docker push public.ecr.aws/j5a0e3h8/k8s-shopping-site/order_service:${env.IMAGE_TAG}
-                    docker tag ${env.PAYMENT_SERVICE_ECR_REPO}:${env.IMAGE_TAG} public.ecr.aws/j5a0e3h8/k8s-shopping-site/payment_service:${env.IMAGE_TAG}
-                    docker push public.ecr.aws/j5a0e3h8/k8s-shopping-site/payment_service:${env.IMAGE_TAG}
+                    // 取得當前日期並格式化為 `yyyy-mm-dd_HH:mm:ss`
+                    def image_name_prefix = 'public.ecr.aws/j5a0e3h8/k8s-shopping-site'
+					// 定義 allServices 陣列，只在此 script 區域內使用
+                    def allServices = [
+                        [name: 'site-service', repo: env.SITE_ECR_REPO],
+                        [name: 'user_service', repo: env.USER_SERVICE_ECR_REPO],
+                        [name: 'product_service', repo: env.PRODUCT_SERVICE_ECR_REPO],
+                        [name: 'order_service', repo: env.ORDER_SERVICE_ECR_REPO],
+                        [name: 'payment_service', repo: env.PAYMENT_SERVICE_ECR_REPO]
+                    ]
+
+                    // 取得當前日期並格式化為 `yyyy-mm-dd_HH-mm-ss`
+                    def currentDate = sh(script: "date '+%Y-%m-%d_%H-%M-%S'", returnStdout: true).trim()
+                    
+                    // 標籤清單
+                    def tags = [env.IMAGE_TAG, currentDate]
+
+                    // 逐一處理每個服務
+                    for (service in allServices) {
+                        def serviceName = service.name
+                        def serviceRepo = service.repo
+                        def imageName = "${image_name_prefix}/${serviceName}"
+
+                        // 建立 Docker image，使用主要的 env.IMAGE_TAG 標籤
+                        sh "docker build -t ${serviceRepo}:${env.IMAGE_TAG} ."
+
+                        // 標籤和推送其他標籤
+                        for (tag in tags) {
+                            // 標籤和推送操作
+                            sh "docker tag ${serviceRepo}:${env.IMAGE_TAG} ${imageName}:${tag}"
+                            sh "docker push ${imageName}:${tag}"
+                        }
+                    }
                     """
                 }
             }
@@ -209,9 +229,13 @@ pipeline {
                 // 新增 ExternalDNS Helm repo 並安裝 ExternalDNS
                 script {
                     sh '''
+                    set +e  #忽略錯誤繼續
                     helm repo add bitnami https://charts.bitnami.com/bitnami
                     helm repo update
+                    #先清除前次安裝，若是第一次安裝則忽略錯誤繼纆
+                    helm uninstall externaldns || true
                     helm upgrade --install externaldns bitnami/external-dns \
+                    --force --recreate-pods
                     --set provider=aws \
                     --set aws.zoneType=public
                     '''
@@ -227,10 +251,14 @@ pipeline {
                     // 將 Helm 二進制檔案路徑加入到 PATH 中
                     sh """
                         export PATH=\$PATH:/tmp/linux-amd64
+                        set +e  #忽略錯誤繼續
                         # 安裝或升級 Fluent Bit Helm Chart
                         helm repo add fluent https://fluent.github.io/helm-charts
                         helm repo update
+                        #先清除前次安裝，若是第一次安裝則忽略錯誤繼纆
+                        helm uninstall aws-for-fluent-bit || true
                         helm upgrade --install aws-for-fluent-bit fluent/fluent-bit \
+                        --force --recreate-pods
                         --set awsRegion=${env.AWS_REGION} \
                         --set cloudWatch.logGroupName=${env.LOG_GROUP_NAME}
                     """
@@ -256,8 +284,12 @@ pipeline {
                     dir('./k8s-chart') {
                         // 使用 helm 指令，使用參數命名方式動態傳遞 awsRegion、serviceType 和 awsLogsGroup
                         sh """
+                            set +e  #忽略錯誤繼續
+                            #先清除前次安裝，若是第一次安裝則忽略錯誤繼纆
+                            helm uninstall ${env.HELM_RELEASE_NAME} || true
                             set -x  # 啟用命令追蹤
                             helm upgrade --install ${env.HELM_RELEASE_NAME} . \
+                            --force --recreate-pods \
                             --set awsRegion=${env.AWS_REGION} \
                             --set awsLogsGroup=${env.LOG_GROUP_NAME} \
                             --set services.user-service.image.repository=${env.USER_SERVICE_ECR_REPO} \
@@ -303,12 +335,11 @@ pipeline {
         }
     }
 
-    /*
     post {
         failure {
             // 如果過程失敗，清除 terraform 建的資源
             sh """
-                set +e
+                set +e  #忽略錯誤繼續
                 helm repo remove bitnami
                 helm repo remove fluent
                 helm uninstall ${env.HELM_RELEASE_NAME} # 刪除Helm建立的資源，例如ELB。但不會自動刪除 Docker 映像
@@ -357,5 +388,4 @@ pipeline {
             }
         }
     }
-    */
 }

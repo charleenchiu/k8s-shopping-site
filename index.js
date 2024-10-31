@@ -35,25 +35,25 @@ app.use('/payment-service', createProxyMiddleware({ target: 'http://payment-serv
 app.use('/user-service', createProxyMiddleware({ 
     target: userServiceUrl, 
     changeOrigin: true, 
-    pathRewrite: { '^/user-service': '' },  // 重寫路徑
+    pathRewrite: { '^/user-service': '/' },  // 重寫路徑
     logLevel: 'debug' 
 }));
 app.use('/product-service', createProxyMiddleware({ 
     target: productServiceUrl, 
     changeOrigin: true, 
-    pathRewrite: { '^/product-service': '' }, 
+    pathRewrite: { '^/product-service': '/' }, 
     logLevel: 'debug' 
 }));
 app.use('/order-service', createProxyMiddleware({ 
     target: orderServiceUrl, 
     changeOrigin: true, 
-    pathRewrite: { '^/order-service': '' }, 
+    pathRewrite: { '^/order-service': '/' }, 
     logLevel: 'debug' 
 }));
 app.use('/payment-service', createProxyMiddleware({ 
     target: paymentServiceUrl, 
     changeOrigin: true, 
-    pathRewrite: { '^/payment-service': '' }, 
+    pathRewrite: { '^/payment-service': '/' }, 
     logLevel: 'debug' 
 }));
 

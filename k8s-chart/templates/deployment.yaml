@@ -21,6 +21,7 @@ spec:
       containers:
         - name: {{ $serviceName }}
           image: "{{ $service.image.repository }}:{{ $service.image.tag }}"
+          imagePullPolicy: Always
           ports:
           - containerPort: {{ $service.service.port | default 80 }}
           env:
