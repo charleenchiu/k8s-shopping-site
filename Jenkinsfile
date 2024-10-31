@@ -277,13 +277,6 @@ pipeline {
             }
         }
 
-        stage('Deploy Ingress') {
-            steps {
-                // 部署 Ingress
-                sh 'kubectl apply -f k8s-chart/templates/ingress.yaml'
-            }
-        }
-
         stage('Get ELB Information') {
             steps {
                 script {
