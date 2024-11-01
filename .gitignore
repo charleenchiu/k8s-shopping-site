@@ -38,4 +38,4 @@ target/
 
 # 待做Jenkins Multibranch
 MyNote/ForJenkinsMultibranch
-k8s-chart/out.txt
+k8s-chart/out.yaml
