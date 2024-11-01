@@ -152,6 +152,7 @@ pipeline {
             steps {
                 script {
                     // 印出Trerraform 執行結果的值，方便Debug
+                    sh """
                     echo "SITE_ECR_REPO: ${env.SITE_ECR_REPO}"
                     echo "USER_SERVICE_ECR_REPO: ${env.USER_SERVICE_ECR_REPO}"
                     echo "PRODUCT_SERVICE_ECR_REPO: ${env.PRODUCT_SERVICE_ECR_REPO}"
@@ -161,9 +162,7 @@ pipeline {
                     echo "EKS_CLUSTER_ARN: ${env.EKS_CLUSTER_ARN}"
                     echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
                     echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
-
-                    // 開啟 Shell 的錯誤模式，若有錯誤則停止執行
-                    set -e
+                    """
 
                     // 定義服務列表
                     def allServices = [
