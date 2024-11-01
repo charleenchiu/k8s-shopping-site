@@ -211,7 +211,7 @@ pipeline {
                     allServices.each { service ->
                         def serviceName = service.name
                         def serviceRepo = service.repo
-                        def imageName = "${image_name_prefix}/${serviceName}"
+                        def imageName = serviceName == "site-service" ? "${image_name_prefix}" : "${image_name_prefix}/${serviceName}"
 
                         // 建立 Docker image，使用主要的 env.IMAGE_TAG 標籤
                         sh """
