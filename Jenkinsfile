@@ -1,4 +1,4 @@
-/* groovylint-disable TrailingWhitespace */
+/* groovylint-disable CatchException, TrailingWhitespace */
 pipeline {
     agent any
 
@@ -97,7 +97,15 @@ pipeline {
                     services.each { service ->
                         dir("src/${service}") {
                             sh 'yarn install'
-                            sh 'yarn test'
+                            // 設定超時時間為 1 秒
+                            try {
+                                echo "Starting tests with a timeout of 1 second..."
+                                sh 'timeout 1 yarn test'
+                            } catch (Exception e) {
+                                echo "Tests timed out or failed: ${e.getMessage()}"
+                                // 可以選擇再次報告錯誤或執行其他處理
+                                currentBuild.result = 'FAILURE'
+                            }
                         }
                     }
 
