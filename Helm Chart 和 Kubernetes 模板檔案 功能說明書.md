@@ -1,0 +1,118 @@
+以下是更新後的功能說明書，包含 `Chart.yaml` 檔案的部分。
+
+---
+
+# 功能說明書
+
+## 一、`Chart.yaml` 檔案
+
+`Chart.yaml` 是 Helm Chart 的主要描述文件，定義了該 Chart 的元數據和屬性。
+
+### 1. `apiVersion`
+- **用途**：指定 Chart 的 API 版本，該版本用於 Helm 確定如何處理此 Chart。
+- **預設值**：`v2`
+
+### 2. `name`
+- **用途**：設定 Chart 的名稱，這將是安裝時使用的名稱。
+- **預設值**：`k8s-shopping-site`
+
+### 3. `description`
+- **用途**：提供 Chart 的簡要描述，幫助使用者理解其用途。
+- **預設值**：`A Helm chart for deploying the k8s shopping site microservices`
+
+### 4. `type`
+- **用途**：指示該 Chart 的類型。在此情況下，定義為應用程序類型的 Chart。
+- **預設值**：`application`
+
+### 5. `version`
+- **用途**：指定 Chart 的版本，當對 Chart 進行修改時，需更新此版本號以反映變更。
+- **預設值**：`0.1.0`
+
+### 6. `appVersion`
+- **用途**：指定正在部署的應用版本，當服務發生變更時，應更新此版本號以確保版本一致性。
+- **預設值**：`"1.16.0"`
+
+---
+
+## 二、`values.yaml` 檔案
+
+`values.yaml` 檔案定義了 Helm Chart 的各項配置，這些配置在部署應用時會被引用。
+
+### 1. `replicaCount`
+- **用途**：設定應用的副本數量。該值定義了在 Kubernetes 中運行的容器副本數，以實現負載均衡和高可用性。
+- **預設值**：`1`
+
+### 2. `awsRegion`
+- **用途**：指定 AWS 的區域，應用將在此區域內運行。
+- **預設值**：`"us-east-1"`
+
+### 3. `awsLogsGroup`
+- **用途**：指定 AWS CloudWatch 的日誌組名稱，便於應用日誌的集中管理與檢索。
+- **預設值**：`""`（空字串，表示未設置）
+
+### 4. `env`
+- **用途**：環境變數設定，用於配置不同微服務之間的通訊。
+- **變數**：
+  - `USER_SERVICE_URL`: 用於訪問用戶服務的 URL。
+  - `PRODUCT_SERVICE_URL`: 用於訪問產品服務的 URL。
+  - `ORDER_SERVICE_URL`: 用於訪問訂單服務的 URL。
+  - `PAYMENT_SERVICE_URL`: 用於訪問支付服務的 URL。
+
+### 5. `services`
+- **用途**：定義所有微服務的設定，包括映像來源、埠號和服務類型。
+
+#### a. `site-service`
+- **image**:
+  - `repository`: 指定 ECR 映像庫的 URI。
+  - `tag`: 映像標籤，通常設為 `latest`。
+- **service**:
+  - `serviceType`: 設定為 `LoadBalancer`，允許外部流量進入。
+  - `port`: 映射到的容器埠號，預設為 `3000`。
+
+#### b. 其他微服務 (`user-service`, `product-service`, `order-service`, `payment-service`)
+- 每個服務的配置與 `site-service` 類似，但 `serviceType` 均設為 `ClusterIP`，只允許內部流量訪問。
+
+---
+
+## 三、`deployment.yaml` 模板檔案
+
+該檔案用於定義 Kubernetes Deployment 的設定，從而控制容器的部署。
+
+### 1. Deployment 結構
+- **apiVersion**: 使用 `apps/v1` 表示這是部署 API 的版本。
+- **kind**: 標示該資源的類型為 `Deployment`。
+- **metadata**: 
+  - `name`: 設定部署的名稱，通常為服務名稱加上 `-deployment`。
+  - `labels`: 為部署標記，方便篩選與管理。
+- **spec**:
+  - `replicas`: 使用者在 `values.yaml` 中設定的副本數。
+  - `selector`: 指定用於選擇 Pod 的標籤。
+  - `template`: 定義 Pod 的模板，包括容器設定、環境變數等。
+
+### 2. 環境變數
+- **AWS_LOG_GROUP**: 從 `values.yaml` 中獲取 AWS 日誌組的名稱。
+- **AWS_REGION**: 從 `values.yaml` 中獲取 AWS 區域。
+- **其他環境變數**: 根據 `env` 部分的設定，將各 URL 配置為環境變數。
+
+---
+
+## 四、`service.yaml` 模板檔案
+
+該檔案用於定義 Kubernetes Service 的設定，從而實現容器之間的通訊。
+
+### 1. Service 結構
+- **apiVersion**: 使用 `v1` 表示這是服務 API 的版本。
+- **kind**: 標示該資源的類型為 `Service`。
+- **metadata**:
+  - `name`: 設定服務的名稱。
+  - `labels`: 為服務標記。
+- **spec**:
+  - `type`: 根據 `values.yaml` 設定的服務類型（如 `ClusterIP` 或 `LoadBalancer`）。
+  - `ports`: 設定服務的埠號，對應於容器的 `targetPort`。
+  - `selector`: 指定用於選擇 Pod 的標籤。
+
+---
+
+## 結語
+
+此功能說明書提供了對 `Chart.yaml`、`values.yaml` 和 Kubernetes 模板檔案的詳細解釋，幫助開發人員理解和管理應用程式的部署配置。適當的配置將有助於提升應用的穩定性與可維護性，並促進開發流程的順利進行。
