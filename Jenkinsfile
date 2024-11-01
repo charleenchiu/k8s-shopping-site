@@ -289,9 +289,9 @@ pipeline {
                         helm repo update
                         #先清除前次安裝，若是第一次安裝則忽略錯誤繼纆
                         helm uninstall aws-for-fluent-bit || true
-                        helm upgrade --install aws-for-fluent-bit fluent/fluent-bit \
-                        --force --recreate-pods
-                        --set awsRegion=${env.AWS_REGION} \
+                        helm upgrade --install aws-for-fluent-bit fluent/fluent-bit \\
+                        --force --recreate-pods \\
+                        --set awsRegion=${env.AWS_REGION} \\
                         --set cloudWatch.logGroupName=${env.LOG_GROUP_NAME}
                     """
                 }
