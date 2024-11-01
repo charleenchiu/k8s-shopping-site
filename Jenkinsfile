@@ -124,7 +124,7 @@ pipeline {
             }
         }
 
-        stage('Build && SonarQube analysis') {
+        stage('SonarQube analysis') {
             environment {
                 scannerHome = tool 'SonarScanner'
             }
@@ -171,7 +171,7 @@ pipeline {
         stage('Login to Public ECR & Push Image') {
             steps {
                 script {
-                    // 印出Trerraform 執行結果的值，方便Debug
+                    // 印出Terraform執行結果的值，方便Debug
                     sh """
                     echo "SITE_ECR_REPO: ${env.SITE_ECR_REPO}"
                     echo "USER_SERVICE_ECR_REPO: ${env.USER_SERVICE_ECR_REPO}"
@@ -204,7 +204,7 @@ pipeline {
 
                     // 重新登入 ECR 以獲取新的權杖
                     sh """
-                    aws ecr-public get-login-password --region ${env.AWS_REGION} | docker login --username AWS --password-stdin public.ecr.aws/j5a0e3h8'
+                    aws ecr-public get-login-password --region ${env.AWS_REGION} | docker login --username AWS --password-stdin public.ecr.aws/j5a0e3h8
                     """
 
                     // 逐一處理每個服務
