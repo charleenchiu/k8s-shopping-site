@@ -151,8 +151,7 @@ pipeline {
         stage('Login to Public ECR & Push Image') {
             steps {
                 script {
-                    sh """
-                    # 印出Trerraform 執行結果的值，方便Debug
+                    // 印出Trerraform 執行結果的值，方便Debug
                     echo "SITE_ECR_REPO: ${env.SITE_ECR_REPO}"
                     echo "USER_SERVICE_ECR_REPO: ${env.USER_SERVICE_ECR_REPO}"
                     echo "PRODUCT_SERVICE_ECR_REPO: ${env.PRODUCT_SERVICE_ECR_REPO}"
@@ -163,10 +162,10 @@ pipeline {
                     echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
                     echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
 
-                    # 開啟 Shell 的錯誤模式，若有錯誤則停止執行
+                    // 開啟 Shell 的錯誤模式，若有錯誤則停止執行
                     set -e
 
-                    # 定義服務列表
+                    // 定義服務列表
                     def allServices = [
                         [name: 'site-service', repo: env.SITE_ECR_REPO],
                         [name: 'user_service', repo: env.USER_SERVICE_ECR_REPO],
@@ -175,27 +174,27 @@ pipeline {
                         [name: 'payment_service', repo: env.PAYMENT_SERVICE_ECR_REPO]
                     ]
 
-                    # 取得當前日期並格式化為 `yyyy-mm-dd_HH-mm-ss`
+                    // 取得當前日期並格式化為 `yyyy-mm-dd_HH-mm-ss`
                     def currentDate = sh(script: "date '+%Y-%m-%d_%H-%M-%S'", returnStdout: true).trim()
                     
-                    # 標籤清單
+                    // 標籤清單
                     def tags = [env.IMAGE_TAG, currentDate]
                     
-                    # ECR public repo 的前置字串
+                    // ECR public repo 的前置字串
                     def image_name_prefix = 'public.ecr.aws/j5a0e3h8/k8s-shopping-site'
                  
-                    # 逐一處理每個服務
+                    // 逐一處理每個服務
                     allServices.each { service ->
                         def serviceName = service.name
                         def serviceRepo = service.repo
                         def imageName = "${image_name_prefix}/${serviceName}"
 
-                        # 建立 Docker image，使用主要的 env.IMAGE_TAG 標籤
+                        // 建立 Docker image，使用主要的 env.IMAGE_TAG 標籤
                         sh """
                         docker build -t ${serviceRepo}:${env.IMAGE_TAG} .
                         """
 
-                        # 標籤和推送其他標籤
+                        // 標籤和推送其他標籤
                         tags.each { tag ->
                             sh """
                             docker tag ${serviceRepo}:${env.IMAGE_TAG} ${imageName}:${tag}
