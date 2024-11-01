@@ -110,14 +110,16 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv('SonarServer') {
-                    sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=k8s-site \
+                    sh """
+                    ${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=k8s-site \
                     -Dsonar.projectName=k8s-site-repo \
                     -Dsonar.projectVersion=1.0 \
                     -Dsonar.sources=src/ \
                     -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
                     -Dsonar.junit.reportsPath=target/surefire-reports/ \
                     -Dsonar.jacoco.reportsPath=target/jacoco.exec \
-                    -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
+                    -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml
+                    """
                 }
             }
         }
@@ -150,6 +152,7 @@ pipeline {
             steps {
                 script {
                     sh """
+                    # 印出Trerraform 執行結果的值，方便Debug
                     echo "SITE_ECR_REPO: ${env.SITE_ECR_REPO}"
                     echo "USER_SERVICE_ECR_REPO: ${env.USER_SERVICE_ECR_REPO}"
                     echo "PRODUCT_SERVICE_ECR_REPO: ${env.PRODUCT_SERVICE_ECR_REPO}"
@@ -160,10 +163,10 @@ pipeline {
                     echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
                     echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
 
-                    set -e  # 開啟 Shell 的錯誤模式，若有錯誤則停止執行
-                    # 取得當前日期並格式化為 `yyyy-mm-dd_HH-mm-ss`
-                    def image_name_prefix = 'public.ecr.aws/j5a0e3h8/k8s-shopping-site'
-                    # 定義 allServices 陣列，只在此 script 區域內使用
+                    # 開啟 Shell 的錯誤模式，若有錯誤則停止執行
+                    set -e
+
+                    # 定義服務列表
                     def allServices = [
                         [name: 'site-service', repo: env.SITE_ECR_REPO],
                         [name: 'user_service', repo: env.USER_SERVICE_ECR_REPO],
@@ -177,24 +180,29 @@ pipeline {
                     
                     # 標籤清單
                     def tags = [env.IMAGE_TAG, currentDate]
-
+                    
+                    # ECR public repo 的前置字串
+                    def image_name_prefix = 'public.ecr.aws/j5a0e3h8/k8s-shopping-site'
+                 
                     # 逐一處理每個服務
-                    for (service in allServices) {
+                    allServices.each { service ->
                         def serviceName = service.name
                         def serviceRepo = service.repo
                         def imageName = "${image_name_prefix}/${serviceName}"
 
                         # 建立 Docker image，使用主要的 env.IMAGE_TAG 標籤
-                        sh "docker build -t ${serviceRepo}:${env.IMAGE_TAG} ."
+                        sh """
+                        docker build -t ${serviceRepo}:${env.IMAGE_TAG} .
+                        """
 
                         # 標籤和推送其他標籤
-                        for (tag in tags) {
-                            # 標籤和推送操作
-                            sh "docker tag ${serviceRepo}:${env.IMAGE_TAG} ${imageName}:${tag}"
-                            sh "docker push ${imageName}:${tag}"
+                        tags.each { tag ->
+                            sh """
+                            docker tag ${serviceRepo}:${env.IMAGE_TAG} ${imageName}:${tag}
+                            docker push ${imageName}:${tag}
+                            """
                         }
                     }
-                    """
                 }
             }
         }
