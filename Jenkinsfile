@@ -1,3 +1,4 @@
+/* groovylint-disable TrailingWhitespace */
 pipeline {
     agent any
 
@@ -31,7 +32,7 @@ pipeline {
                         cd terraform
                         terraform init
                         terraform apply -auto-approve
-                    '''                    
+                    '''
                 }
             }
         }
@@ -91,7 +92,7 @@ pipeline {
             steps {
                 script {
                     def services = ['user-service', 'product-service', 'order-service', 'payment-service']
-                    
+
                     // 執行 src 目錄下的各個微服務測試
                     services.each { service ->
                         dir("src/${service}") {
@@ -108,7 +109,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Code Analysis with CheckStyle') {
             steps {
                 sh 'mvn checkstyle:checkstyle'
@@ -191,17 +192,16 @@ pipeline {
 
                     // 取得當前日期並格式化為 `yyyy-mm-dd_HH-mm-ss`
                     def currentDate = sh(script: "date '+%Y-%m-%d_%H-%M-%S'", returnStdout: true).trim()
-                    
+
                     // 標籤清單
                     def tags = [env.IMAGE_TAG, currentDate]
-                    
+
                     // ECR public repo 的前置字串
                     def image_name_prefix = 'public.ecr.aws/j5a0e3h8/k8s-shopping-site'
-                 
+
                     // 重新登入 ECR 以獲取新的權杖
                     sh """
-                    aws ecr-public get-login-password --region ${env.AWS_REGION} | \
-                    docker login --username AWS --password-stdin public.ecr.aws/j5a0e3h8'
+                    aws ecr-public get-login-password --region ${env.AWS_REGION} | docker login --username AWS --password-stdin public.ecr.aws/j5a0e3h8'
                     """
 
                     // 逐一處理每個服務
@@ -226,7 +226,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Install Helm') {
             steps {
                 script {
@@ -234,17 +234,17 @@ pipeline {
                     # 下載並安裝 Helm 到 /tmp 目錄(以防主機沒有安裝)
                     curl -L https://get.helm.sh/helm-v3.16.2-linux-amd64.tar.gz -o /tmp/helm.tar.gz
                     tar -zxvf /tmp/helm.tar.gz -C /tmp
-                    export PATH=\$PATH:/tmp/linux-amd64                    
+                    export PATH=\$PATH:/tmp/linux-amd64
                     # 確認 Helm 安裝成功
                     helm version
                     """
                 }
             }
         }
-        
+
         stage('Config kubectl Connect to EKS Cluster') {
             steps {
-                script { 
+                script {
                     sh """
                     aws eks update-kubeconfig --region ${env.AWS_REGION} --name ${env.EKS_CLUSTER_NAME}
                     """
