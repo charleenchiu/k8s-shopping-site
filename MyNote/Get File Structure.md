@@ -114,10 +114,7 @@ C:\charleen\LearnDevops\vprofile-project\ShoppingSite
 
 C:\charleen\LearnDevops\k8s-shopping-site_1_simple
 ├── InitAndCleanup
-│   ├── CreateServers.tf
-│   ├── ansible
-│   │   ├── inventory
-│   │   ├── playbook.yml
+│   └── CreateServers.tf
 ├── k8s-chart
 │   ├── charts
 │   ├── templates
@@ -125,35 +122,39 @@ C:\charleen\LearnDevops\k8s-shopping-site_1_simple
 │   │   ├── service.yaml
 │   ├── .helmignore
 │   ├── Chart.yaml
-│   ├── values.yaml
+│   └── values.yaml
 ├── src
 │   ├── user-service
 │   │   ├── Dockerfile
-│   │   ├── index.js   (port: 3001)
+│   │   ├── index.js (port: 3001)
 │   │   ├── package-lock.json
 │   │   ├── package.json
+│   │   └── yarn.lock
 │   ├── product-service
 │   │   ├── Dockerfile
-│   │   ├── index.js   (port: 3002)
+│   │   ├── index.js (port: 3002)
 │   │   ├── package-lock.json
 │   │   ├── package.json
+│   │   └── yarn.lock
 │   ├── order-service
 │   │   ├── Dockerfile
-│   │   ├── index.js   (port: 3002)
+│   │   ├── index.js (port: 3003)
 │   │   ├── package-lock.json
 │   │   ├── package.json
-│   ├── payment-service   (port: 3004)
-│   │   ├── Dockerfile
-│   │   ├── index.js
-│   │   ├── package-lock.json
-│   │   ├── package.json
-├── index.js   (port: 3000)
+│   │   └── yarn.lock
+│   └── payment-service
+│       ├──  Dockerfile
+│       ├── index.js (port: 3004)
+│       ├── package-lock.json
+│       ├── package.json
+│       └── yarn.lock
 ├── .env
-├── docker-compose.yml
+├── index.js (port: 3000)
 ├── Dockerfile
+├── docker-compose.yml
 ├── Jenkinsfile
 ├── package-lock.json
 ├── package.json
-└── pom.xml
+└── yarn.lock
 
 

@@ -16,40 +16,48 @@
     ```plaintext
     k8s-shopping-site_1_simple
     ├── InitAndCleanup
-    │   ├── CreateJenkinsServer.tf    # Terraform script，用於建立 Jenkins Server
+    │   └── CreateServers.tf
     ├── k8s-chart
-    │   ├── charts                    # Helm charts 資料夾
-    │   ├── templates                 # Kubernetes 部署和服務模板
+    │   ├── charts
+    │   ├── templates
     │   │   ├── deployment.yaml
     │   │   ├── service.yaml
-    │   │   ├── ingress.yaml
     │   ├── .helmignore
     │   ├── Chart.yaml
-    │   ├── values.yaml               # Helm values 配置
-    ├── user-service (port: 3001)     # User Service 微服務
-    │   ├── Dockerfile
-    │   ├── index.js
-    │   ├── package.json
-    ├── product-service (port: 3002)  # Product Service 微服務
-    │   ├── Dockerfile
-    │   ├── index.js
-    │   ├── package.json
-    ├── order-service (port: 3003)    # Order Service 微服務
-    │   ├── Dockerfile
-    │   ├── index.js
-    │   ├── package.json
-    ├── payment-service (port: 3004)  # Payment Service 微服務
-    │   ├── Dockerfile
-    │   ├── index.js
-    │   ├── package.json
-    ├── terraform                     # Terraform 配置，管理基礎設施
-    │   ├── main.tf
-    │   ├── outputs.tf
-    │   ├── variables.tf
-    ├── docker-compose.yml            # 本地端開發的 Docker Compose 配置
-    ├── .env                          # 環境變數設定檔
-    ├── Jenkinsfile                   # Jenkins Pipeline 配置
-    └── index.js (port: 3000)         # 主網站入口，提供服務連結清單
+    │   └── values.yaml
+    ├── src
+    │   ├── user-service
+    │   │   ├── Dockerfile
+    │   │   ├── index.js (port: 3001)
+    │   │   ├── package-lock.json
+    │   │   ├── package.json
+    │   │   └── yarn.lock
+    │   ├── product-service
+    │   │   ├── Dockerfile
+    │   │   ├── index.js (port: 3002)
+    │   │   ├── package-lock.json
+    │   │   ├── package.json
+    │   │   └── yarn.lock
+    │   ├── order-service
+    │   │   ├── Dockerfile
+    │   │   ├── index.js (port: 3003)
+    │   │   ├── package-lock.json
+    │   │   ├── package.json
+    │   │   └── yarn.lock
+    │   └── payment-service
+    │       ├──  Dockerfile
+    │       ├── index.js (port: 3004)
+    │       ├── package-lock.json
+    │       ├── package.json
+    │       └── yarn.lock
+    ├── .env
+    ├── index.js (port: 3000)
+    ├── Dockerfile
+    ├── docker-compose.yml
+    ├── Jenkinsfile
+    ├── package-lock.json
+    ├── package.json
+    └── yarn.lock
     ```
 
 ### Pipeline 階段說明
