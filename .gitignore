@@ -1,6 +1,7 @@
 gitignore/
 
-node_modules/
+# 忽略專案中所有的 node_modules 文件夾
+**/node_modules/
 
 # terraform 運作時產生的檔案
 terraform/.terraform/

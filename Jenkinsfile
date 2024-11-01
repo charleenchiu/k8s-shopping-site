@@ -87,12 +87,28 @@ pipeline {
         }
         */
 
-        stage('Test') {
+        stage('Install Dependencies and Run Tests') {
             steps {
-                sh 'mvn test'
+                script {
+                    def services = ['user-service', 'product-service', 'order-service', 'payment-service']
+                    
+                    // 執行 src 目錄下的各個微服務測試
+                    services.each { service ->
+                        dir("src/${service}") {
+                            sh 'yarn install'
+                            sh 'yarn test'
+                        }
+                    }
+
+                    // 執行專案根目錄的微服務測試
+                    dir(".") { // 專案根目錄
+                        sh 'yarn install'
+                        sh 'yarn test'
+                    }
+                }
             }
         }
-
+        
         stage('Code Analysis with CheckStyle') {
             steps {
                 sh 'mvn checkstyle:checkstyle'
@@ -182,6 +198,12 @@ pipeline {
                     // ECR public repo 的前置字串
                     def image_name_prefix = 'public.ecr.aws/j5a0e3h8/k8s-shopping-site'
                  
+                    // 重新登入 ECR 以獲取新的權杖
+                    sh """
+                    aws ecr-public get-login-password --region ${env.AWS_REGION} | \
+                    docker login --username AWS --password-stdin public.ecr.aws/j5a0e3h8'
+                    """
+
                     // 逐一處理每個服務
                     allServices.each { service ->
                         def serviceName = service.name
