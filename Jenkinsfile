@@ -367,7 +367,6 @@ pipeline {
         }
     }
 
-    /*
     post {
         failure {
             // 如果過程失敗，清除 terraform 建的資源
@@ -421,5 +420,4 @@ pipeline {
             }
         }
     }
-    */
 }

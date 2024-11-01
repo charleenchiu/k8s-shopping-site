@@ -1,3 +1,5 @@
+以下是根據您提供的 Jenkinsfile 內容修改後的功能說明書：
+
 ## 功能說明書 - k8s-shopping-site 專案
 
 ### 簡介
@@ -13,52 +15,63 @@
 
 本專案檔案結構圖：
 
-    ```plaintext
-    k8s-shopping-site_1_simple
-    ├── InitAndCleanup
-    │   └── CreateServers.tf
-    ├── k8s-chart
-    │   ├── charts
-    │   ├── templates
-    │   │   ├── deployment.yaml
-    │   │   ├── service.yaml
-    │   ├── .helmignore
-    │   ├── Chart.yaml
-    │   └── values.yaml
-    ├── src
-    │   ├── user-service
-    │   │   ├── Dockerfile
-    │   │   ├── index.js (port: 3001)
-    │   │   ├── package-lock.json
-    │   │   ├── package.json
-    │   │   └── yarn.lock
-    │   ├── product-service
-    │   │   ├── Dockerfile
-    │   │   ├── index.js (port: 3002)
-    │   │   ├── package-lock.json
-    │   │   ├── package.json
-    │   │   └── yarn.lock
-    │   ├── order-service
-    │   │   ├── Dockerfile
-    │   │   ├── index.js (port: 3003)
-    │   │   ├── package-lock.json
-    │   │   ├── package.json
-    │   │   └── yarn.lock
-    │   └── payment-service
-    │       ├──  Dockerfile
-    │       ├── index.js (port: 3004)
-    │       ├── package-lock.json
-    │       ├── package.json
-    │       └── yarn.lock
-    ├── .env
-    ├── index.js (port: 3000)
-    ├── Dockerfile
-    ├── docker-compose.yml
-    ├── Jenkinsfile
-    ├── package-lock.json
-    ├── package.json
-    └── yarn.lock
-    ```
+```plaintext
+k8s-shopping-site_1_simple
+├── InitAndCleanup
+│   └── CreateServers.tf          # Terraform script，用於建立 Jenkins Server 和 SonarQube Server
+│
+├── terraform                     # Terraform 配置，管理基礎設施
+│   ├── main.tf                   # Terraform 主配置檔案
+│   ├── outputs.tf                # Terraform 輸出變數定義
+│   ├── variables.tf              # Terraform 變數定義
+│
+├── k8s-chart                     # Kubernetes Helm chart，用於部署 Kubernetes 資源
+│   ├── charts                    # Helm charts 的子目錄
+│   ├── templates                 # Kubernetes 部署和服務模板
+│   │   ├── deployment.yaml       # 部署配置模板
+│   │   ├── service.yaml          # 服務配置模板
+│   ├── .helmignore               # 指定哪些文件在打包 Helm chart 時應被忽略
+│   ├── Chart.yaml                # Helm chart 的描述檔案
+│   └── values.yaml               # Helm values 配置檔案，用於覆蓋默認值
+│
+├── src                           # 專案的主要程式碼資料夾
+│   ├── user-service              # User Service 微服務
+│   │   ├── Dockerfile            # Docker映像檔設定檔
+│   │   ├── index.js (port: 3001) # 服務的主要程式碼
+│   │   ├── package-lock.json     # 確保依賴版本一致
+│   │   ├── package.json          # 依賴包設定
+│   │   └── yarn.lock             # Yarn 鎖檔案，確保依賴版本一致
+│   │
+│   ├── product-service           # Product Service 微服務
+│   │   ├── Dockerfile            # Docker映像檔設定檔
+│   │   ├── index.js (port: 3002) # 服務的主要程式碼
+│   │   ├── package-lock.json     # 確保依賴版本一致
+│   │   ├── package.json          # 依賴包設定
+│   │   └── yarn.lock             # Yarn 鎖檔案，確保依賴版本一致
+│   │
+│   ├── order-service             # Order Service 微服務
+│   │   ├── Dockerfile            # Docker映像檔設定檔
+│   │   ├── index.js (port: 3003) # 服務的主要程式碼
+│   │   ├── package-lock.json     # 確保依賴版本一致
+│   │   ├── package.json          # 依賴包設定
+│   │   └── yarn.lock             # Yarn 鎖檔案，確保依賴版本一致
+│   │
+│   └── payment-service           # Payment Service 微服務
+│       ├── Dockerfile            # Docker映像檔設定檔
+│       ├── index.js (port: 3004) # 服務的主要程式碼
+│       ├── package-lock.json     # 確保依賴版本一致
+│       ├── package.json          # 依賴包設定
+│       └── yarn.lock             # Yarn 鎖檔案，確保依賴版本一致
+│
+├── .env                          # 環境變數設定檔
+├── index.js (port: 3000)         # 主網站入口，提供服務連結清單
+├── Dockerfile                    # 主網站的 Docker 設定檔
+├── docker-compose.yml            # 本地端開發的 Docker Compose 配置
+├── Jenkinsfile                   # Jenkins Pipeline 配置
+├── package-lock.json             # 確保依賴版本一致
+├── package.json                  # 依賴包設定
+└── yarn.lock                     # Yarn 鎖檔案，確保依賴版本一致
+```
 
 ### Pipeline 階段說明
 
@@ -75,42 +88,33 @@
    - 驗證從 Terraform 獲取的輸出變數，確保其正確性。
 
 5. **Test**
-   - 使用 Maven 執行單元測試，確保代碼品質。
+   - 使用 `yarn test` 執行各微服務的單元測試，確保代碼品質。
 
-6. **Code Analysis with CheckStyle**
-   - 進行代碼風格檢查，生成分析結果。
-
-7. **Build && SonarQube analysis**
-   - 建置 Docker 映像，並使用 SonarQube 進行代碼質量檢查。
-
-8. **Quality Gate**
-   - 等待 SonarQube 的質量門檻檢查結果，若未通過則終止 Pipeline。
-
-9. **Build Docker Image**
+7. **Build Docker Image**
    - 根據 Dockerfile 建構各微服務的 Docker 映像。
 
-10. **Login to Public ECR & Push Image**
-    - 登入 AWS 公共 ECR 並推送 Docker 映像。
+8. **Login to ECR & Push Image**
+   - 登入 AWS ECR 並推送 Docker 映像。
 
-11. **Install Helm**
-    - 下載並安裝 Helm，以便在 Kubernetes 中管理應用。
+9. **Install Helm**
+   - 下載並安裝 Helm，以便在 Kubernetes 中管理應用。
 
-12. **Setup Helm**
+10. **Setup Helm**
     - 新增 ExternalDNS Helm repo 並安裝 ExternalDNS，幫助進行 DNS 設定。
 
-13. **Config kubectl Connect to EKS Cluster**
+11. **Config kubectl Connect to EKS Cluster**
     - 更新 kubeconfig，使得 kubectl 可以連接到 EKS 集群。
 
-14. **Install or Upgrade Fluent Bit**
+12. **Install or Upgrade Fluent Bit**
     - 安裝或升級 Fluent Bit，以將 Kubernetes 日誌寫入 CloudWatch。
 
-15. **Helm Deploy**
+13. **Helm Deploy**
     - 使用 Helm 部署應用至 Kubernetes 集群，設定所需的參數。
 
-16. **Deploy Ingress**
+14. **Deploy Ingress**
     - 部署 Ingress 以管理外部訪問流量。
 
-17. **Get ELB Information**
+15. **Get ELB Information**
     - 獲取和顯示 ELB 的 DNS 和端口資訊，以便用戶訪問。
 
 ### 錯誤處理
