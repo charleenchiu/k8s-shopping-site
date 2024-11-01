@@ -96,7 +96,6 @@ pipeline {
                     // 執行 src 目錄下的各個微服務測試
                     services.each { service ->
                         dir("src/${service}") {
-                            sh 'yarn install'
                             // 設定超時時間為 1 秒
                             try {
                                 echo "Starting tests with a timeout of 1 second..."
