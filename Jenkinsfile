@@ -111,7 +111,14 @@ pipeline {
                     // 執行專案根目錄的微服務測試
                     dir(".") { // 專案根目錄
                         sh 'yarn install'
-                        sh 'yarn test'
+                        try {
+                            echo "Starting tests with a timeout of 1 second..."
+                            sh 'timeout 1 yarn test'
+                        } catch (Exception e) {
+                            echo "Tests timed out or failed: ${e.getMessage()}"
+                            // 可以選擇再次報告錯誤或執行其他處理
+                            currentBuild.result = 'FAILURE'
+                        }
                     }
                 }
             }
