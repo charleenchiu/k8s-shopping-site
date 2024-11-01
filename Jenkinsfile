@@ -124,17 +124,6 @@ pipeline {
             }
         }
 
-        stage('Code Analysis with CheckStyle') {
-            steps {
-                sh 'mvn checkstyle:checkstyle'
-            }
-            post {
-                success {
-                    echo 'Generated Analysis Result'
-                }
-            }
-        }
-
         stage('Build && SonarQube analysis') {
             environment {
                 scannerHome = tool 'SonarScanner'
