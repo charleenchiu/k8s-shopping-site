@@ -122,3 +122,68 @@ k8s-shopping-site_1_simple
 
 ### 結論
 本專案展示了在 Kubernetes 環境中實現 CI/CD 的最佳實踐，提供了一個可擴展且高效的微服務架構範例，並強調了使用 Terraform、Docker 和 Helm 等技術的重要性。
+
+=======================================================================
+Jenkins Pipeline 階段說明
+Checkout Code
+
+從 GitHub 獲取指定分支的程式碼。
+
+Terraform Init
+
+初始化 Terraform，準備應用基礎架構變更。
+
+Get Outputs
+
+獲取 Terraform 執行的輸出，包括 ECR 儲存庫和 EKS 相關信息。
+
+Verify Outputs
+
+驗證從 Terraform 獲取的輸出變數，確保其正確性。
+
+Install Dependencies and Run Tests
+
+使用 yarn test 執行各微服務的單元測試，確保代碼品質。
+
+SonarQube analysis
+
+使用 SonarQube 分析代碼品質。
+
+Quality Gate
+
+設置質量門，確保代碼品質達到要求。
+
+Build Docker Image
+
+根據 Dockerfile 建構各微服務的 Docker 映像。
+
+Login to Public ECR & Push Image
+
+登入 AWS ECR 並推送 Docker 映像。
+
+Install Helm
+
+下載並安裝 Helm，以便在 Kubernetes 中管理應用。
+
+Config kubectl Connect to EKS Cluster
+
+更新 kubeconfig，使得 kubectl 可以連接到 EKS 集群。
+
+Install or Upgrade Fluent Bit
+
+安裝或升級 Fluent Bit，以將 Kubernetes 日誌寫入 CloudWatch。
+
+Helm Deploy
+
+使用 Helm 部署應用至 Kubernetes 集群，設定所需的參數。
+
+Get ELB Information
+
+獲取和顯示 ELB 的 DNS 和端口資訊，以便用戶訪問。
+
+錯誤處理
+若任一階段失敗，將自動清理 Terraform 創建的資源及 Helm 部署的應用，確保環境的整潔。
+
+結論
+本專案展示了在 Kubernetes 環境中實現 CI/CD 的最佳實踐，提供了一個可擴展且高效的微服務架構範例，並強調了使用 Terraform、Docker 和 Helm 等技術的重要性。
+
