@@ -1,8 +1,7 @@
 # k8s-shopping-site 專案
 
-歡迎來到這個專案的 README 檔案！如果你想要了解更多細節，請點擊以下連結：
-
-[開啟 README_專案說明 資料夾](README_專案說明/)
+### 歡迎來到這個專案的 README 檔案！如果您想要了解更多細節，請點擊這個連結：
+## [開啟 <span style="color:red;font-weight:bold;">README_專案說明</span> 資料夾](README_專案說明/)
 
 
 ![alt text](README_專案說明/pictures/202410260223_k8s-shopping-site_1_simple_用Helm佈署成功_70_Helm佈署結果_site-service_3000.png)
