@@ -1,7 +1,9 @@
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const app = express();
-const port = 3000; // 根目錄的網站入口
+const host = process.env.HOST || 'localhost'; // 設定伺服器主機名稱，從環境變數讀取，若未設定則預設為 'localhost'
+const port = process.env.PORT || 3000; // 根目錄的網站入口
+
 
 // 設定環境變數：本地和 EKS 環境的不同微服務 URL
 const userServiceUrl = process.env.USER_SERVICE_URL || 'http://user-service:3001';
@@ -58,6 +60,6 @@ app.use('/payment-service', createProxyMiddleware({
 }));
 
 // 啟動伺服器
-app.listen(port, '0.0.0.0', () => {
-    console.log(`Index Page listening at http://0.0.0.0:${port}`);
+app.listen(port, host, () => {
+    console.log(`Index Page listening at http://${host}:${port}`);
 });

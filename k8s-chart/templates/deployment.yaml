@@ -29,6 +29,8 @@ spec:
             value: "{{ $.Values.awsLogsGroup }}"
           - name: AWS_REGION
             value: "{{ $.Values.awsRegion }}"
+          - name: HOST
+            value: {{ .Values.env.HOST }}
           {{- if $.Values.env }}
           {{- range $key, $url := $.Values.env }}
           - name: {{ $key }}

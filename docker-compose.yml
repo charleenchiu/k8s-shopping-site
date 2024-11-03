@@ -3,7 +3,7 @@ services:
   site-service:
     build: .
     ports:
-      - "${SITE_PORT}:3000"
+      - "${SITE_PORT}:${SITE_PORT}"
     environment:
       - USER_SERVICE_URL=http://user-service:3001
       - PRODUCT_SERVICE_URL=http://product-service:3002
@@ -12,50 +12,55 @@ services:
       - NODE_ENV=production
       - EC2_PRIVATE_IP=${EC2_PRIVATE_IP}
       - USE_CONTAINER=${USE_CONTAINER}
+      - HOST=localhost
     networks:
       - backend
 
   user-service:
     build: ./src/user-service
     ports:
-      - "${USER_SERVICE_PORT}:3001"
+      - "${USER_SERVICE_PORT}:${USER_SERVICE_PORT}"
     environment:
       - NODE_ENV=production
       - EC2_PRIVATE_IP=${EC2_PRIVATE_IP}
       - USE_CONTAINER=${USE_CONTAINER}
-    networks:
+      - HOST=localhost
+  networks:
       - backend
 
   product-service:
     build: ./src/product-service
     ports:
-      - "${PRODUCT_SERVICE_PORT}:3002"
+      - "${PRODUCT_SERVICE_PORT}:${PRODUCT_SERVICE_PORT}"
     environment:
       - NODE_ENV=production
       - EC2_PRIVATE_IP=${EC2_PRIVATE_IP}
       - USE_CONTAINER=${USE_CONTAINER}
+      - HOST=localhost
     networks:
       - backend
 
   order-service:
     build: ./src/order-service
     ports:
-      - "${ORDER_SERVICE_PORT}:3003"
+      - "${ORDER_SERVICE_PORT}:${ORDER_SERVICE_PORT}"
     environment:
       - NODE_ENV=production
       - EC2_PRIVATE_IP=${EC2_PRIVATE_IP}
       - USE_CONTAINER=${USE_CONTAINER}
+      - HOST=localhost
     networks:
       - backend
 
   payment-service:
     build: ./src/payment-service
     ports:
-      - "${PAYMENT_SERVICE_PORT}:3004"
+      - "${PAYMENT_SERVICE_PORT}:${PAYMENT_SERVICE_PORT}"
     environment:
       - NODE_ENV=production
       - EC2_PRIVATE_IP=${EC2_PRIVATE_IP}
       - USE_CONTAINER=${USE_CONTAINER}
+      - HOST=localhost
     networks:
       - backend
 
