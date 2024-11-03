@@ -6,6 +6,6 @@ app.get('/', (req, res) => {
     res.send('Hi, this is product-service!');
 });
 
-app.listen(port, '0.0.0.0', () => {
-    console.log(`Product Service listening at http://0.0.0.0:${port}`);
+app.listen(port, 'product-service', () => {
+    console.log(`Product Service listening at http://product-service:${port}`);
 });

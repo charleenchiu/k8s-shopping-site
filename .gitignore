@@ -10,11 +10,11 @@ terraform/terraform.tfstate
 terraform/terraform.tfstate.backup
 
 # InitAndCleanup下terraform 運作時產生的檔案
-InitAndCleanup/.terraform/
-InitAndCleanup/.terraform.lock.hcl
-InitAndCleanup/terraform.tfstate
-InitAndCleanup/terraform.tfstate.backup
-InitAndCleanup/.terraform.tfstate.lock.info
+Init/.terraform/
+Init/.terraform.lock.hcl
+Init/terraform.tfstate
+Init/terraform.tfstate.backup
+Init/.terraform.tfstate.lock.info
 
 # helm的檔案
 # Helm Chart 目錄中的 .helmignore

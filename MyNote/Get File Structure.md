@@ -113,7 +113,7 @@ C:\charleen\LearnDevops\vprofile-project\ShoppingSite
 //====k8s-shopping-site=============================================================================
 
 C:\charleen\LearnDevops\k8s-shopping-site_1_simple
-├── InitAndCleanup
+├── Init
 │   └── CreateServers.tf
 ├── k8s-chart
 │   ├── charts

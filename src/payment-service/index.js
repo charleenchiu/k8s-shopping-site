@@ -6,6 +6,6 @@ app.get('/', (req, res) => {
     res.send('Hi, this is payment-service!');
 });
 
-app.listen(port, '0.0.0.0', () => {
-    console.log(`Payment Service listening at http://0.0.0.0:${port}`);
+app.listen(port, 'payment-service', () => {
+    console.log(`Payment Service listening at http://payment-service:${port}`);
 });
