@@ -52,7 +52,7 @@ app.listen(port, '0.0.0.0', () => {
 npm install http-proxy-middleware
 ```
 
-### 2. 修改 `index.js` 代碼
+### 2. 修改 `index.js` 程式碼
 在 `index.js` 中，透過 `http-proxy-middleware` 將 `/user-service`、`/product-service`、`/order-service` 和 `/payment-service` 的請求代理到相對應的端口：
 
 ```javascript

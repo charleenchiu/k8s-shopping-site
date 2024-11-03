@@ -1,8 +1,5 @@
-### Jenkins Pipeline 說明文件
-
+# 功能說明書：Jenkins Pipeline (`jenkinsfile`)
 這個 Jenkins Pipeline 為多階段自動化流程，包含程式碼檢出、基礎架構建置、測試、品質檢查、映像檔構建與推送、Helm 部署等。此 Pipeline 適合於 DevOps 團隊管理 Kubernetes 應用服務，並將服務自動部署至 AWS EKS。
-
----
 
 ### Pipeline 概觀
 

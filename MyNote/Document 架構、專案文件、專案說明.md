@@ -23,7 +23,7 @@
 - **雲端平台**: AWS
 - **容器化**: Docker
 - **持續集成/持續部署**: Jenkins
-- **基礎設施即代碼**: Terraform
+- **基礎設施即程式碼**: Terraform
 - **配置管理**: Ansible
 - **Kubernetes**: EKS
 - **版本控制**: Git, GitHub

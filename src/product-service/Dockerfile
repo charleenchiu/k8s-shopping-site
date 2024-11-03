@@ -10,7 +10,7 @@ COPY package*.json ./
 # 安裝依賴
 RUN npm install
 
-# 複製應用程式代碼
+# 複製應用程式程式碼
 COPY . .
 
 # 開放端口

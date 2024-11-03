@@ -16,8 +16,8 @@ Jenkins 的 master-slave 架構（也稱為 **controller-agent 架構**）在許
 4. **分散工作負載**：
    - 如果你的專案需要大量的資源（例如大量的 CPU、記憶體或磁碟 I/O），可以將不同的任務分散到不同的 slave node 上執行，這樣可以避免一個 node 上的高負載影響其他建置。
 
-5. **加入 SonarQube 或其他工具進行靜態代碼分析**：
-   - SonarQube 需要分析專案的代碼並生成報告，這個過程也可能是資源密集型的工作。將這些分析任務委派給 Jenkins slave node 來執行，能夠確保分析過程不會影響 Jenkins master 的運行。
+5. **加入 SonarQube 或其他工具進行靜態程式碼分析**：
+   - SonarQube 需要分析專案的程式碼並生成報告，這個過程也可能是資源密集型的工作。將這些分析任務委派給 Jenkins slave node 來執行，能夠確保分析過程不會影響 Jenkins master 的運行。
 
 ### 如何設置 Jenkins master-slave 架構：
 
@@ -82,6 +82,6 @@ Jenkins 的 master-slave 架構（也稱為 **controller-agent 架構**）在許
 - **針對性環境**：不同 node 可以配置不同的環境（如不同的操作系統、Docker版本等），以應對不同專案的需求。
   
 ### 結論：
-1. **適用的情況**：當你的 Jenkins pipeline 有較大並發量、多環境測試需求，或是需要引入靜態代碼分析（如 SonarQube）時，使用 master-slave 架構非常合適。
+1. **適用的情況**：當你的 Jenkins pipeline 有較大並發量、多環境測試需求，或是需要引入靜態程式碼分析（如 SonarQube）時，使用 master-slave 架構非常合適。
 2. **架構的設置**：通過在 Jenkins 中設置 slave node 並分配具體任務，可以實現分散式構建、測試和分析，提高效率。
-3. **SonarQube 的整合**：透過 Jenkins 和 SonarQube 的整合，可以實現代碼質量的自動化檢查，並將這些分析工作負載分散到 Jenkins 的 slave node 上。
+3. **SonarQube 的整合**：透過 Jenkins 和 SonarQube 的整合，可以實現程式碼質量的自動化檢查，並將這些分析工作負載分散到 Jenkins 的 slave node 上。

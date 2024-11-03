@@ -282,7 +282,7 @@ pipeline {
 
 2. 是的，共用庫與`def terraformOutput = sh(script: 'terraform output -json', returnStdout: true)`可以並用。共用庫提供變數和函數，而這行程式碼則用來直接從 Terraform 的輸出讀取 JSON 資料。兩者不會衝突。
 
-3. 代碼上有些需要注意的地方和優化，以下是修改建議：
+3. 程式碼上有些需要注意的地方和優化，以下是修改建議：
 
    - **Setup-AWS-Resources Jenkinsfile** 中：
      - `parseJson` 是個假設的函數。如果未自定義，可用 Jenkins 預設的 `readJSON` 函數。

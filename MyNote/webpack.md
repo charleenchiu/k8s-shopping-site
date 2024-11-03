@@ -1,13 +1,13 @@
 Webpack 是一個模組打包工具，常見於現代前端開發中。它可以將多個不同的資源文件（如 JavaScript、CSS、圖像等）打包成單一文件或多個文件，這些文件更適合在生產環境中部署。以下是 webpack 的一些核心功能：
 
 1. **模組打包**：Webpack 可以將應用程式中所有依賴關係的模組打包成一個或多個文件，這些文件可以方便地部署到伺服器上。
-2. **代碼拆分**：Webpack 支援代碼拆分（code splitting），可以根據需求將應用程式分割成更小的部分，減少初次加載的文件大小。
-3. **資源優化**：Webpack 可以優化代碼，像是壓縮 JS 和 CSS 文件，移除未使用的代碼，從而提高效能。
+2. **程式碼拆分**：Webpack 支援程式碼拆分（code splitting），可以根據需求將應用程式分割成更小的部分，減少初次加載的文件大小。
+3. **資源優化**：Webpack 可以優化程式碼，像是壓縮 JS 和 CSS 文件，移除未使用的程式碼，從而提高效能。
 4. **開發工具**：Webpack 提供了 Hot Module Replacement (HMR) 功能，能夠在開發過程中自動重新載入修改過的模組，無需手動刷新頁面。
 
-雖然 Docker 可以讓你的應用在不同環境中一致運行，但 webpack 專注於將前端代碼打包、優化和構建。兩者的目標不太一樣：Webpack 是前端構建工具，而 Docker 是容器化的運行平台。使用 Docker 可以部署應用，但為了優化前端資源，Webpack 等工具仍然很有用。
+雖然 Docker 可以讓你的應用在不同環境中一致運行，但 webpack 專注於將前端程式碼打包、優化和構建。兩者的目標不太一樣：Webpack 是前端構建工具，而 Docker 是容器化的運行平台。使用 Docker 可以部署應用，但為了優化前端資源，Webpack 等工具仍然很有用。
 
-你可以將 Webpack 和 Docker 結合使用，例如先使用 Webpack 打包前端代碼，再用 Docker 部署這些打包後的文件。
+你可以將 Webpack 和 Docker 結合使用，例如先使用 Webpack 打包前端程式碼，再用 Docker 部署這些打包後的文件。
 
 //=================================================================================================
 
@@ -42,7 +42,7 @@ npm install --save-dev webpack webpack-cli
   package.json
 ```
 
-在 `src/index.js` 中寫一些簡單的 JavaScript 代碼：
+在 `src/index.js` 中寫一些簡單的 JavaScript 程式碼：
 
 ```javascript
 console.log('Hello Webpack!');
@@ -85,7 +85,7 @@ npm run build
 這會執行 Webpack 並將你的原始碼打包到 `dist/bundle.js`。
 
 ### 6. **運行 Webpack**
-當你運行 `npm run build` 後，Webpack 會打包代碼並生成 `dist/bundle.js`，然後你可以在 HTML 中引用這個文件。
+當你運行 `npm run build` 後，Webpack 會打包程式碼並生成 `dist/bundle.js`，然後你可以在 HTML 中引用這個文件。
 
 範例的 `index.html` 文件：
 
@@ -104,7 +104,7 @@ npm run build
 ```
 
 ### 7. **開發模式與生產模式**
-在 `webpack.config.js` 中，`mode` 可以設定為 `development` 或 `production`。在 `production` 模式下，Webpack 會自動壓縮和優化代碼，適合部署。
+在 `webpack.config.js` 中，`mode` 可以設定為 `development` 或 `production`。在 `production` 模式下，Webpack 會自動壓縮和優化程式碼，適合部署。
 
 例如，將模式設為 `production`：
 
