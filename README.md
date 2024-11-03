@@ -1,7 +1,8 @@
 # k8s-shopping-site 專案
 
 ### **歡迎來到這個專案的 README 檔案！如果您想要了解更多細節，請點擊這個連結：**
-##  [📁 開啟 <span style="color:red;font-weight:bold;">README_專案說明</span> 資料夾](README_專案說明/)
+##   [📂 開啟 <span style="color:red;font-weight:bold;">README_專案說明</span> 資料夾](README_專案說明/)
+
 
 
 ### **專案展示：**
