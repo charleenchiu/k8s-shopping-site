@@ -2,7 +2,7 @@
 
 `ShoppingSite` 是一個用 **Node.js + MySQL** 開發的模擬電商網站全端應用，包含用戶、商品、訂單和支付等微服務。此專案支援基本的 CRUD（建立、讀取、更新、刪除）操作，並已使用 Docker 和 Kubernetes 進行容器化與部署設置。專案實現了 canary deployment 功能，當發生錯誤時，系統會自動回滾至 `1_simple` 所部署的 stable 標籤 Docker image 版本。這個專案的主要目的是展示 DevOps 流程和微服務架構的實踐應用。
 
-本專案的網頁及程式功能已開發完畢，目前正在調整CI/CD功能。
+本專案的網頁及程式功能已開發完畢，目前正在調整容器化及CI/CD功能。
 
 ## 目錄
 
