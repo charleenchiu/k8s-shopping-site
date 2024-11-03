@@ -3,7 +3,7 @@ README目錄：不列出目錄名稱
 node_modules目錄：只列出目錄名稱。不列出目錄下的所有子目錄及檔案
 
 ```sh
-Get-ChildItem -Recurse -Force | Where-Object { $_.FullName -notmatch "README|node_modules\\.*" } | ForEach-Object { $_.FullName }
+Get-ChildItem -Recurse -Force | Where-Object { $_.FullName -notmatch "README|MyNote|node_modules|.terraform|.git|gitignore|.gitignore\\.*" } | ForEach-Object { $_.FullName }
 ```
 
 列出的所有檔案COPY給AI, 請它畫出樹狀圖
@@ -110,94 +110,51 @@ C:\charleen\LearnDevops\vprofile-project\ShoppingSite
    └── bundle.js
 
 
-//====k8s-shopping-site_V1=============================================================================
+//====k8s-shopping-site=============================================================================
 
-C:\charleen\LearnDevops\vprofile-project\k8s-shopping-site
-├── user-service (http://localhost:3001)
-│   ├── node_modules
-│   ├── Dockerfile
-│   ├── index.js
-│   ├── package-lock.json
-│   └── package.json
-├── product-service (http://localhost:3002)
-│   ├── node_modules
-│   ├── Dockerfile
-│   ├── index.js
-│   ├── package-lock.json
-│   └── package.json
-├── order-service (http://localhost:3003)
-│   ├── node_modules
-│   ├── Dockerfile
-│   ├── index.js
-│   ├── package-lock.json
-│   └── package.json
-├── payment-service (http://localhost:3004)
-│   ├── Dockerfile
-│   ├── index.js
-│   ├── node_modules
-│   ├── package-lock.json
-│   └── package.json
+C:\charleen\LearnDevops\k8s-shopping-site_1_simple
+├── Init
+│   └── CreateServers.tf
+├── k8s-chart
+│   ├── charts
+│   ├── templates
+│   │   ├── deployment.yaml
+│   │   ├── service.yaml
+│   ├── .helmignore
+│   ├── Chart.yaml
+│   └── values.yaml
+├── src
+│   ├── user-service
+│   │   ├── Dockerfile
+│   │   ├── index.js (port: 3001)
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   └── yarn.lock
+│   ├── product-service
+│   │   ├── Dockerfile
+│   │   ├── index.js (port: 3002)
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   └── yarn.lock
+│   ├── order-service
+│   │   ├── Dockerfile
+│   │   ├── index.js (port: 3003)
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   └── yarn.lock
+│   └── payment-service
+│       ├──  Dockerfile
+│       ├── index.js (port: 3004)
+│       ├── package-lock.json
+│       ├── package.json
+│       └── yarn.lock
 ├── .env
-├── index.js (http://localhost:3000)
-├── node_modules
-├── package-lock.json
-├── package.json
+├── index.js (port: 3000)
 ├── Dockerfile
 ├── docker-compose.yml
-└── k8s
-   ├── order-service-deployment.yaml
-   ├── payment-service-deployment.yaml
-   ├── product-service-deployment.yaml
-   └── user-service-deployment.yaml
-
-
-
-//====k8s-shopping-site_V2===================================================================
-
-
-C:\charleen\LearnDevops\vprofile-project\k8s-shopping-site
-├── user-service (http://localhost:3001)
-│   ├── node_modules
-│   ├── Dockerfile
-│   ├── index.js
-│   ├── package-lock.json
-│   └── package.json
-├── product-service (http://localhost:3002)
-│   ├── node_modules
-│   ├── Dockerfile
-│   ├── index.js
-│   ├── package-lock.json
-│   └── package.json
-├── order-service (http://localhost:3003)
-│   ├── node_modules
-│   ├── Dockerfile
-│   ├── index.js
-│   ├── package-lock.json
-│   └── package.json
-├── payment-service (http://localhost:3004)
-│   ├── Dockerfile
-│   ├── index.js
-│   ├── node_modules
-│   ├── package-lock.json
-│   └── package.json
-├── .env
-├── index.js (http://localhost:3000)
-├── node_modules
+├── Jenkinsfile
 ├── package-lock.json
 ├── package.json
-├── Dockerfile
-├── docker-compose.yml
-├── k8s
-│   ├── order-service-deployment.yaml
-│   ├── payment-service-deployment.yaml
-│   ├── product-service-deployment.yaml
-│   ├── user-service-deployment.yaml
-├── terraform/
-│   ├── main.tf
-│   ├── variables.tf
-│   ├── outputs.tf
-├── ansible/
-│   ├── playbook.yml
-│   ├── inventory
-└── Jenkinsfile
+└── yarn.lock
+
 
