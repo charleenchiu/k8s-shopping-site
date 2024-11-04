@@ -1,7 +1,7 @@
 ## 功能說明報告 - `Jenkinsfile`
 
 ### 檔案概述
-此 `Jenkinsfile` 定義了一個 Jenkins Pipeline，運用 Terraform 來自動化 AWS 基礎設施的設定。此流程的特色是提供使用者選擇是否自動執行 `apply` 步驟，並支援 Ansible 部署和驗證工作流程。該 Pipeline 主要涵蓋 Git 代碼庫克隆、Terraform 計劃生成與應用、選擇性部署等步驟，從而實現 CI/CD 流程的自動化。
+此 `Jenkinsfile` 定義了一個 Jenkins Pipeline，運用 Terraform 來自動化 AWS 基礎設施的設定。此流程的特色是提供使用者選擇是否自動執行 `apply` 步驟，並支援 Ansible 部署和驗證工作流程。該 Pipeline 主要涵蓋 Git 程式碼庫克隆、Terraform 計劃生成與應用、選擇性部署等步驟，從而實現 CI/CD 流程的自動化。
 
 ### Pipeline 各階段說明
 

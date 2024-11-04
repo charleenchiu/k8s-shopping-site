@@ -26,7 +26,7 @@ Playbook 使用 `---` 起始標記，設定 `hosts: all` 以作用於所有指�
 - `update`：更新所有軟體包的索引。
 - `Install httpd`：安裝 Apache2 網頁伺服器。
 - `Start` 和 `Enable httpd`：分別啟動並設置 Apache2 開機自啟。
-- `Install git`：安裝 Git 以管理代碼版本。
+- `Install git`：安裝 Git 以管理程式碼版本。
 
 ---
 
@@ -43,12 +43,12 @@ Playbook 使用 `---` 起始標記，設定 `hosts: all` 以作用於所有指�
 
 ---
 
-### 第三部分：開機自動掛載與靜態網站代碼同步
+### 第三部分：開機自動掛載與靜態網站程式碼同步
 
-**功能**：在 `/etc/fstab` 中配置自動掛載 EFS，並從 GitHub 克隆靜態網站代碼至 EFS 掛載的目錄。
+**功能**：在 `/etc/fstab` 中配置自動掛載 EFS，並從 GitHub 克隆靜態網站程式碼至 EFS 掛載的目錄。
 
 - **Edit fstab**：將 EFS 掛載指令寫入 `/etc/fstab` 以便重啟後自動掛載。
-- **Clone repository**：將靜態網站代碼從 GitHub 克隆到 EFS 掛載目錄中。
+- **Clone repository**：將靜態網站程式碼從 GitHub 克隆到 EFS 掛載目錄中。
   
 --- 
 
@@ -64,4 +64,4 @@ Playbook 使用 `---` 起始標記，設定 `hosts: all` 以作用於所有指�
 
 ### 結論
 
-此 Playbook 提供一套完整的系統設置流程，支持 Ubuntu 主機上的 Apache 網頁伺服器、Git 代碼管理、NFS 服務與 EFS 文件系統的自動掛載，並可選擇性地將靜態網站同步至 S3。此流程確保靜態網站代碼可在重啟後自動載入，並可持續同步至 S3 以便備份或作為 CDN 的內容來源。
+此 Playbook 提供一套完整的系統設置流程，支持 Ubuntu 主機上的 Apache 網頁伺服器、Git 程式碼管理、NFS 服務與 EFS 文件系統的自動掛載，並可選擇性地將靜態網站同步至 S3。此流程確保靜態網站程式碼可在重啟後自動載入，並可持續同步至 S3 以便備份或作為 CDN 的內容來源。

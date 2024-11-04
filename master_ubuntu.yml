@@ -125,7 +125,7 @@
     # 等於下列shell指令：
     # sudo bash -c 'echo ${efs_id}:/ /var/www/html efs defaults,_netdev 0 0 >> /etc/fstab'
 
-    # 以 sudo 權限執行，並切換到 /var/www/html 目錄後執行 git clone 命令，將代碼庫複製到該目錄中。
+    # 以 sudo 權限執行，並切換到 /var/www/html 目錄後執行 git clone 命令，將程式碼庫複製到該目錄中。
     - name: Copy the code from github to the /var/www/html
       shell: |
         cd {{ efs_mount_dir }}
