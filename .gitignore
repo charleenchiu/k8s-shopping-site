@@ -1,1 +1,6 @@
+gitignore/
+
 venv/
+
+# 忽略專案中所有的 __pycache__ 資料夾
+**/__pycache__/
