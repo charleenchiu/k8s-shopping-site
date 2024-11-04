@@ -10,10 +10,10 @@
 ### 未來擴充計畫
 
 1. **版本管理與標籤策略**  
-   繼續實踐版本標籤策略，包括 `stable` 與 `canary` 版本的標籤管理，適用於每個服務，以支援滾動升級與版本控制。
+   繼續實踐版本標籤策略，包括 `stable` 與 `canary` 版本的標籤管理，適用於每個服務，以支援滾動升級與版本控制。開發中。詳見：[2_nodejs_mysql](https://github.com/charleenchiu/k8s-shopping-site/tree/2_nodejs_mysql)
 
 2. **Docker 部署 MySQL**  
-   將 MySQL 整合到服務中，並透過 Docker 容器管理資料庫，便於開發與測試環境的快速建置。
+   將 MySQL 整合到服務中，並透過 Docker 容器管理資料庫，便於開發與測試環境的快速建置。開發中。詳見：[2_nodejs_mysql](https://github.com/charleenchiu/k8s-shopping-site/tree/2_nodejs_mysql)
 
 3. **改為 Node.js + MySQL 架構**  
    將目前的架構改為 Node.js + MySQL，模擬真實企業常用技術堆疊，展示後端整合的能力。目前已完成程式碼開發，將整合到本專案的CI/CD流程，並且使用canary標籤，實現滾動升級與版本控制。詳見：[2_nodejs_mysql](https://github.com/charleenchiu/k8s-shopping-site/tree/2_nodejs_mysql)
