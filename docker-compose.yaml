@@ -1,0 +1,69 @@
+version: '3'
+services:
+  site-service:
+    build: .
+    ports:
+      - "${SITE_PORT}:${SITE_PORT}"  # 替換為你的實際端口
+    environment:
+      - USER_SERVICE_URL=http://user-service:3001
+      - PRODUCT_SERVICE_URL=http://product-service:3002
+      - ORDER_SERVICE_URL=http://order-service:3003
+      - PAYMENT_SERVICE_URL=http://payment-service:3004
+      - NODE_ENV=production
+      - EC2_PRIVATE_IP=${EC2_PRIVATE_IP}
+      - USE_CONTAINER=${USE_CONTAINER}
+      - HOST=localhost
+    networks:
+      - backend
+
+  user-service:
+    build: ./src/user-service
+    ports:
+      - "${USER_SERVICE_PORT}:${USER_SERVICE_PORT}"  # 替換為你的實際端口
+    environment:
+      - NODE_ENV=production
+      - EC2_PRIVATE_IP=${EC2_PRIVATE_IP}
+      - USE_CONTAINER=${USE_CONTAINER}
+      - HOST=localhost
+    networks:
+      - backend
+
+  product-service:
+    build: ./src/product-service
+    ports:
+      - "${PRODUCT_SERVICE_PORT}:${PRODUCT_SERVICE_PORT}"  # 替換為你的實際端口
+    environment:
+      - NODE_ENV=production
+      - EC2_PRIVATE_IP=${EC2_PRIVATE_IP}
+      - USE_CONTAINER=${USE_CONTAINER}
+      - HOST=localhost
+    networks:
+      - backend
+
+  order-service:
+    build: ./src/order-service
+    ports:
+      - "${ORDER_SERVICE_PORT}:${ORDER_SERVICE_PORT}"  # 替換為你的實際端口
+    environment:
+      - NODE_ENV=production
+      - EC2_PRIVATE_IP=${EC2_PRIVATE_IP}
+      - USE_CONTAINER=${USE_CONTAINER}
+      - HOST=localhost
+    networks:
+      - backend
+
+  payment-service:
+    build: ./src/payment-service
+    ports:
+      - "${PAYMENT_SERVICE_PORT}:${PAYMENT_SERVICE_PORT}"  # 替換為你的實際端口
+    environment:
+      - NODE_ENV=production
+      - EC2_PRIVATE_IP=${EC2_PRIVATE_IP}
+      - USE_CONTAINER=${USE_CONTAINER}
+      - HOST=localhost
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
