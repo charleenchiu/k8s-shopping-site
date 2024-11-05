@@ -1,6 +1,44 @@
 gitignore/
 
+# 忽略專案中 venv/ 資料夾
 venv/
 
 # 忽略專案中所有的 __pycache__ 資料夾
 **/__pycache__/
+
+# terraform 運作時產生的檔案
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+
+# InitAndCleanup下terraform 運作時產生的檔案
+Init/.terraform/
+Init/.terraform.lock.hcl
+Init/terraform.tfstate
+Init/terraform.tfstate.backup
+Init/.terraform.tfstate.lock.info
+
+# helm的檔案
+# Helm Chart 目錄中的 .helmignore
+k8s-chart/**/.DS_Store
+k8s-chart/**/Thumbs.db
+k8s-chart/**/*.tgz
+
+# Chart dependencies
+k8s-chart/charts/*
+
+# Template-generated files
+k8s-chart/templates/*.rendered
+
+# 特定於開發環境的文件
+k8s-chart/test/
+k8s-chart/tmp/
+k8s-chart/*.log
+
+# Ignore Maven build output
+target/
+
+# 待做Jenkins Multibranch
+MyNote/ForJenkinsMultibranch
+k8s-chart/out.yaml

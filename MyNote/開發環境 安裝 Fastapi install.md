@@ -3,7 +3,7 @@
 bash
 複製程式碼
 python -m venv venv
-.\venv\Scripts\activate  # 啟動虛擬環境
+venv\Scripts\activate  # 啟動虛擬環境
 pip install fastapi pymongo uvicorn requests
 使用虛擬環境不僅可以避免權限問題，也能夠避免全域環境的干擾。
 
