@@ -11,3 +11,9 @@ pip install fastapi pymongo uvicorn requests
 
 Python 必須先手動安裝，並確認已加入系統的 PATH 中才能使用 pip。
 MongoDB 伺服器也需要獨立安裝。pymongo 是 Python 連接 MongoDB 的驅動程式，但它不會安裝或啟動 MongoDB 伺服器本身。
+
+
+退出虛擬環境：
+在命令提示字元或終端中執行以下命令：
+deactivate
+這樣你就可以退出和停止當前啟動的虛擬環境。這個命令會將你的終端會話從虛擬環境中釋放回到系統的全局環境。
