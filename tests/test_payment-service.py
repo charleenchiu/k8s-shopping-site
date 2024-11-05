@@ -3,7 +3,7 @@ import requests
 from bson import ObjectId
 from pymongo import MongoClient
 
-BASE_URL = "http://localhost:5000"  # 假設 Flask 伺服器在本地運行
+BASE_URL = "http://localhost:3004"  # 假設 Flask 伺服器在本地運行
 client = MongoClient('mongodb://localhost:27017/')
 db = client.payment_database  # 連接到你的 MongoDB 資料庫
 payments = db.payments  # 付款集合

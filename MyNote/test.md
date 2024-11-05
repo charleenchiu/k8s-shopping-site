@@ -16,7 +16,7 @@ import requests
 import os
 
 # 設定 API 服務的 URL，假設服務運行在 localhost 且使用指定的埠號
-BASE_URL = f"http://localhost:{os.getenv('ORDER_SERVICE_PORT', 5000)}"
+BASE_URL = f"http://localhost:{os.getenv('ORDER_SERVICE_PORT', 3003)}"
 
 def test_get_all_orders():
     response = requests.get(f"{BASE_URL}/orders")
@@ -84,7 +84,7 @@ def test_delete_order():
 
 ### 說明
 
-1. **`BASE_URL`**：設置 API 的根路徑，並允許從 `.env` 環境變數中指定 `ORDER_SERVICE_PORT`，默認為 `5000` 埠。
+1. **`BASE_URL`**：設置 API 的根路徑，並允許從 `.env` 環境變數中指定 `ORDER_SERVICE_PORT`，默認為 `3003` 埠。
 
 2. **測試案例**：
    - `test_get_all_orders`：測試 `GET /orders` 以獲取所有訂單。

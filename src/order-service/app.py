@@ -111,5 +111,5 @@ def delete_order(order_id):
 
 # 啟動伺服器
 if __name__ == '__main__':
-    app_port = int(os.getenv('ORDER_SERVICE_PORT', 5000))  # 預設埠號為 5000
+    app_port = int(os.getenv('ORDER_SERVICE_PORT', 3003))  # 預設埠號為 3003
     app.run(host='0.0.0.0', port=app_port)

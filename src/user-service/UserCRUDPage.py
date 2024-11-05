@@ -37,4 +37,4 @@ def user_detail(user_id):
         return jsonify({"message": "User deleted"}), 204
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=3001)

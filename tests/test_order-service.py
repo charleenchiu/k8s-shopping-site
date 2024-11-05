@@ -2,7 +2,7 @@ import requests
 import os
 
 # 設定 API 服務的 URL，假設服務運行在 localhost 且使用指定的埠號
-BASE_URL = f"http://localhost:{os.getenv('ORDER_SERVICE_PORT', 5000)}"
+BASE_URL = f"http://localhost:{os.getenv('ORDER_SERVICE_PORT', 3003)}"
 
 def test_get_all_orders():
     response = requests.get(f"{BASE_URL}/orders")

@@ -108,5 +108,5 @@ def delete_payment(payment_id):
 
 # 啟動伺服器
 if __name__ == '__main__':
-    app_port = int(os.getenv('PAYMENT_SERVICE_PORT', 5000))  # 預設埠號 5000
+    app_port = int(os.getenv('PAYMENT_SERVICE_PORT', 3004))  # 預設埠號 3004
     app.run(host='0.0.0.0', port=app_port)

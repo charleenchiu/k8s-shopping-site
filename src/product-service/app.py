@@ -31,5 +31,5 @@ products_collection = db['products']
 # ...
 
 if __name__ == "__main__":
-    port = int(os.getenv("PRODUCT_SERVICE_PORT", 5000))
+    port = int(os.getenv("PRODUCT_SERVICE_PORT", 3002))
     app.run(host="0.0.0.0", port=port)
