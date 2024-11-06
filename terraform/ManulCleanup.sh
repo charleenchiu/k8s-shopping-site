@@ -22,7 +22,6 @@ fi
 
 helm uninstall k8s-site
 helm uninstall aws-for-fluent-bit
-helm uninstall externaldns
 
 # 檢查 Jenkins 專案目錄是否存在
 cd /var/lib/jenkins/workspace/K8S_Shopping_Site/terraform || { echo "找不到 Jenkins 專案目錄，請確認路徑是否正確"; exit 1; }

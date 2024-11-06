@@ -28,7 +28,6 @@ helm repo remove bitnami
 helm repo remove fluent
 helm uninstall k8s-site
 helm uninstall aws-for-fluent-bit
-helm uninstall externaldns
 
 sudo nano main.tf
 最前面加上
