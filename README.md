@@ -13,9 +13,9 @@
 
 本系列專案旨在展示如何在 Kubernetes 環境下通過微服務架構實現電子商務網站的自動化部署與持續交付（CI/CD）。以下是三個專案的簡介，涵蓋了從最簡單的靜態服務部署到使用資料庫的複雜應用，並展示了不同的部署策略（Stable 與 Canary 部署）來確保應用的穩定性與高效性。
 
-### k8s-shopping-site (1_simple) 專案：簡單無資料庫的靜態網站（Stable 標籤部署）  [1_simple](https://github.com/charleenchiu/k8s-shopping-site/tree/1_simple)
+### k8s-shopping-site (1_simple) 專案：簡單呈現CI/CD、Helm Kubernetes容器化佈署的微服務購物網站（Stable 標籤部署）  [1_simple](https://github.com/charleenchiu/k8s-shopping-site/tree/1_simple)
 
-此專案展示了最簡單的微服務架構，無需資料庫及後端程式，只將每個服務簡單地設置為顯示一個靜態句子，表示使用者、產品、訂單和付款等功能。這些服務使用 Kubernetes 進行管理並進行容器化部署，所有服務的部署皆透過 Helm 完成，並以 Stable 標籤佈署。此專案的目的是展示基本的 CI/CD 流程，並能在 Kubernetes 環境中進行穩定的服務運行。
+此專案展示了最簡單的微服務架構，無資料庫及後端程式，只將每個服務簡單地設置為顯示一個靜態句子，表示使用者、產品、訂單和付款等功能。這些服務使用 Kubernetes 進行容器化部署，所有服務的部署皆透過 Helm 完成，並以 Stable 標籤佈署。此專案的目的是展示 CI/CD 流程，並能在 AWS EKS 環境中進行穩定的服務運行。
 
 - **架構**: 使用 Docker 和 Helm，搭配 Kubernetes 進行部署，並未使用資料庫。
 - **部署**: 服務以 `stable` 標籤進行部署，標示為穩定版本。
