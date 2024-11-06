@@ -8,7 +8,7 @@ Get-ChildItem -Recurse -Force | Where-Object { $_.FullName -notmatch "README|MyN
 
 列出的所有檔案COPY給AI, 請它畫出樹狀圖
 
-C:\charleen\LearnDevops\vprofile-project\ShoppingSite
+vprofile-project\ShoppingSite
 ├── web-client
 │   ├── node_modules
 │   ├── public
@@ -112,7 +112,7 @@ C:\charleen\LearnDevops\vprofile-project\ShoppingSite
 
 //====k8s-shopping-site=============================================================================
 
-C:\charleen\LearnDevops\k8s-shopping-site_1_simple
+k8s-shopping-site_2_nodejs_mysql
 ├── Init
 │   └── CreateServers.tf
 ├── k8s-chart

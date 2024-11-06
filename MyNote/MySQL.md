@@ -34,7 +34,7 @@ added 13 packages in 3s
 我執行SQL的方法：
 ```sh
 # 先編寫好init-db.js
-cd C:\charleen\LearnDevops\vprofile-project\ShoppingSite
+cd vprofile-project\ShoppingSite
 node init-db.js
 ```
 

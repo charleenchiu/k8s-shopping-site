@@ -404,9 +404,9 @@ describe('Products API', () => {
 
 //====總結工作順序！==============================================================================
 我的應用程式路徑是：
-C:\charleen\LearnDevops\vprofile-project\ShoppingSite\product-service\src\app.js
+vprofile-project\ShoppingSite\product-service\src\app.js
 測試它的程式在：
-C:\charleen\LearnDevops\vprofile-project\ShoppingSite\product-service\test\test.js
+vprofile-project\ShoppingSite\product-service\test\test.js
 
 vprofile-project/
 └── ShoppingSite/

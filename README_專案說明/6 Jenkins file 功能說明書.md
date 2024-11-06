@@ -1,70 +1,82 @@
 # 功能說明書：Jenkins Pipeline (`jenkinsfile`)
-這個 Jenkins Pipeline 為多階段自動化流程，包含程式碼檢出、基礎架構建置、測試、品質檢查、映像檔構建與推送、Helm 部署等。此 Pipeline 適合於 DevOps 團隊管理 Kubernetes 應用服務，並將服務自動部署至 AWS EKS。
 
-### Pipeline 概觀
+### 目標
 
-1. **Pipeline 定義與環境變數**
-   - 設定 AWS 及 Jenkins 環境變數，包含 AWS 帳戶 ID、區域、Kubernetes 配置路徑及其他服務相關配置。
-   - 預設 Docker 映像標籤為 `stable`。
-   - 使用 Jenkins 中的憑證儲存 AWS 憑證，確保安全性。
+本 `Jenkinsfile` 用於自動化部署 Kubernetes 應用，涵蓋從程式碼檢出、Terraform 初始化、Docker 影像建構，到部署 Helm Charts 和測試的完整流程。最終將應用部署到 AWS EKS，並將日誌寫入 CloudWatch。
 
-2. **主要階段說明**
+### 環境變數設定
 
-   #### 1. 檢出程式碼
-   - 從 GitHub 儲存庫拉取程式碼（分支名稱：`1_simple`），將其作為此流程的基礎程式碼版本。
+- `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`: 透過 Jenkins 憑證管理來提供 AWS 認證。
+- `AWS_ACCOUNT_ID`: AWS 帳戶 ID。
+- `HELM_RELEASE_NAME`: Helm 部署的發行名稱。
+- `IMAGE_TAG`: Docker 映像的標籤（預設為 `canary`）。
+- `AWS_REGION`: AWS 區域（預設為 `us-east-1`）。
+- `KUBECONFIG`: 設定 Kubernetes 配置路徑。
 
-   #### 2. Terraform 初始化與建置
-   - 執行 Terraform 配置以自動建置 AWS 資源（如 ECR、CloudWatch Log Group 等）。
-   - 使用 `terraform init` 和 `terraform apply` 指令完成資源部署。
+### 階段說明
 
-   #### 3. 取得並解析 Terraform 輸出
-   - 抓取 Terraform 輸出的所有變數，並依照 ECR 儲存庫名稱、EKS 叢集名稱、CloudWatch Log Group 等分別存入 Jenkins 環境變數中，便於後續使用。
+#### 1. **Checkout Code**:
+   - 從 GitHub 取得程式碼，使用分支 `2_nodejs_mysql` 進行檢出。
 
-   #### 4. 驗證輸出變數
-   - 於 Jenkins Console 中印出每個變數，確保成功抓取並可以進一步使用。
+#### 2. **Terraform Init**:
+   - 初始化 Terraform 並應用配置。執行 `terraform init` 和 `terraform apply -auto-approve`，確保基礎設施配置更新。
 
-   #### 5. 安裝依賴及測試
-   - 遍歷微服務清單，安裝依賴後執行各微服務的單元測試。
-   - 設定測試超時機制，以應對某些測試可能超時的情況，並防止整體流程中斷。
+#### 3. **Get Outputs**:
+   - 透過 `terraform output` 命令獲取 Terraform 執行結果的輸出，並將結果拆解為對應的環境變數，例如 ECR repository、EKS Cluster 相關設定等。
 
-   #### 6. SonarQube 分析與品質閘檢查
-   - 使用 SonarScanner 分析程式碼品質，並將結果提交至 SonarQube 服務。
-   - 等待品質閘結果，若未通過，會自動中止 Pipeline。
+#### 4. **Verify Outputs**:
+   - 驗證輸出的變數，檢查 ECR 和 EKS 配置。
 
-   #### 7. Docker 映像構建與推送
-   - 使用 Dockerfile 為每個微服務構建映像檔，並將其推送至 AWS 公共 ECR。
-   - 為每個映像檔打上時間戳記與穩定標籤，並上傳至 AWS ECR 儲存庫。
+#### 5. **Install Dependencies and Run Tests**:
+   - 安裝依賴並在各微服務目錄下執行測試，設定測試的超時時間為 1 秒，若測試失敗或超時，流程不會中斷。
 
-   #### 8. 安裝或升級 Helm
-   - 下載並安裝 Helm，供後續 Kubernetes 應用服務的管理與部署。
+#### 6. **SonarQube Analysis**:
+   - 使用 SonarQube 進行程式碼質量分析，配置 `sonar-project` 相關的參數。
 
-   #### 9. 配置 kubectl 並連接 EKS 叢集
-   - 更新 kubeconfig，以便 Jenkins Pipeline 使用 kubectl 指令控制 EKS 叢集資源。
+#### 7. **Quality Gate**:
+   - 檢查 SonarQube 的品質門檻，若未達標，則中止部署。
 
-   #### 10. 安裝或升級 Fluent Bit（選擇性）
-   - 配置 Fluent Bit 以將 Kubernetes 日誌導入至 CloudWatch Log Group 中，便於日誌監控。
+#### 8. **Build Docker Image**:
+   - 使用 `docker build` 建構 Docker 映像，標籤為指定的 `IMAGE_TAG`，並依照不同服務建立映像。
 
-   #### 11. Helm 部署
-   - 進入 Helm Chart 目錄，依據 Jenkins 中的環境變數進行部署或升級操作。
-   - 將服務映像、CloudWatch Log Group 等參數動態傳遞至 Helm，進行 Kubernetes 服務部署。
+#### 9. **Login to Public ECR & Push Image**:
+   - 登入 AWS ECR，將 Docker 映像推送到公共 ECR 仓库，並使用當前日期作為額外標籤。
 
----
+#### 10. **Install Helm**:
+   - 安裝 Helm，若系統中未安裝 Helm，則透過下載安裝包並解壓。
 
-### 注意事項
+#### 11. **Config kubectl Connect to EKS Cluster**:
+   - 使用 `aws eks update-kubeconfig` 連接到 EKS 集群，設定 `kubectl` 以便與 EKS 進行互動。
 
-1. **環境變數更新限制**：
-   - 一些由 Terraform 更新的環境變數無法在 Pipeline 開始時設置，因此會在 `Get Outputs` 階段中動態設定。
+#### 12. **Install or Upgrade Fluent Bit**:
+   - 安裝或升級 Fluent Bit Helm Chart，將 Kubernetes 日誌導入到 AWS CloudWatch。
 
-2. **錯誤處理**：
-   - 測試階段包含錯誤捕捉及超時設置，確保 Pipeline 即使單一測試失敗也能繼續執行，提升流程穩定性。
+#### 13. **Helm Deploy**:
+   - 使用 Helm 部署應用，並將各微服務的 Docker 映像部署到 Kubernetes 上。部署完成後會進行健康檢查，若健康檢查通過，將流量切換到 canary 版本。
 
-3. **Helm 與 kubectl 安裝與配置**：
-   - Pipeline 中已考慮可能缺少 Helm 與 kubectl 的情況，通過下載與設置 PATH 確保其正常運行。
+#### 14. **Rollback**:
+   - 如果 `Helm Deploy` 失敗，則回滾到上一個穩定版本。
 
----
+#### 15. **Get ELB Information**:
+   - 獲取並顯示部署的 ELB (Elastic Load Balancer) DNS 和端口信息，用於檢查部署是否成功。
 
-### 版本歷程
-- 初始版本 v1.0：提供基本自動化流程。
-- **修改建議**：
-   - 可以根據需求調整 Docker 標籤或超時設置時間。
-   - 可以進一步增加 Ansible 配置步驟，以自動化更多操作。
+### Post 建立階段
+
+#### 1. **Failure**:
+   - 如果流程失敗，將進行清理操作，刪除 Terraform、Helm 和 Docker 中的資源，確保不留殘餘的服務和映像。
+
+#### 2. **Always**:
+   - 清理 Jenkins 工作區，確保每次執行後都不留下無用的文件。
+   - 檢查 Terraform 狀態鎖定並進行解除。
+   - 清理 Docker 資源，如未使用的容器和影像。
+
+### 主要工具與技術
+
+- **Terraform**: 用於基礎設施管理與自動化配置，建立和管理 EKS 集群、ECR 儲存庫等。
+- **Docker**: 用來建構微服務的容器映像。
+- **Helm**: Kubernetes 部署工具，透過 Helm Charts 部署微服務到 Kubernetes。
+- **SonarQube**: 程式碼質量管理工具，用來檢查程式碼中的潛在問題。
+- **Fluent Bit**: 用來將 Kubernetes 日誌輸送到 CloudWatch。
+- **Kubernetes**: 用來運行應用和服務的容器編排平台，與 EKS 集群密切集成。
+
+這個 `Jenkinsfile` 適合用於實現微服務架構的 CI/CD 管道，通過自動化的方式確保應用能夠高效且穩定地部署到雲端平台。

@@ -11,9 +11,9 @@
         <ul>
             <li><a href="/login">登入頁面</a></li>
             <li><a href="/orders">訂單管理</a></li>
-            <li><a href="/payments">支付管理</a></li>
+            <li><a href="/payments">付款管理</a></li>
             <li><a href="/products">商品管理</a></li>
-            <li><a href="/users">用戶管理</a></li>
+            <li><a href="/users">使用者管理</a></li>
         </ul>
     </nav>
 </body>

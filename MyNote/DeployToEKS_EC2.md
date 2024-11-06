@@ -289,7 +289,7 @@ kubectl get services              # 列出當前叢集中所有的服務，顯�
 您可以使用 `kubectl describe pod <pod_name>` 來查看詳細信息。
 
 ```sh
-PS C:\charleen\LearnDevops\vprofile-project\ShoppingSite\user-service\k8s> kubectl get pods
+PS vprofile-project\ShoppingSite\user-service\k8s> kubectl get pods
 NAME                            READY   STATUS    RESTARTS   AGE
 user-service-5d596cf4dd-jrc9g   0/1     Pending   0          58s
 NAME           TYPE           CLUSTER-IP       EXTERNAL-IP                                                              PORT(S)        AGE

@@ -3,7 +3,7 @@
 試運行你的前端應用的步驟：
 
 ```sh
-cd C:\charleen\LearnDevops\vprofile-project\ShoppingSite\web-client\
+cd vprofile-project\ShoppingSite\web-client\
 npm install
 npm start
 步驟說明：

@@ -40,7 +40,7 @@
 希望這些資訊對你有幫助！如果還有其他問題，隨時告訴我哦！😊
 
 ========================================
-# PS C:\charleen\LearnDevops\vprofile-project\FourAPIDockerWekubectl config current-context
+# PS vprofile-project\FourAPIDockerWekubectl config current-context
 arn:aws:eks:us-east-1:167804136284:cluster/4api-docker-website-eks-cluster
 
 - 看起來你目前的 `kubectl` 上下文是指向 EKS 叢集 (`4api-docker-website-eks-cluster`)。如果你想切換到 Minikube，請按照以下步驟操作：

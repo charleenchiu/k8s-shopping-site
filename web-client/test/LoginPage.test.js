@@ -9,10 +9,10 @@ it('顯示登入頁面標題', () => {
   expect(titleElement).toBeInTheDocument();
 });
 
-it('顯示用戶名和密碼輸入框', () => {
+it('顯示使用者名和密碼輸入框', () => {
   render(<LoginPage />);
 
-  const usernameInput = screen.getByPlaceholderText(/用戶名/i);
+  const usernameInput = screen.getByPlaceholderText(/使用者名/i);
   const passwordInput = screen.getByPlaceholderText(/密碼/i);
   
   expect(usernameInput).toBeInTheDocument();
