@@ -7,6 +7,8 @@
 ### 簡介
 本專案是基於 Kubernetes 的電子商務網站，旨在展示微服務架構下的 CI/CD 流程。透過 Jenkins 自動化工具，使用 Terraform 進行基礎架構的配置，並利用 Docker 和 Helm 來部署各微服務。
 
+### [三個 k8s-shopping-site 專案總覽](README_3個k8s-shopping-site專案總覽.md)
+
 ### 未來擴充計畫
 
 1. **版本管理與標籤策略**  
@@ -15,10 +17,10 @@
 2. **Docker 部署 MySQL**  
    將 MySQL 整合到服務中，並透過 Docker 容器管理資料庫，便於開發與測試環境的快速建置。開發中。詳見：[2_nodejs_mysql](https://github.com/charleenchiu/k8s-shopping-site/tree/2_nodejs_mysql)
 
-3. **改為 Node.js + MySQL 架構**  
+3. **版本二 Node.js + MySQL 架構**  
    將目前的架構改為 Node.js + MySQL，模擬真實企業常用技術堆疊，展示後端整合的能力。目前已完成程式碼開發，將整合到本專案的CI/CD流程，並且使用canary標籤，實現滾動升級與版本控制。詳見：[2_nodejs_mysql](https://github.com/charleenchiu/k8s-shopping-site/tree/2_nodejs_mysql)
 
-4. **開發 Python + NoSQL 版本**  
+4. **版本三 Python + NoSQL 版本**  
    在目前基礎上新增 Python + NoSQL 版本，擴展技術多樣性，展示對不同語言及資料庫的適應能力，強化專案的靈活性。開發中。詳見：[2_nodejs_mysql](https://github.com/charleenchiu/k8s-shopping-site/tree/3_python_nosql)
 
 5. **Ansible 設置 AWS EC2 主機**  
