@@ -1,12 +1,12 @@
 ﻿# k8s-shopping-site
 本儲存庫共有四個專案。包括三個不同版本的微服務網站 k8s-shopping-site，以及一個 Jenkins + Terraform + Ansible綜合應用專案展示。簡介如下：
 
-## 一個 Jenkins + Terraform + Ansible綜合應用專案
+## ※一個 Jenkins + Terraform + Ansible綜合應用專案
 ### Ansible 設置 AWS EC2 主機
 在Jenkins pipeline 呼叫 Tarraform 建置 AWS 資源後，在Terraform 內呼叫 Ansible playbook 對主機進行設置。目前已完成開發及初步驗證。詳見：[4_jenkins_terraform_ansible](https://github.com/charleenchiu/k8s-shopping-site.git/tree/4_jenkins_terraform_ansible)
 
 
-## 三個 k8s-shopping-site 專案總覽
+## ※三個 k8s-shopping-site 專案總覽
 
 本系列專案旨在展示如何在 Kubernetes 環境下通過微服務架構實現電子商務網站的自動化部署與持續交付（CI/CD）。以下是三個專案的簡介，涵蓋了從最簡單的靜態服務部署到使用資料庫的複雜應用，並展示了不同的部署策略（Stable 與 Canary 部署）來確保應用的穩定性與高效性。
 
