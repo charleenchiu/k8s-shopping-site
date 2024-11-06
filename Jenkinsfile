@@ -8,7 +8,7 @@ pipeline {
         AWS_ACCOUNT_ID = '167804136284' // AWS 帳戶 ID
         HELM_RELEASE_NAME="k8s-site"    // Helm upgrade 時用的release name
         //IMAGE_TAG = 'latest' // Docker Image Tag
-        IMAGE_TAG = 'stable' // Docker Image Tag
+        IMAGE_TAG = 'canary' // Docker Image Tag
         AWS_REGION = 'us-east-1'    // AWS 區域
         KUBECONFIG = '/var/lib/jenkins/.kube/config'
         /*
@@ -20,7 +20,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 // 從 Git 獲取程式碼
-                git branch: '1_simple', url: 'https://github.com/charleenchiu/k8s-shopping-site.git'
+                git clone -b '3_python_nosql' https://github.com/charleenchiu/k8s-shopping-site.git'
             }
         }
 
@@ -312,6 +312,7 @@ pipeline {
                     echo "EKS_CLUSTER_URL: ${env.EKS_CLUSTER_URL}"
                     echo "LOG_GROUP_NAME: ${env.LOG_GROUP_NAME}"
 
+                    // 先部署 canary 版本
                     // 進入 helm chart 目錄
                     dir('./k8s-chart') {
                         // 使用 helm 指令，使用參數命名方式動態傳遞 awsRegion、serviceType 和 awsLogsGroup
@@ -337,6 +338,25 @@ pipeline {
                             set +x  # 關閉命令追蹤
                         """
                     }
+                }
+
+                // 健康檢查
+                def healthy = sh(script: "kubectl get pods -l app=user-service,tier=canary -o jsonpath='{.items[0].status.containerStatuses[0].ready}'", returnStdout: true).trim()
+
+                if (healthy == 'true') {
+                    // 如果健康檢查通過，則切換流量到 canary 版本
+                    sh 'kubectl set image deployment/user-service user-service=${env.USER_SERVICE_ECR_REPO}:${env.IMAGE_TAG}'
+                } else {
+                    error('Canary deployment failed. Rolling back.')
+                }
+            }
+        }
+
+        stage('Rollback') {
+            steps {
+                script {
+                    // Rollback 到上一個穩定版本
+                    sh 'kubectl rollout undo deployment/user-service'
                 }
             }
         }
@@ -376,7 +396,6 @@ pipeline {
                 helm repo remove fluent
                 helm uninstall ${env.HELM_RELEASE_NAME} # 刪除Helm建立的資源，例如ELB。但不會自動刪除 Docker 映像
                 helm uninstall aws-for-fluent-bit
-                helm uninstall externaldns
                 cd terraform     # 切換到 terraform 目錄
                 sudo chmod +x delete_ecr_images.sh   # 確保 delete_ecr_images.sh 可執行
                 ./delete_ecr_images.sh  # 注意加上 "./" 來執行當前目錄的腳本，執行刪除映像的腳本

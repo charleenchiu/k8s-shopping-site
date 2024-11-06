@@ -112,7 +112,7 @@ C:\charleen\LearnDevops\vprofile-project\ShoppingSite
 
 //====k8s-shopping-site=============================================================================
 
-C:\charleen\LearnDevops\k8s-shopping-site_1_simple
+C:\charleen\LearnDevops\k8s-shopping-site_3_python_nosql
 ├── Init
 │   └── CreateServers.tf
 ├── k8s-chart
