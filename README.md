@@ -21,7 +21,7 @@
    將目前的架構改為 Node.js + MySQL，模擬真實企業常用技術堆疊，展示後端整合的能力。目前已完成程式碼開發，將整合到本專案的CI/CD流程，並且使用canary標籤，實現滾動升級與版本控制。詳見：[2_nodejs_mysql](https://github.com/charleenchiu/k8s-shopping-site/tree/2_nodejs_mysql)
 
 4. **版本三 Python + NoSQL 版本**  
-   在目前基礎上新增 Python + NoSQL 版本，擴展技術多樣性，展示對不同語言及資料庫的適應能力，強化專案的靈活性。開發中。詳見：[2_nodejs_mysql](https://github.com/charleenchiu/k8s-shopping-site/tree/3_python_nosql)
+   在目前基礎上新增 Python + NoSQL 版本，擴展技術多樣性，展示對不同語言及資料庫的適應能力，強化專案的靈活性。開發中。詳見：[3_python_nosql](https://github.com/charleenchiu/k8s-shopping-site/tree/3_python_nosql)
 
 5. **Ansible 設置 AWS EC2 主機**  
    在 Tarraform 建置 AWS 資源後，呼叫 Ansible playbook 對主機進行設置。目前已完成開發及初步驗證。詳見：[4_jenkins_terraform_ansible](https://github.com/charleenchiu/k8s-shopping-site.git/tree/4_jenkins_terraform_ansible)
