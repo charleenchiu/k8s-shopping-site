@@ -1,7 +1,7 @@
 ﻿# k8s-shopping-site
-本儲存庫共有四個專案。包括三個不同版本的微服務網站 k8s-shopping-site，以及一個展示。簡介如下：
+本儲存庫共有四個專案。包括三個不同版本的微服務網站 k8s-shopping-site，以及一個 Jenkins + Terraform + Ansible綜合應用專案展示。簡介如下：
 
-## Jenkins + Terraform + Ansible綜合應用專案
+## 一個 Jenkins + Terraform + Ansible綜合應用專案
 ### Ansible 設置 AWS EC2 主機
 在Jenkins pipeline 呼叫 Tarraform 建置 AWS 資源後，在Terraform 內呼叫 Ansible playbook 對主機進行設置。目前已完成開發及初步驗證。詳見：[4_jenkins_terraform_ansible](https://github.com/charleenchiu/k8s-shopping-site.git/tree/4_jenkins_terraform_ansible)
 
