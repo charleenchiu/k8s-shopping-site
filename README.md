@@ -1,5 +1,5 @@
 ﻿# k8s-shopping-site
-本儲存庫共有四個專案。包括三個不同版本的微服務網站 k8s-shopping-site，以及一個 Jenkins + Terraform + Ansible綜合應用專案展示。簡介如下：
+本儲存庫共有四個專案。包括一個 Jenkins + Terraform + Ansible綜合應用專案，以及三個不同版本的微服務網站 k8s-shopping-site 專案。簡介如下：
 
 ---
 
