@@ -43,3 +43,13 @@
 ### 📈 結論
 
 這三個 k8s-shopping-site 專案展示了如何使用 Kubernetes 搭配不同技術堆疊實現微服務架構，並強調 CI/CD 流程的自動化。無論是最簡單的靜態服務部署還是複雜的資料庫驅動型應用，這些專案提供了實用的架構與技術參考，並通過 Stable 和 Canary 部署策略確保應用的穩定性與高效性。
+
+---
+
+### 📞 聯絡我
+👩‍💻 **邱瓊瑩**  
+✉️ **Email**: [charleenchiu@msn.com](mailto:charleenchiu@msn.com)  
+📱 **電話**: 0930-629-242  
+
+🔗 [![LinkedIn](https://img.shields.io/badge/LinkedIn-邱瓊瑩-blue?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/charleenchiu/)  
+🔗 [![104人力銀行](https://img.shields.io/badge/104人力銀行-履歷分享-orange?style=flat&logo=104&logoColor=white)](https://pda.104.com.tw/profile/share/i8TlEWaBQZoMAXKV0SEmPST014a1AIa9) **(效期至2024/11/20)**
