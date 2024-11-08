@@ -1,33 +1,38 @@
 # k8s-shopping-site 專案
 
-### **歡迎來到這個專案的 README 檔案！想要了解更多細節，請點擊這個連結：**
-##   [📂 開啟 <span style="color:red;font-weight:bold;">README_專案說明</span> 資料夾](README_專案說明/)
+---
 
-
-### 簡介
+### 📝 簡介  
 本專案是基於 Kubernetes 的電子商務網站，旨在展示微服務架構下的 CI/CD 流程。透過 Jenkins 自動化工具，使用 Terraform 進行基礎架構的配置，並利用 Docker 和 Helm 來部署各微服務。
 
-### [三個 k8s-shopping-site 專案總覽](README_3個k8s-shopping-site專案總覽.md)
+---
 
-### 未來擴充計畫
+### 🔧 擴充計畫
 
-1. **版本管理與標籤策略**  
+1. **🛠 版本管理與標籤策略**  
    繼續實踐版本標籤策略，包括 `stable` 與 `canary` 版本的標籤管理，適用於每個服務，以支援滾動升級與版本控制。開發中。詳見：[2_nodejs_mysql](https://github.com/charleenchiu/k8s-shopping-site/tree/2_nodejs_mysql)
 
-2. **Docker 部署 MySQL**  
+2. **🐳 Docker 部署 MySQL**  
    將 MySQL 整合到服務中，並透過 Docker 容器管理資料庫，便於開發與測試環境的快速建置。開發中。詳見：[2_nodejs_mysql](https://github.com/charleenchiu/k8s-shopping-site/tree/2_nodejs_mysql)
 
-3. **版本二 Node.js + MySQL 架構**  
-   將目前的架構改為 Node.js + MySQL，模擬真實企業常用技術堆疊，展示後端整合的能力。目前已完成程式碼開發，將整合到本專案的CI/CD流程，並且使用canary標籤，實現滾動升級與版本控制。詳見：[2_nodejs_mysql](https://github.com/charleenchiu/k8s-shopping-site/tree/2_nodejs_mysql)
+3. **📦 版本二 Node.js + MySQL 架構**  
+   將目前的架構改為 Node.js + MySQL，模擬真實企業常用技術堆疊，展示後端整合的能力。目前已完成程式碼開發，將整合到本專案的 CI/CD 流程，並使用 canary 標籤，實現滾動升級與版本控制。詳見：[2_nodejs_mysql](https://github.com/charleenchiu/k8s-shopping-site/tree/2_nodejs_mysql)
 
-4. **版本三 Python + NoSQL 版本**  
+4. **🐍 版本三 Python + NoSQL 版本**  
    在目前基礎上新增 Python + NoSQL 版本，擴展技術多樣性，展示對不同語言及資料庫的適應能力，強化專案的靈活性。開發中。詳見：[3_python_nosql](https://github.com/charleenchiu/k8s-shopping-site/tree/3_python_nosql)
 
-5. **Ansible 設置 AWS EC2 主機**  
-   在 Tarraform 建置 AWS 資源後，呼叫 Ansible playbook 對主機進行設置。目前已完成開發及初步驗證。詳見：[4_jenkins_terraform_ansible](https://github.com/charleenchiu/k8s-shopping-site.git/tree/4_jenkins_terraform_ansible)
+5. **📜 Ansible 設置 AWS EC2 主機**  
+   在 Terraform 建置 AWS 資源後，呼叫 Ansible playbook 對主機進行設置。目前已完成開發及初步驗證。詳見：[4_jenkins_terraform_ansible](https://github.com/charleenchiu/k8s-shopping-site.git/tree/4_jenkins_terraform_ansible)
 
+---
 
-### **專案展示：**
+### 📘 **想要瞭解每個功能的詳細說明，請點擊以下連結：**  
+## [📂 **<span style="color:red;font-weight:bold;">README_專案說明</span>**](README_專案說明/)
+
+---
+
+### 💻 **專案展示：**
+
 ![alt text](README_專案說明/pictures/202410260223_k8s-shopping-site_1_simple_用Helm佈署成功_70_Helm佈署結果_site-service_3000.png)
 
 ![alt text](README_專案說明/pictures/202410280050_k8s-shopping-site_1_simple_docker_compose_result_3000_user-service.png)
@@ -123,3 +128,18 @@
 ![alt text](README_專案說明/pictures/202410260223_k8s-shopping-site_1_simple_用Helm佈署成功_512_ELB_user-service_DNS.png)
 
 ![alt text](README_專案說明/pictures/202410260223_k8s-shopping-site_1_simple_用Helm佈署成功_513_ELB_user-service_PORT.png)
+
+
+---
+
+### ➡️想要看看本專案的不同版本，請前往 📄 [總覽三個 k8s-shopping-site 專案](README_總覽3個k8s-shopping-site專案.md)
+
+---
+
+### 📞 聯絡我
+👩‍💻 **邱瓊瑩**  
+✉️ **Email**: [charleenchiu@msn.com](mailto:charleenchiu@msn.com)  
+📱 **電話**: 0930-629-242  
+
+🔗 [![LinkedIn](https://img.shields.io/badge/LinkedIn-邱瓊瑩-blue?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/charleenchiu/)  
+🔗 [![104人力銀行](https://img.shields.io/badge/104人力銀行-履歷分享-orange?style=flat&logo=104&logoColor=white)](https://pda.104.com.tw/profile/share/i8TlEWaBQZoMAXKV0SEmPST014a1AIa9) **(效期至2024/11/20)**
